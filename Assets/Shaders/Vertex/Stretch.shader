@@ -1,16 +1,14 @@
-// Implement z-twist
-Shader "Custom/TwistShader"
+// Implement z-stretch
+Shader "Custom/StretchShader"
 {
 	Properties
     {
-		// TWIST
-    	_TwistCoeff("Twist Coefficient", Range(-0.05, 0.05)) = 0	
-
-		// Which axis?
-		[Enum(X,0,Y,1,Z,2)]_TwistAxis("Twist around", Int) = 2
-
 		// STRETCH
+		// How much to stretch along z axis
+    	_StretchCoeff("Stretch Coefficient", Range(-2,2)) = 0
 
+		// Which Axis to choose?
+		[Enum(X,0,Y,1,Z,2)]_StretchAxis("Stretch around", Int) = 2
     }
 
     SubShader
@@ -29,8 +27,10 @@ Shader "Custom/TwistShader"
                 float3 normal : TEXCOORD0;
             };
 
-			float _TwistCoeff;
-			int _TwistAxis;
+			float _StrechStrength;
+			float _StretchCoeff;
+			int _StretchAxis;
+			
 
             // vertex shader
             v2f vert (appdata_base v)
@@ -55,32 +55,25 @@ Shader "Custom/TwistShader"
 				};
 				float4x4 XtoZAxis = transpose(ZtoXAxis);
 
-				if( _TwistAxis == 0 )
+				if( _StretchAxis == 0 )
 					v.vertex = mul(ZtoXAxis, v.vertex);
-				else if( _TwistAxis == 1 )
+				else if( _StretchAxis == 1 )
 					v.vertex = mul(ZtoYAxis, v.vertex);
-				
+
 				// Setup
 				float x = v.vertex.x;
 				float y = v.vertex.y;
 				float z = v.vertex.z;
 				float w = v.vertex.w;
 
-				// TWIST around z axis
-				float theta = _TwistCoeff * v.vertex.z;
-				float dtheta = _TwistCoeff;
-
-				float c = cos(theta);
-				float s = sin(theta);
-
-				o.vertex.x = x*c - y*s;
-				o.vertex.y = x*s + y*c;
-				o.vertex.z = z;
+				o.vertex.x = x * (z * z * _StretchCoeff - _StretchCoeff + 1.0);
+				o.vertex.y = y * (z * z * _StretchCoeff - _StretchCoeff + 1.0);
+				o.vertex.z = z * ( 1.0 + _StretchCoeff );
 				o.vertex.w = w;
-				
-				if( _TwistAxis == 0 )
+
+				if( _StretchAxis == 0 )
 					o.vertex = mul(XtoZAxis, o.vertex);
-				else if( _TwistAxis == 1 )
+				else if( _StretchAxis == 1 )
 					o.vertex = mul(YtoZAxis, o.vertex);
 
                 // MVP projection
@@ -89,16 +82,6 @@ Shader "Custom/TwistShader"
                 // Normals
 				// IGNORED FOR NOW
 				o.normal = v.normal;
-				
-				/*float nx = v.normal.x;
-				float ny = v.normal.y;
-				float nz = v.normal.z;
-
-                o.normal.x = c*nx - s*ny;
-				o.normal.y = s*nx + c*ny;
-				o.normal.z = y*dtheta*nx - x*dtheta*ny + nz;*/
-				
-				//o.normal = UnityObjectToWorldNormal(normal);
 
                 return o;
             }

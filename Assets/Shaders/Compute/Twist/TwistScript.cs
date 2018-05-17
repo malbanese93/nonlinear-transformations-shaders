@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TwistScript : MonoBehaviour {
 
-
     public ComputeShader shader;
     [Range(-0.05f, 0.05f)] public float alpha;  // theta = alpha * z;
 
