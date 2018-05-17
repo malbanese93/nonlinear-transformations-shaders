@@ -6,7 +6,7 @@ public class TwistScript : MonoBehaviour {
 
 
     public ComputeShader shader;
-    [Range(-1, 1)] public float alpha;  // theta = alpha * z;
+    [Range(-0.05f, 0.05f)] public float alpha;  // theta = alpha * z;
 
     private Mesh mesh;
     private Vector3[] vertices, startVertices;
