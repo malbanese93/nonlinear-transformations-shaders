@@ -20,7 +20,7 @@ public class Twist : MonoBehaviour {
 	void Update () {
         mesh.MarkDynamic();
 
-        Vector3[] vertices = originalVertices;
+        /*Vector3[] vertices = originalVertices;
         Vector3[] normals = originalNormals;
 
         int i = 0;
@@ -30,6 +30,6 @@ public class Twist : MonoBehaviour {
             i++;
         }
 
-        mesh.vertices = vertices;
+        mesh.vertices = vertices;*/
     }
 }

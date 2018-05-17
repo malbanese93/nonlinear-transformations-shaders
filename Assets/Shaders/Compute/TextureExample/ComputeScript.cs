@@ -16,14 +16,15 @@ public class ComputeScript : MonoBehaviour {
         tex.Create();
 
         shader.SetTexture(kernelHandle, "Result", tex);
+        shader.SetFloat("time", Time.time);
         shader.Dispatch(kernelHandle, 32, 32, 1);
     }
 
-    void Start()
+    void Update()
     {
         Run();
 
-        StartCoroutine(WaitFrame());
+        //StartCoroutine(WaitFrame());
 
         gameObject.GetComponent<Renderer>().material.mainTexture = tex;
     }
