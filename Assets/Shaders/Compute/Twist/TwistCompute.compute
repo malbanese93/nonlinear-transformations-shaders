@@ -1,0 +1,31 @@
+#pragma kernel Twist
+
+RWStructuredBuffer<float3> vBuffer;
+RWStructuredBuffer<float3> nBuffer;
+float alpha;
+
+[numthreads(16,1,1)]
+void Twist (uint3 id : SV_DispatchThreadID)
+{
+	// transform vertices
+	float3 v = vBuffer[id.x];
+
+    float theta = alpha * v.z;
+	float dtheta = alpha; // d(theta) / dz
+	float c = cos(theta), s = sin(theta);
+
+	float x = v.x;
+	float y = v.y;
+	float z = v.z;
+
+    vBuffer[id.x] = float3(x*c - y*s, x*s + y*c, z);
+
+	// transform normals
+	float3 n = nBuffer[id.x];
+
+	float nx = n.x;
+	float ny = n.y;
+	float nz = n.z;
+
+	nBuffer[id.x] = float3(c*nx - s*ny, s*nx + c*ny, y*dtheta*nx - x*dtheta*ny + nz);
+}

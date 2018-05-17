@@ -2,8 +2,7 @@ Shader "Custom/TwistShader"
 {
 	Properties
     {
-    	_Alpha("Alpha", Range(0,100)) = 0.5	
-		[Toggle] _Normalize("Normalize normal?", Int) = 0
+    	_Alpha("Alpha", Range(-0.05, 0.05)) = 0	
     }
 
     SubShader
@@ -23,7 +22,6 @@ Shader "Custom/TwistShader"
             };
 
 			float _Alpha;
-			int _Normalize;
 
             // vertex shader
             v2f vert (appdata_base v)
@@ -47,7 +45,7 @@ Shader "Custom/TwistShader"
 				o.vertex.z = z;
 				o.vertex.w = w;
 				              
-                // MVP projection and return
+                // MVP projection
                 o.vertex = UnityObjectToClipPos(o.vertex);
 
                 // Normals
@@ -59,9 +57,7 @@ Shader "Custom/TwistShader"
 				o.normal.y = s*nx + c*ny;
 				o.normal.z = y*dtheta*nx - x*dtheta*ny + nz;
 				
-
-				if( _Normalize != 0 )
-					o.normal = normalize(o.normal);
+				//o.normal = UnityObjectToWorldNormal(normal);
 
                 return o;
             }
@@ -69,6 +65,7 @@ Shader "Custom/TwistShader"
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 c;
+				i.normal = normalize(i.normal);
                 c.xyz = i.normal * 0.5 + 0.5;
                 c.w = 1;
 
