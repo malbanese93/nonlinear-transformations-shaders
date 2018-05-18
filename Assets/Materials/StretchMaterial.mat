@@ -80,9 +80,11 @@ Material:
     - _StencilComp: 6
     - _StencilOp: 0
     - _StrechStrength: 0
+    - _StretchAmount: 0
     - _StretchAxis: 1
-    - _StretchCoeff: 0
-    - _TwistAxis: 2
+    - _StretchCoeff: 0.02
+    - _StretchStrength: 1
+    - _TwistAxis: 1
     - _TwistCoeff: 0
     - _UVSec: 0
     - _ZWrite: 1

@@ -59,7 +59,7 @@ Shader "Custom/TwistShader"
 					v.vertex = mul(ZtoXAxis, v.vertex);
 				else if( _TwistAxis == 1 )
 					v.vertex = mul(ZtoYAxis, v.vertex);
-				
+
 				// Setup
 				float x = v.vertex.x;
 				float y = v.vertex.y;
@@ -77,7 +77,7 @@ Shader "Custom/TwistShader"
 				o.vertex.y = x*s + y*c;
 				o.vertex.z = z;
 				o.vertex.w = w;
-				
+
 				if( _TwistAxis == 0 )
 					o.vertex = mul(XtoZAxis, o.vertex);
 				else if( _TwistAxis == 1 )
@@ -89,7 +89,7 @@ Shader "Custom/TwistShader"
                 // Normals
 				// IGNORED FOR NOW
 				o.normal = v.normal;
-				
+
 				/*float nx = v.normal.x;
 				float ny = v.normal.y;
 				float nz = v.normal.z;
@@ -97,7 +97,7 @@ Shader "Custom/TwistShader"
                 o.normal.x = c*nx - s*ny;
 				o.normal.y = s*nx + c*ny;
 				o.normal.z = y*dtheta*nx - x*dtheta*ny + nz;*/
-				
+
 				//o.normal = UnityObjectToWorldNormal(normal);
 
                 return o;

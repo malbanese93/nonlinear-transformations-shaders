@@ -5,7 +5,10 @@ Shader "Custom/StretchShader"
     {
 		// STRETCH
 		// How much to stretch along z axis
-    	_StretchCoeff("Stretch Coefficient", Range(-2,2)) = 0
+    	_StretchAmount("Stretch Amount", Range(-2,2)) = 0
+
+		// How much to exagerate stretch
+		_StretchStrength("Stretch Strength", Range(0,3)) = 1
 
 		// Which Axis to choose?
 		[Enum(X,0,Y,1,Z,2)]_StretchAxis("Stretch around", Int) = 2
@@ -27,8 +30,8 @@ Shader "Custom/StretchShader"
                 float3 normal : TEXCOORD0;
             };
 
-			float _StrechStrength;
-			float _StretchCoeff;
+			float _StretchStrength;
+			float _StretchAmount;
 			int _StretchAxis;
 			
 
@@ -66,9 +69,24 @@ Shader "Custom/StretchShader"
 				float z = v.vertex.z;
 				float w = v.vertex.w;
 
-				o.vertex.x = x * (z * z * _StretchCoeff - _StretchCoeff + 1.0);
-				o.vertex.y = y * (z * z * _StretchCoeff - _StretchCoeff + 1.0);
-				o.vertex.z = z * ( 1.0 + _StretchCoeff );
+				// _StretchAmount > 0 ==> stretch
+				if( _StretchAmount > 0 )
+				{
+					//x && y reduce ..
+					o.vertex.x = x / ( 1.0 + _StretchAmount * _StretchStrength) ;
+					o.vertex.y = y / ( 1.0 + _StretchAmount * _StretchStrength) ;
+
+					// while z increase
+					o.vertex.z = z*(1 + _StretchAmount);
+				} else {   // _StretchAmount < 0 ==> squash
+				    // x & y scale out
+					o.vertex.x = x * (1.0 - _StretchAmount * _StretchStrength);
+					o.vertex.y = y * (1.0 - _StretchAmount * _StretchStrength);
+
+					// while z reduce
+					o.vertex.z = -z / (_StretchAmount - 1.0);
+				}
+
 				o.vertex.w = w;
 
 				if( _StretchAxis == 0 )
