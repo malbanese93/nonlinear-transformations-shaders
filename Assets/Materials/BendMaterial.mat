@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: StretchMaterial
-  m_Shader: {fileID: 4800000, guid: 37955c0f1a383d642b3ecdd23d75e0fd, type: 3}
+  m_Name: TwistMaterial
+  m_Shader: {fileID: 4800000, guid: b9b930c66bf58744ea1ae6ac9a4df76b, type: 3}
   m_ShaderKeywords: _NORMALIZE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -54,15 +54,9 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SpecGlossMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Alpha: 0
     - _Axis: 0
-    - _BendAxis: 1
-    - _BendRate: 5
     - _BumpScale: 1
     - _ColorMask: 1
     - _Cutoff: 0.5
@@ -81,21 +75,12 @@ Material:
     - _SrcBlend: 1
     - _StencilComp: 6
     - _StencilOp: 0
-    - _StrechStrength: 0
-    - _StretchAmount: -0.21
-    - _StretchAxis: 1
-    - _StretchCoeff: 0.02
-    - _StretchStrength: 1
-    - _TwistAxis: 1
+    - _TwistAxis: 2
     - _TwistCoeff: 0
     - _UVSec: 0
-    - _Y0: 0.73
-    - _YMax: 2
-    - _YMin: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.64705884, g: 0.10942906, b: 0.10942906, a: 1}
     - _ColorBack: {r: 0.7, g: 1, b: 0.7, a: 1}
     - _ColorFront: {r: 1, g: 0.7, b: 0.7, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
