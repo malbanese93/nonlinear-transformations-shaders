@@ -60,6 +60,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Alpha: 0
+    - _Angle: 187
     - _Axis: 0
     - _BendAxis: 0
     - _BendRate: 14.22
@@ -71,6 +72,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _MaxExtent: 0
     - _Metallic: 0
     - _Mode: 0
     - _Normalize: 1

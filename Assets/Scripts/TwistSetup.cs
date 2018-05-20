@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Twist : MonoBehaviour {
+public class TwistSetup : MonoBehaviour {
 
     Material material;
 

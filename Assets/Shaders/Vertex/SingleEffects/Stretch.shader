@@ -33,7 +33,7 @@ Shader "Custom/StretchShader"
 			float _StretchStrength;
 			float _StretchAmount;
 			int _StretchAxis;
-			
+
 
             // vertex shader
             v2f vert (appdata_base v)
@@ -80,7 +80,7 @@ Shader "Custom/StretchShader"
 					o.vertex.z = z*(1 + _StretchAmount);
 				} else {   // _StretchAmount < 0 ==> squash
 				    // x & y scale out
-					o.vertex.x = x * (1.0 - _StretchAmount * _StretchStrength);
+					o.vertex.x = x * (1.0 - _StretchAmount * _StretchStrength); // NB _StretchAmount < 0 thus scaling factor > 1!
 					o.vertex.y = y * (1.0 - _StretchAmount * _StretchStrength);
 
 					// while z reduce

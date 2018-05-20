@@ -4,12 +4,12 @@ Shader "Custom/TwistShader"
 	Properties
     {
 		// TWIST
-    	//_TwistCoeff("Twist Coefficient", Range(-0.5, 0.5)) = 0
+    	_TwistCoeff("Twist Coefficient", Range(-0.5, 0.5)) = 0
 		[HideInInspector]_MaxExtent("Max value", Float) = 0
 		// Which axis?
 		[Enum(X,0,Y,1,Z,2)]_TwistAxis("Twist around", Int) = 2
 
-		_Angle("Twist Angle", Range(-360,360)) = 0
+		//_Angle("Twist Angle", Range(-360,360)) = 0
     }
 
     SubShader
@@ -28,10 +28,10 @@ Shader "Custom/TwistShader"
                 float3 normal : TEXCOORD0;
             };
 
-			//float _TwistCoeff;
+			float _TwistCoeff;
 			float _MaxExtent;
 			int _TwistAxis;
-			float _Angle;
+			//float _Angle;
 
             // vertex shader
             v2f vert (appdata_base v)
@@ -69,12 +69,13 @@ Shader "Custom/TwistShader"
 
 				// TWIST around z axis
 				// Rotate by angle theta = f(z) = a*z + b
-				/*float theta = _TwistCoeff * v.vertex.z;
-				float dtheta = _TwistCoeff;*/
+				float theta = _TwistCoeff * v.vertex.z;
+				float dtheta = _TwistCoeff;
 
 				// Rotate by angle theta = f(z) = lerp(0,z,z*,0,theta*)
 				// where z* is max z (_MaxExtent) and theta* is angle set by user
-				float theta = (z / _MaxExtent) * radians(_Angle);
+				/*float theta = (z / _MaxExtent) * radians(_Angle);*/
+				
 				float c = cos(theta);
 				float s = sin(theta);
 
