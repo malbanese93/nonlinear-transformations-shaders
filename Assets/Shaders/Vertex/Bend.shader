@@ -1,4 +1,4 @@
-// Implement z-bend
+// Implement y-bend
 Shader "Custom/BendShader"
 {
 	Properties
@@ -59,7 +59,7 @@ Shader "Custom/BendShader"
 					0,0,0,1
 				};
 				float4x4 XtoZAxis = transpose(ZtoXAxis);
-				
+
 				if( _BendAxis == 0 )
 					v.vertex = mul(ZtoXAxis, v.vertex);
 				else if( _BendAxis == 1 )
@@ -83,13 +83,13 @@ Shader "Custom/BendShader"
 
 				// y and z have formula that change according to region
 				// Y
-				/*o.vertex.y = -s * (z-1.0f/_BendRate) + _Y0; // common part
+				o.vertex.y = -s * (z-1.0f/_BendRate) + _Y0; // common part
 
 				if( y < _YMin ) {
 					o.vertex.y += c * (y - _YMin);
 				} else if( y > _YMax ) {
 					o.vertex.y += c * (y - _YMax);
-				} 
+				}
 
 				// Z
 				o.vertex.z = c * (z-1.0f/_BendRate) + 1.0f / _BendRate;
@@ -98,7 +98,7 @@ Shader "Custom/BendShader"
 					o.vertex.z += s * (y - _YMin);
 				} else if( y > _YMax ) {
 					o.vertex.z += s * (y - _YMax);
-				} */
+				}
 
 
 				/*
