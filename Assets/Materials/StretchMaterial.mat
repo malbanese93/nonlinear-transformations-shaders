@@ -84,8 +84,8 @@ Material:
     - _StencilComp: 6
     - _StencilOp: 0
     - _StrechStrength: 0
-    - _StretchAmount: -0.21
-    - _StretchAxis: 1
+    - _StretchAmount: 1
+    - _StretchAxis: 0
     - _StretchCoeff: 0.02
     - _StretchStrength: 1
     - _TwistAngle: 0
