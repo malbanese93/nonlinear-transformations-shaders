@@ -17,7 +17,7 @@ Shader "Custom/TransformationShader"
 
 		// === TWIST ===
 		// Axis for twisting
-		[Enum(X,X_AXIS, Y,Y_AXIS, Z,Z_AXIS)]_TwistAxis("Twist around", Int) = 2
+		[Enum(X,0,Y,1,Z,2)]_TwistAxis("Twist around", Int) = 2
 		// Angle of rotation at the extremes (in degrees)
 		_TwistAngle("Twist Angle", Range(-360,360)) = 0
     }
@@ -55,9 +55,9 @@ Shader "Custom/TransformationShader"
 				o.normal = v.normal;
 
 				// Apply all transformations in sequence
-				o = DoTwist(o);
-				o = DoStretch(o);
-				o = DoBend(o);
+				o = DoTwist(o, _TwistAxis, _TwistAngle, _MaxExtents);
+				//o = DoStretch(o);
+				//o = DoBend(o);
 				// TODO: lattice transformation
 
 				// Finally, do MVP transformation as usual and return

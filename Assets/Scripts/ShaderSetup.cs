@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TwistSetup : MonoBehaviour {
+public class ShaderSetup : MonoBehaviour {
 
     Material material;
 
@@ -12,7 +12,7 @@ public class TwistSetup : MonoBehaviour {
 
         // set max z
         material = GetComponent<Renderer>().material;
-        material.SetFloat("_MaxExtent", 2 * b.extents.z);
+        material.SetVector("_MaxExtents", 2 * b.extents);
 	}
 	
 	// Update is called once per frame

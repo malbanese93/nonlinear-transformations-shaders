@@ -12,35 +12,9 @@ struct v2f {
     float3 normal : TEXCOORD0;
 };
 
-// =============== UNIFORM VARS =======================
-// Rotation matrix from Z to Y Axis
-float4x4 ZtoYAxis = {
-   1,0,0,0,
-   0,0,-1,0,
-   0,1,0,0,
-   0,0,0,1
-};
-// Rotation matrix from Y to Z Axis
-float4x4 YtoZAxis = {
-    1,0,0,0,
-    0,0,1,0,
-    0,-1,0,0,
-    0,0,0,1
-};
-
-// Rotation matrix from Z to X Axis
-float4x4 ZtoXAxis = {
-    0,0,1,0,
-    0,1,0,0,
-    -1,0,0,0,
-    0,0,0,1
-};
-// Rotation matrix from X to Z Axis
-float4x4 XtoZAxis = {
-    0,0,-1,0,
-    0,1,0,0,
-    1,0,0,1,
-    0,0,0,1
+struct TwistData {
+    int _TwistAxis;
+    float _TwistAngle;
 };
 
 // ============== FUNCTIONS ==========================
@@ -49,8 +23,40 @@ float4x4 XtoZAxis = {
 // In this case, the extreme angles are fixed, thus
 // f(z) = lerp(0,z,z*,0,theta*)
 // where z* is max z (_MaxExtent) and theta* is angle set by user
-inline v2f DoTwist( v2f v )
+inline v2f DoTwist( v2f v, int _TwistAxis, float _TwistAngle, float4 _MaxExtents )
 {
+    v2f o;
+
+    // Rotation matrix from Z to Y Axis
+    float4x4 ZtoYAxis = {
+       1,0,0,0,
+       0,0,-1,0,
+       0,1,0,0,
+       0,0,0,1
+    };
+    // Rotation matrix from Y to Z Axis
+    float4x4 YtoZAxis = {
+        1,0,0,0,
+        0,0,1,0,
+        0,-1,0,0,
+        0,0,0,1
+    };
+
+    // Rotation matrix from Z to X Axis
+    float4x4 ZtoXAxis = {
+        0,0,1,0,
+        0,1,0,0,
+        -1,0,0,0,
+        0,0,0,1
+    };
+    // Rotation matrix from X to Z Axis
+    float4x4 XtoZAxis = {
+        0,0,-1,0,
+        0,1,0,0,
+        1,0,0,0,
+        0,0,0,1
+    };
+
     // First of all, check if a pre-rotation is required in order to align
     // one axis with the z axis
     if( _TwistAxis == X_AXIS )
@@ -64,7 +70,7 @@ inline v2f DoTwist( v2f v )
     float z = v.vertex.z;
     float w = v.vertex.w;
 
-    float theta = (z / _MaxExtent) * radians(_TwistAngle); // NB! Angle is in degrees!
+    float theta = (z / _MaxExtents.z) * radians(_TwistAngle); // NB! Angle is in degrees!
     float c = cos(theta);
     float s = sin(theta);
 
@@ -93,6 +99,7 @@ inline v2f DoTwist( v2f v )
     o.normal.z = y*dtheta*nx - x*dtheta*ny + nz;*/
 
     //o.normal = UnityObjectToWorldNormal(normal);
+    return o;
 }
 
 #endif
