@@ -20,6 +20,15 @@ Shader "Custom/TransformationShader"
 		[Enum(X,0,Y,1,Z,2)]_TwistAxis("Twist around", Int) = 2
 		// Angle of rotation at the extremes (in degrees)
 		_TwistAngle("Twist Angle", Range(-360,360)) = 0
+
+		//[Space(10)]
+		// === STRETCH ===
+		// Axis for stretching
+		[Enum(X,0,Y,1,Z,2)]_StretchAxis("Stretch around", Int) = 2
+		// How much to stretch along main axis
+		_StretchAmount("Stretch Amount", Range(-2,2)) = 0
+		// How much to exagerate stretch
+		_StretchStrength("Stretch Strength", Range(0,3)) = 1
     }
 
     SubShader
@@ -45,6 +54,11 @@ Shader "Custom/TransformationShader"
 			int _TwistAxis;
 			float _TwistAngle;
 
+			// STRETCH
+			int _StretchAxis;
+			float _StretchStrength;
+			float _StretchAmount;
+
             // Vertex Shader
             v2f vert (appdata_base v)
             {
@@ -56,8 +70,8 @@ Shader "Custom/TransformationShader"
 
 				// Apply all transformations in sequence
 				o = DoTwist(o, _TwistAxis, _TwistAngle, _MaxExtents);
-				//o = DoStretch(o);
-				//o = DoBend(o);
+				o = DoStretch(o, _StretchAxis, _StretchAmount, _StretchStrength, _MaxExtents );
+				//TODO o = DoBend(o);
 				// TODO: lattice transformation
 
 				// Finally, do MVP transformation as usual and return
