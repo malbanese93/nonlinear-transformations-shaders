@@ -71,7 +71,7 @@ Shader "Custom/TransformationShader"
 				// Apply all transformations in sequence
 				o = DoTwist(o, _TwistAxis, _TwistAngle, _MaxExtents);
 				o = DoStretch(o, _StretchAxis, _StretchAmount, _StretchStrength, _MaxExtents );
-				//TODO o = DoBend(o);
+				//TODO o = DoBend();
 				// TODO: lattice transformation
 
 				// Finally, do MVP transformation as usual and return

@@ -41,30 +41,7 @@ Shader "Custom/BendShader"
             v2f vert (appdata_base v)
             {
                 v2f o;
-			/*
-				// ====== ROTATE TO GET AROUND Y AXIS ======
-				float4x4 ZtoYAxis = {
-				   1,0,0,0,
-				   0,0,-1,0,
-				   0,1,0,0,
-				   0,0,0,1
-				};
-				float4x4 YtoZAxis = transpose(ZtoYAxis);
 
-				// ===== ROTATE TO GET AROUND X AXIS ======
-				float4x4 ZtoXAxis = {
-					0,0,1,0,
-					0,1,0,0,
-					-1,0,0,0,
-					0,0,0,1
-				};
-				float4x4 XtoZAxis = transpose(ZtoXAxis);
-
-				if( _BendAxis == 0 )
-					v.vertex = mul(ZtoXAxis, v.vertex);
-				else if( _BendAxis == 1 )
-					v.vertex = mul(ZtoYAxis, v.vertex);
-					*/
 				// Setup
 				float x = v.vertex.x;
 				float y = v.vertex.y;

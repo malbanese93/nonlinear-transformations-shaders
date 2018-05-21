@@ -75,6 +75,68 @@ v2f RestoreZAxis(v2f v, int fromAxis, float4 maxExtents) {
     return v;
 }
 
+// Align x or z axis to y axis to enable transformation on all axes (for bending!)
+v2f DoYAxisRotation(v2f v, int toAxis, float4 maxExtents) {
+    // Rotation matrix from Y to X Axis
+    float4x4 YtoXAxis = {
+       0, 1, 0, 0,
+      -1, 0, 0, 0,
+       0, 0, 1, 0,
+       0, 0, 0, 1
+    };
+
+    // Rotation matrix from Y to Z Axis
+    float4x4 YtoZAxis = {
+        1, 0, 0, 0,
+        0, 0,-1, 0,
+        0, 1, 0, 0,
+        0, 0, 0, 1
+    };
+
+    // First of all, check if a pre-rotation is required in order to align
+    // one axis with the y axis
+    if( toAxis == X_AXIS ) {
+        v.vertex = mul(YtoXAxis, v.vertex);
+        maxExtents = mul(YtoXAxis, maxExtents);
+    }
+    else if( toAxis == Z_AXIS ) {
+        v.vertex = mul(YtoZAxis, v.vertex);
+        maxExtents = mul(YtoZAxis, maxExtents);
+    }
+
+    return v;
+}
+
+v2f RestoreYAxis(v2f v, int fromAxis, float4 maxExtents) {
+    // Rotation x axis back
+    float4x4 XtoYAxis = {
+      0, -1, 0, 0,
+      1,  0, 0, 0,
+      0,  0, 1, 0,
+      0,  0, 0, 1
+    };
+
+    // Rotation z axis back
+    float4x4 ZtoYAxis = {
+        1, 0, 0, 0,
+        0, 0, 1, 0,
+        0, -1, 0, 0,
+        0, 0, 0, 1
+    };
+
+    // Rollback axis if pre-rotated
+    if( fromAxis == X_AXIS ) {
+        v.vertex = mul(XtoYAxis, v.vertex);
+        maxExtents = mul(XtoYAxis, maxExtents);
+    }
+    else if( fromAxis == Z_AXIS ) {
+        v.vertex = mul(ZtoYAxis, v.vertex);
+        maxExtents = mul(ZtoYAxis, maxExtents);
+    }
+
+    return v;
+}
+
 // 1) (z-)TWIST
 // Do rotation along z axis, where theta depends on a function of z and is not fixed.
 // In this case, the extreme angles are fixed, thus
@@ -149,6 +211,46 @@ inline v2f DoStretch( v2f v, int _StretchAxis, float _StretchAmount, float _Stre
     // TODO: normals if needed.
     o.normal = v.normal;
     return o;
+}
+
+// 3) (y-)BEND
+// Bend linearly at a rate k [rad/m] from point y0
+// Note we are following Barr convention, thus this transformation is around y-axis and not z-axis by default!
+inline v2f DoBend(  ) {
+    // Setup
+    /*float x = v.vertex.x;
+    float y = v.vertex.y;
+    float z = v.vertex.z;
+    float w = v.vertex.w;
+
+    // first of all, get angle theta
+    float yHat = clamp(y, _YMin, _YMax);
+    float theta = _BendRate * (yHat - _Y0);
+    float c = cos(theta), s = sin(theta);
+
+    // apply transformation
+    // let's start with the simplest ones
+    o.vertex.x = x;
+    o.vertex.w = w;
+
+    // y and z have formula that change according to region
+    // Y
+    o.vertex.y = -s * (z-1.0f/_BendRate) + _Y0; // common part
+
+    if( y < _YMin ) {
+        o.vertex.y += c * (y - _YMin);
+    } else if( y > _YMax ) {
+        o.vertex.y += c * (y - _YMax);
+    }
+
+    // Z
+    o.vertex.z = c * (z-1.0f/_BendRate) + 1.0f / _BendRate;
+
+    if( y < _YMin ) {
+        o.vertex.z += s * (y - _YMin);
+    } else if( y > _YMax ) {
+        o.vertex.z += s * (y - _YMax);
+    }*/
 }
 
 #endif
