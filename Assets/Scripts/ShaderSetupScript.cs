@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShaderSetup : MonoBehaviour {
+public class ShaderSetupScript : MonoBehaviour {
 
     Material material;
 
