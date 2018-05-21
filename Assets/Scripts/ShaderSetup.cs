@@ -12,11 +12,11 @@ public class ShaderSetup : MonoBehaviour {
 
         // set max z
         material = GetComponent<Renderer>().material;
-        material.SetVector("_MaxExtents", 2 * b.extents);
+        material.SetVector("_MaxExtents", b.extents);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		
+
 	}
 }
