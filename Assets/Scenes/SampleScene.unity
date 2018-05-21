@@ -194,10 +194,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c743a6eafbc11564abe5a8530613ba29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfGridPoints:
-    x: 3
-    y: 1
-    z: 1
+  gridParams:
+    L: 2
+    M: 1
+    N: 1
 --- !u!114 &69764261
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -30,19 +30,24 @@ public class LatticeScript : MonoBehaviour {
         bounds = GetComponent<MeshFilter>().mesh.bounds;
         extents = bounds.extents;
 
-        // Create lattice points
+        // Get parameters for grid
         int L = gridParams.L;
         int M = gridParams.M;
         int N = gridParams.N;
-        gridpoints = new Vector3[L+1, M+1, N+1];
 
+        // Assert all values are positive
+        Debug.Assert(L > 0 && M > 0 && N > 0);
+
+        // Create lattice points
+        gridpoints = new Vector3[L+1, M+1, N+1];
         for( int i = 0; i <= L; ++i )
             for( int j = 0; j <= M; ++j )
                 for( int k = 0; k <= N; ++k )
                     gridpoints[i, j, k] = new Vector3 { x = (float)i / L, y = (float)j / M, z = (float)k / N };
 
-        // Check if all points are generated correctly
-        DebugPoints();
+        // Generate lattice vertices
+        GenerateCubes();
+
 
     }
 
@@ -58,8 +63,8 @@ public class LatticeScript : MonoBehaviour {
         return res;
     }
 
-    // Display debug information on lattice vertices
-    void DebugPoints()
+    // Display a little cube for each vertex
+    void GenerateCubes()
     {
         // Show coordinates in STU and local systems
         for (int i = 0; i <= gridParams.L; ++i)
@@ -72,10 +77,18 @@ public class LatticeScript : MonoBehaviour {
 
                     print("POINT (" + i + "," + j + "," + k + ") -- STU: " + stuCoords + " -- LC: " + localCoords);
 
-                    // Generate debug cube in that position
+                    // Generate debug cube
                     GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.name = "Cube_" + i + "_" + j + "_" + k;
+
+                    // Add mouse interaction script
+                    cube.AddComponent<LatticeVertex>();
+
+                    // Change position and scaling
                     cube.transform.parent = transform;
-                    cube.name = "Cube";
+                    cube.transform.localScale *= 0.5f;
+
+                    // Set it as a child of the mesh
                     cube.transform.position = localCoords;
                 }
     }
