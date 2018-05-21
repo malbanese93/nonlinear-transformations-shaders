@@ -12,6 +12,8 @@ public class ShaderSetup : MonoBehaviour {
 
         // set max z
         material = GetComponent<Renderer>().material;
+
+        // TODO: check if extents must be fixed along y axis
         material.SetVector("_MaxExtents", b.extents);
 	}
 

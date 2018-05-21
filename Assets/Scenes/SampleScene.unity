@@ -183,7 +183,7 @@ Prefab:
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: 1e8fbb06c5b9b4140a191246bc1123f9, type: 3}
   m_PrefabInternal: {fileID: 48965471}
---- !u!114 &69764257
+--- !u!114 &69764260
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfGridPoints:
-    x: 1
+    x: 3
     y: 1
     z: 1
 --- !u!114 &69764261
