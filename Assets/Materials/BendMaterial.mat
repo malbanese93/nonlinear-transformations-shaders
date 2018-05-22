@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: TwistMaterial
-  m_Shader: {fileID: 4800000, guid: b9b930c66bf58744ea1ae6ac9a4df76b, type: 3}
+  m_Name: BendMaterial
+  m_Shader: {fileID: 4800000, guid: 0ebb413ce80f5ee4b856da05ae4a2a7a, type: 3}
   m_ShaderKeywords: _NORMALIZE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -57,6 +57,8 @@ Material:
     m_Floats:
     - _Alpha: 0
     - _Axis: 0
+    - _BendAxis: 1
+    - _BendRate: 2
     - _BumpScale: 1
     - _ColorMask: 1
     - _Cutoff: 0.5
@@ -65,6 +67,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
+    - _MaxExtent: 0
     - _Metallic: 0
     - _Mode: 0
     - _Normalize: 1
@@ -78,6 +81,9 @@ Material:
     - _TwistAxis: 2
     - _TwistCoeff: 0
     - _UVSec: 0
+    - _Y0: 1
+    - _YMax: -1
+    - _YMin: 1
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.64705884, g: 0.10942906, b: 0.10942906, a: 1}

@@ -63,7 +63,7 @@ Material:
     - _Angle: 187
     - _Axis: 0
     - _BendAxis: 0
-    - _BendRate: 14.22
+    - _BendRate: 0
     - _BumpScale: 1
     - _ColorMask: 1
     - _Cutoff: 0.5
@@ -92,9 +92,9 @@ Material:
     - _TwistAxis: 1
     - _TwistCoeff: -0.007
     - _UVSec: 0
-    - _Y0: 0.73
-    - _YMax: 2
-    - _YMin: 0
+    - _Y0: 0
+    - _YMax: 5
+    - _YMin: -5
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0.64705884, g: 0.10942906, b: 0.10942906, a: 1}

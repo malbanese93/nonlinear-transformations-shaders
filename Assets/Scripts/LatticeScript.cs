@@ -11,6 +11,7 @@ public class LatticeScript : MonoBehaviour {
     Mesh mesh;
     Bounds bounds;
     Vector3 extents;
+    Vector3[] startVertices;
 
     // L,M,N parameters for lattice
     // NB: the number of vertices along each axis is 1 + param!
@@ -26,6 +27,7 @@ public class LatticeScript : MonoBehaviour {
         mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
         extents = bounds.extents;
+        startVertices = mesh.vertices;
 
         // Get parameters for grid
         int L = gridParams.L;
@@ -84,7 +86,7 @@ public class LatticeScript : MonoBehaviour {
         for( int v = 0; v < vertices.Length; ++v )
         {
             // 1) get STU coords
-            var stuVertex = GetSTUCoords(vertices[v]);
+            var stuVertex = GetSTUCoords(startVertices[v]); // NB: use (s,t,u) coords of original vertices of the mesh!
             float s = stuVertex.x;
             float t = stuVertex.y;
             float u = stuVertex.z;
@@ -121,7 +123,6 @@ public class LatticeScript : MonoBehaviour {
         return res;
     }
 
-    // TODO Check correctness!
     // Transform from local coords to STU coords (apply reverse transformation wrt above)
     Vector3 GetSTUCoords(Vector3 localCoords)
     {

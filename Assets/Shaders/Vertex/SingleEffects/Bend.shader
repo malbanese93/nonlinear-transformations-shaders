@@ -13,7 +13,6 @@ Shader "Custom/BendShader"
 
 		// Which axis?
 		[Enum(X,0,Y,1,Z,2)]_BendAxis("Bend around", Int) = 2
-
     }
 
     SubShader

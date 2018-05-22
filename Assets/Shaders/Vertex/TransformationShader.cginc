@@ -215,27 +215,35 @@ inline v2f DoStretch( v2f v, int _StretchAxis, float _StretchAmount, float _Stre
 
 // 3) (y-)BEND
 // Bend linearly at a rate k [rad/m] from point y0
-// Note we are following Barr convention, thus this transformation is around y-axis and not z-axis by default!
-inline v2f DoBend(  ) {
+// Note that we are following Barr convention, thus this transformation is around y-axis and not z-axis by default!
+inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, float k, float4 _MaxExtents ) {
+    // If no bending is required actually (k = 0), just return v
+    if( k < 1e-5 && k > -1e-5 )
+        return v;
+
+    v2f o;
+
+    v = DoYAxisRotation(v, _BendAxis, _MaxExtents);
+
     // Setup
-    /*float x = v.vertex.x;
+    float x = v.vertex.x;
     float y = v.vertex.y;
     float z = v.vertex.z;
     float w = v.vertex.w;
 
     // first of all, get angle theta
     float yHat = clamp(y, _YMin, _YMax);
-    float theta = _BendRate * (yHat - _Y0);
+    float theta = k * (yHat - _Y0);
     float c = cos(theta), s = sin(theta);
 
     // apply transformation
-    // let's start with the simplest ones
+    // let's start with the fixed components
     o.vertex.x = x;
     o.vertex.w = w;
 
-    // y and z have formula that change according to region
+    // y and z have formulae that change according to region considered
     // Y
-    o.vertex.y = -s * (z-1.0f/_BendRate) + _Y0; // common part
+    o.vertex.y = -s * (z-1.0f/k) + _Y0; // common part
 
     if( y < _YMin ) {
         o.vertex.y += c * (y - _YMin);
@@ -244,13 +252,19 @@ inline v2f DoBend(  ) {
     }
 
     // Z
-    o.vertex.z = c * (z-1.0f/_BendRate) + 1.0f / _BendRate;
+    o.vertex.z = c * (z-1.0f/k) + 1.0f / k;
 
     if( y < _YMin ) {
         o.vertex.z += s * (y - _YMin);
     } else if( y > _YMax ) {
         o.vertex.z += s * (y - _YMax);
-    }*/
+    }
+
+    o = RestoreYAxis(o, _BendAxis, _MaxExtents);
+
+    // TODO: normals if needed.
+    o.normal = v.normal;
+    return o;
 }
 
 #endif

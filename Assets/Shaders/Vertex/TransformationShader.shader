@@ -21,7 +21,7 @@ Shader "Custom/TransformationShader"
 		// Angle of rotation at the extremes (in degrees)
 		_TwistAngle("Twist Angle", Range(-360,360)) = 0
 
-		//[Space(10)]
+		[Space(10)]
 		// === STRETCH ===
 		// Axis for stretching
 		[Enum(X,0,Y,1,Z,2)]_StretchAxis("Stretch around", Int) = 2
@@ -29,6 +29,18 @@ Shader "Custom/TransformationShader"
 		_StretchAmount("Stretch Amount", Range(-2,2)) = 0
 		// How much to exagerate stretch
 		_StretchStrength("Stretch Strength", Range(0,3)) = 1
+
+		[Space(10)]
+		// === BEND ===
+		// Axis for bending
+		[Enum(X,0,Y,1,Z,2)]_BendAxis("Bend around", Int) = 2
+		// Min and max y for transform (TODO: in percentage!)
+		_YMin("Min value", Float) = 0
+		_YMax("Max value", Float) = 0
+
+		// Starting y0
+		_Y0("Starting value", Float) = 0
+		_BendRate("Bend Rate (k)", Float) = 0
     }
 
     SubShader
@@ -59,6 +71,13 @@ Shader "Custom/TransformationShader"
 			float _StretchStrength;
 			float _StretchAmount;
 
+			// BEND
+			int _BendAxis;
+			float _YMin;
+			float _YMax;
+			float _Y0;
+			float _BendRate;
+
             // Vertex Shader
             v2f vert (appdata_base v)
             {
@@ -71,7 +90,7 @@ Shader "Custom/TransformationShader"
 				// Apply all transformations in sequence
 				o = DoTwist(o, _TwistAxis, _TwistAngle, _MaxExtents);
 				o = DoStretch(o, _StretchAxis, _StretchAmount, _StretchStrength, _MaxExtents );
-				//TODO o = DoBend();
+				o = DoBend(o, _BendAxis, _YMin, _YMax, _Y0, _BendRate, _MaxExtents );
 				// TODO: lattice transformation
 
 				// Finally, do MVP transformation as usual and return
