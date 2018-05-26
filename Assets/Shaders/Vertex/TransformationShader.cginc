@@ -149,25 +149,34 @@ inline v2f DoTwist( v2f v, int _TwistAxis, float _TwistAngle, float4 _MaxExtents
     v = DoZAxisRotation(v, _TwistAxis, _MaxExtents);
 
     // Setup
-    float x = v.vertex.x;
-    float y = v.vertex.y;
-    float z = v.vertex.z;
+    float x = v.vertex.x;    float nx = v.normal.x;
+    float y = v.vertex.y;    float ny = v.normal.y;
+    float z = v.vertex.z;    float nz = v.normal.z;
     float w = v.vertex.w;
 
+    // theta = f(z)
     float theta = (z / _MaxExtents.z) * radians(_TwistAngle); // NB! Angle is in degrees!
+    // dtheta = f'(z)
+    // NB! If you change f(z) remember also to change its derivative
+    float dtheta = (1.0f / _MaxExtents.z) * radians(_TwistAngle);
+
     float c = cos(theta);
     float s = sin(theta);
 
-    // Do transformation!
+    // Vertex transformation
     o.vertex.x = x*c - y*s;
     o.vertex.y = x*s + y*c;
     o.vertex.z = z;
     o.vertex.w = w;
 
-    o = RestoreZAxis(o, _TwistAxis, _MaxExtents);
+    // Normal transformation
+    o.normal.x = c * nx - s * ny;
+    o.normal.y = s * nx + c * ny;
+    o.normal.z = y * dtheta * nx - x * dtheta * ny + nz;
+    o.normal = normalize(o.normal); // NB: don't forget to normalize in the end!
 
-    // TODO: normals if needed.
-    o.normal = v.normal;
+    // Restore back to original axis and return
+    o = RestoreZAxis(o, _TwistAxis, _MaxExtents);
     return o;
 }
 
@@ -181,20 +190,39 @@ inline v2f DoStretch( v2f v, int _StretchAxis, float _StretchAmount, float _Stre
     v = DoZAxisRotation(v, _StretchAxis, _MaxExtents);
 
     // Setup
-    float x = v.vertex.x;
-    float y = v.vertex.y;
-    float z = v.vertex.z;
+    float x = v.vertex.x;    float nx = v.normal.x;
+    float y = v.vertex.y;    float ny = v.normal.y;
+    float z = v.vertex.z;    float nz = v.normal.z;
     float w = v.vertex.w;
+
+    // NB Vertex and normal transformation depend on the sign of the amount!
 
     // _StretchAmount > 0 ==> stretch
     if( _StretchAmount > 0 )
     {
+        // Vertex transformation
         //x && y reduce ..
         o.vertex.x = x / ( 1.0 + _StretchAmount * _StretchStrength) ;
         o.vertex.y = y / ( 1.0 + _StretchAmount * _StretchStrength) ;
 
         // while z increase
         o.vertex.z = z * (1 + _StretchAmount);
+
+        // Normal transformation
+        // J =
+        //[ 1/(a*s + 1),           0,     0]
+        //[           0, 1/(a*s + 1),     0]
+        //[           0,           0, a + 1]
+
+        // thus the normal matrix is given by N = |J| * inv(transpose(J)) =
+        //[ (a + 1)/(a*s + 1),                 0,             0]
+        //[                 0, (a + 1)/(a*s + 1),             0]
+        //[                 0,                 0, 1/(a*s + 1)^2]
+
+        o.normal.x = nx * (_StretchAmount + 1.0f) / ( 1.0 + _StretchAmount * _StretchStrength);
+        o.normal.y = ny * (_StretchAmount + 1.0f) / ( 1.0 + _StretchAmount * _StretchStrength);
+        o.normal.z = nz / ( ( 1.0 + _StretchAmount * _StretchStrength) * ( 1.0 + _StretchAmount * _StretchStrength) );
+
     } else {   // _StretchAmount < 0 ==> squash
         // x & y scale out
         o.vertex.x = x * (1.0 - _StretchAmount * _StretchStrength); // NB _StretchAmount < 0 thus scaling factor > 1!
@@ -202,14 +230,29 @@ inline v2f DoStretch( v2f v, int _StretchAxis, float _StretchAmount, float _Stre
 
         // while z reduce
         o.vertex.z = -z / (_StretchAmount - 1.0);
+
+        // Normal transformation
+        // J =
+        //[ 1 - a*s,       0,          0]
+        //[       0, 1 - a*s,          0]
+        //[       0,       0, -1/(a - 1)]
+
+        // thus the normal matrix is given by N = |J| * inv(transpose(J)) =
+        //[ (a*s - 1)/(a - 1),                 0,           0]
+        //[                 0, (a*s - 1)/(a - 1),           0]
+        //[                 0,                 0, (a*s - 1)^2]
+
+        o.normal.x = (nx * (_StretchAmount * _StretchStrength - 1.0f)) / (_StretchAmount - 1.0f);
+        o.normal.y = (ny * (_StretchAmount * _StretchStrength - 1.0f)) / (_StretchAmount - 1.0f);
+        o.normal.z = nz * (_StretchAmount * _StretchStrength - 1.0f) * (_StretchAmount * _StretchStrength - 1.0f);
     }
+
+    o.normal = normalize(o.normal);
 
     o.vertex.w = w;
 
+    // Restore axis and return
     o = RestoreZAxis(o, _StretchAxis, _MaxExtents);
-
-    // TODO: normals if needed.
-    o.normal = v.normal;
     return o;
 }
 
@@ -226,9 +269,9 @@ inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, fl
     v = DoYAxisRotation(v, _BendAxis, _MaxExtents);
 
     // Setup
-    float x = v.vertex.x;
-    float y = v.vertex.y;
-    float z = v.vertex.z;
+    float x = v.vertex.x;    float nx = v.normal.x;
+    float y = v.vertex.y;    float ny = v.normal.y;
+    float z = v.vertex.z;    float nz = v.normal.z;
     float w = v.vertex.w;
 
     // first of all, get angle theta
@@ -260,10 +303,20 @@ inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, fl
         o.vertex.z += s * (y - _YMax);
     }
 
-    o = RestoreYAxis(o, _BendAxis, _MaxExtents);
+    // Normal transformation
+    // Note we use khat in J!
+    float k_hat = k;
+    if( y < _YMin || y > _YMax )
+        k_hat = 0;
 
-    // TODO: normals if needed.
-    o.normal = v.normal;
+    float k_coeff = (1 - k_hat * z);
+    o.normal.x = k_coeff * nx;
+    o.normal.y = c * ny - s * k_coeff * nz;
+    o.normal.z = s * ny + c * k_coeff * nz;
+
+    o.normal = normalize(o.normal);
+
+    o = RestoreYAxis(o, _BendAxis, _MaxExtents);
     return o;
 }
 

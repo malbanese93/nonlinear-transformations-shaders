@@ -325,8 +325,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 282840810}
-  m_LocalRotation: {x: -0.09365587, y: -0.28209865, z: 0.027682927, w: -0.95440173}
-  m_LocalPosition: {x: -1.4671087, y: 0.8642874, z: -2.1222858}
+  m_LocalRotation: {x: 0.028855082, y: -0.42092937, z: 0.013396911, w: 0.9065354}
+  m_LocalPosition: {x: 4.783414, y: 3.1309555, z: -4.2539673}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -428,9 +428,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridParams:
-    L: 1
-    M: 1
-    N: 1
+    L: 2
+    M: 2
+    N: 2
   isOriginDown: 0
 --- !u!23 &1802578180
 MeshRenderer:
