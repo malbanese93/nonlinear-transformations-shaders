@@ -8,7 +8,7 @@ struct VertexData {
 };
 
 // Define the # of threads in a thread block
-#define groupSize 256
+#define groupSize 512
 
 // GLOBAL MEMORY buffer for all vertex data
 RWStructuredBuffer<VertexData> g_buffer;
@@ -16,8 +16,9 @@ RWStructuredBuffer<VertexData> g_buffer;
 // SHARED MEMORY (inside each block) to accelerate computations
 groupshared VertexData shared_buffer[groupSize];
 
-// Parameter for transformation
+// Parameters for transformation
 float alpha;
+uint vertexCount;
 
 // Specify organization of thread block
 // Since there is no implied geometry on the problem solved, we just consider
@@ -32,35 +33,39 @@ void Twist (uint3 threadInGroupIndex : SV_GROUPTHREADID,
 	uint g_tid = (groupIndex * groupSize + threadInGroupIndex).x;
 	uint l_tid = threadInGroupIndex.x;
 
-	// First of all, let's copy data from global to shared memory
-	shared_buffer[l_tid] = g_buffer[g_tid];
+	// Apply calculation only where the data actually are!
+	if( g_tid < vertexCount ) {
+		// First of all, let's copy data from global to shared memory
+		shared_buffer[l_tid] = g_buffer[g_tid];
 
-	// Wait until all copies have finished
-	GroupMemoryBarrierWithGroupSync();
+		// Wait until all copies have finished
+		GroupMemoryBarrierWithGroupSync();
 
-	// Apply calculation
-	int3 v = shared_buffer[l_tid].pos;
-	int3 n = shared_buffer[l_tid].normal;
+		// Apply calculation
+		float3 v = shared_buffer[l_tid].pos;
+		float3 n = shared_buffer[l_tid].normal;
 
-	float theta = alpha * v.z;
-	float dtheta = alpha; // d(theta) / dz
-	float c = cos(theta), s = sin(theta);
+		float theta = alpha * v.z;
+		float dtheta = alpha; // d(theta) / dz
+		float c = cos(theta), s = sin(theta);
 
-	// transform normals
-	float x = v.x;
-	float y = v.y;
-	float z = v.z;
-	float nx = n.x;
-	float ny = n.y;
-	float nz = n.z;
-	shared_buffer[l_tid].normal = float3(c*nx - s*ny, s*nx + c*ny, y*dtheta*nx - x*dtheta*ny + nz);
+		/*float x = v.x;
+		float y = v.y;
+		float z = v.z;
+		float nx = n.x;
+		float ny = n.y;
+		float nz = n.z;*/
 
-	// transform positions
-    shared_buffer[l_tid].pos = float3(x*c - y*s, x*s + y*c, z);
+		// transform normals
+		shared_buffer[l_tid].normal = n;//float3(c*nx - s*ny, s*nx + c*ny, y*dtheta*nx - x*dtheta*ny + nz);
 
-	// Wait until all groups have finished
-	GroupMemoryBarrierWithGroupSync();
+		// transform positions
+		shared_buffer[l_tid].pos = float3(v.x*c - v.y*s, v.x*s + v.y*c, v.z);
 
-	// Copy back to global memory
-	g_buffer[g_tid] = shared_buffer[l_tid];
+		// Wait until all groups have finished
+		GroupMemoryBarrierWithGroupSync();
+
+		// Copy back to global memory
+		g_buffer[g_tid] = shared_buffer[l_tid];
+	}
 }

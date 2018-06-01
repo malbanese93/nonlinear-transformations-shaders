@@ -17,7 +17,7 @@ public class TwistScript : MonoBehaviour {
     int kernelID;
 
     // Params for transformation
-    [Range(-0.05f, 0.05f)] public float alpha;  // theta = alpha * z;
+    [Range(-0.5f, 0.5f)] public float alpha;  // theta = alpha * z;
 
     // Mesh info
     private Mesh mesh;
@@ -40,6 +40,7 @@ public class TwistScript : MonoBehaviour {
         // Get mesh reference
         mesh = GetComponent<MeshFilter>().mesh;
         vCount = mesh.vertexCount;
+        //print(vCount);
 
         // The only dependence we need to consider is the one between pos_i and n_i for a given vertex i.
         // The vertices are independent among themselves (embarassingly parallel)
@@ -62,9 +63,11 @@ public class TwistScript : MonoBehaviour {
         int kernel = computeShader.FindKernel("Twist");
         computeShader.SetBuffer(kernel, "g_buffer", buffer);
         computeShader.SetFloat("alpha", alpha);
+        computeShader.SetInt("vertexCount", vCount);
 
-        // Get material and set buffer in order to share it
-        GetComponent<MeshRenderer>().material.SetBuffer("buffer", buffer);
+        // Set buffer and vertex count in vertex shader
+        Material m = GetComponent<MeshRenderer>().material;
+        m.SetBuffer("buffer", buffer);
 
         // return kernel id
         return kernel;
