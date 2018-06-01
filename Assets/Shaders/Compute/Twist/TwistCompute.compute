@@ -3,12 +3,12 @@
 
 // Same as in CPU
 struct VertexData {
-	int3 pos;
-	int3 normal;
+	float3 pos;
+	float3 normal;
 };
 
 // Define the # of threads in a thread block
-#define groupSize 128
+#define groupSize 256
 
 // GLOBAL MEMORY buffer for all vertex data
 RWStructuredBuffer<VertexData> g_buffer;
@@ -35,24 +35,32 @@ void Twist (uint3 threadInGroupIndex : SV_GROUPTHREADID,
 	// First of all, let's copy data from global to shared memory
 	shared_buffer[l_tid] = g_buffer[g_tid];
 
+	// Wait until all copies have finished
 	GroupMemoryBarrierWithGroupSync();
 
-    /*float theta = alpha * v.z;
+	// Apply calculation
+	int3 v = shared_buffer[l_tid].pos;
+	int3 n = shared_buffer[l_tid].normal;
+
+	float theta = alpha * v.z;
 	float dtheta = alpha; // d(theta) / dz
 	float c = cos(theta), s = sin(theta);
 
+	// transform normals
 	float x = v.x;
 	float y = v.y;
 	float z = v.z;
-
-    vBuffer[id.x] = float3(x*c - y*s, x*s + y*c, z);
-
-	// transform normals
-	float3 n = nBuffer[id.x];
-
 	float nx = n.x;
 	float ny = n.y;
 	float nz = n.z;
+	shared_buffer[l_tid].normal = float3(c*nx - s*ny, s*nx + c*ny, y*dtheta*nx - x*dtheta*ny + nz);
 
-	nBuffer[id.x] = float3(c*nx - s*ny, s*nx + c*ny, y*dtheta*nx - x*dtheta*ny + nz);*/
+	// transform positions
+    shared_buffer[l_tid].pos = float3(x*c - y*s, x*s + y*c, z);
+
+	// Wait until all groups have finished
+	GroupMemoryBarrierWithGroupSync();
+
+	// Copy back to global memory
+	g_buffer[g_tid] = shared_buffer[l_tid];
 }
