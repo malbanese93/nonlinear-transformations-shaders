@@ -1,16 +1,43 @@
+// Specify which are the functions executed by GPU from outside
 #pragma kernel Twist
 
-RWStructuredBuffer<float3> vBuffer;
-RWStructuredBuffer<float3> nBuffer;
+// Same as in CPU
+struct VertexData {
+	int3 pos;
+	int3 normal;
+};
+
+// Define the # of threads in a thread block
+#define groupSize 128
+
+// GLOBAL MEMORY buffer for all vertex data
+RWStructuredBuffer<VertexData> g_buffer;
+
+// SHARED MEMORY (inside each block) to accelerate computations
+groupshared VertexData shared_buffer[groupSize];
+
+// Parameter for transformation
 float alpha;
 
-[numthreads(16,1,1)]
-void Twist (uint3 id : SV_DispatchThreadID)
+// Specify organization of thread block
+// Since there is no implied geometry on the problem solved, we just consider
+// each vertex in a single 1D list
+// NB: the number of threads is highly dependent on the underlying architecture!
+[numthreads(groupSize,1,1)]
+void Twist (uint3 threadInGroupIndex : SV_GROUPTHREADID,
+	        uint3 groupIndex         : SV_GROUPID)
 {
-	// transform vertices
-	float3 v = vBuffer[id.x];
+	// Compute global and local thread ID
+	// NB: all data stored in 1D so get first component only
+	uint g_tid = (groupIndex * groupSize + threadInGroupIndex).x;
+	uint l_tid = threadInGroupIndex.x;
 
-    float theta = alpha * v.z;
+	// First of all, let's copy data from global to shared memory
+	shared_buffer[l_tid] = g_buffer[g_tid];
+
+	GroupMemoryBarrierWithGroupSync();
+
+    /*float theta = alpha * v.z;
 	float dtheta = alpha; // d(theta) / dz
 	float c = cos(theta), s = sin(theta);
 
@@ -27,5 +54,5 @@ void Twist (uint3 id : SV_DispatchThreadID)
 	float ny = n.y;
 	float nz = n.z;
 
-	nBuffer[id.x] = float3(c*nx - s*ny, s*nx + c*ny, y*dtheta*nx - x*dtheta*ny + nz);
+	nBuffer[id.x] = float3(c*nx - s*ny, s*nx + c*ny, y*dtheta*nx - x*dtheta*ny + nz);*/
 }

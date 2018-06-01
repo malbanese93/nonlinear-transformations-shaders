@@ -1,19 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TwistScript : MonoBehaviour {
 
-    public ComputeShader shader;
+    public struct VertexData
+    {
+        public Vector3 pos;
+        public Vector3 normal;
+    }
+
+    public ComputeShader twistShader;
     [Range(-0.05f, 0.05f)] public float alpha;  // theta = alpha * z;
 
+    // Mesh info
     private Mesh mesh;
-    private Vector3[] vertices, startVertices;
-    private Vector3[] normals, startNormals;
+    VertexData[] vData;
 
     void RunComputeShader()
     {
-        int nVertices = vertices.Length;
+        /*int nVertices = vertices.Length;
 
         ComputeBuffer vBuffer = new ComputeBuffer(nVertices, sizeof(float) * 3);
         vBuffer.SetData(vertices);
@@ -34,7 +41,7 @@ public class TwistScript : MonoBehaviour {
         nBuffer.Dispose();
 
         mesh.vertices = vertices;
-        mesh.normals = normals;
+        mesh.normals = normals;*/
     }
 
 	// Use this for initialization
@@ -46,13 +53,26 @@ public class TwistScript : MonoBehaviour {
             Application.Quit();
         }
 
-        // get mesh data
+        // Get mesh reference
         mesh = GetComponent<MeshFilter>().mesh;
-        startVertices = mesh.vertices;
-        vertices = mesh.vertices;
 
-        startNormals = mesh.normals;
-        normals = mesh.normals;
+        // The only dependence we need to consider is the one between pos_i and n_i for a given vertex i.
+        // The vertices are independent among themselves (embarassingly parallel)
+
+        // Thus we restructure data in order to work on (pos_i, n_i) data.
+        RestructureMeshData(mesh.vertices, mesh.normals);
+    }
+
+    // Save all data as an array of (pos_i, n_i)
+    private void RestructureMeshData(Vector3[] v, Vector3[] n)
+    {
+        int vCount = mesh.vertexCount;
+        vData = new VertexData[vCount];
+
+        for (int i = 0; i < vCount; ++i)
+        {
+            vData[i] = new VertexData { pos = v[i], normal = n[i] };
+        }
     }
 
     private void Update()
