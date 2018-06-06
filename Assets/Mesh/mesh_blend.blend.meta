@@ -1,0 +1,147 @@
+fileFormatVersion: 2
+guid: c4698bf6ac62676489cdb6449a51d95d
+timeCreated: 1528293010
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: eLESIONE_1
+    100002: FASCIA_1
+    100004: FASCIA_2
+    100006: iLESIONE_1
+    100008: iLESIONE_2
+    100010: Intersection_result-004
+    100012: //RootNode
+    100014: PORZIONE_1
+    100016: PORZIONE_2
+    100018: PROSTATA_MAPPATA_
+    100020: SFINTERE
+    100022: URETERE
+    400000: eLESIONE_1
+    400002: FASCIA_1
+    400004: FASCIA_2
+    400006: iLESIONE_1
+    400008: iLESIONE_2
+    400010: Intersection_result-004
+    400012: //RootNode
+    400014: PORZIONE_1
+    400016: PORZIONE_2
+    400018: PROSTATA_MAPPATA_
+    400020: SFINTERE
+    400022: URETERE
+    2100000: unnamed
+    2300000: eLESIONE_1
+    2300002: FASCIA_1
+    2300004: FASCIA_2
+    2300006: iLESIONE_1
+    2300008: iLESIONE_2
+    2300010: Intersection_result-004
+    2300012: PORZIONE_1
+    2300014: PORZIONE_2
+    2300016: PROSTATA_MAPPATA_
+    2300018: SFINTERE
+    2300020: URETERE
+    3300000: eLESIONE_1
+    3300002: FASCIA_1
+    3300004: FASCIA_2
+    3300006: iLESIONE_1
+    3300008: iLESIONE_2
+    3300010: Intersection_result-004
+    3300012: PORZIONE_1
+    3300014: PORZIONE_2
+    3300016: PROSTATA_MAPPATA_
+    3300018: SFINTERE
+    3300020: URETERE
+    4300000: URETERE
+    4300002: SFINTERE
+    4300004: PROSTATA_MAPPATA_
+    4300006: PORZIONE_2
+    4300008: PORZIONE_1
+    4300010: Intersection_result-004
+    4300012: iLESIONE_2
+    4300014: iLESIONE_1
+    4300016: FASCIA_2
+    4300018: FASCIA_1
+    4300020: eLESIONE_1
+    7400000: Default Take
+    9500000: //RootNode
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

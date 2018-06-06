@@ -5,6 +5,7 @@
 #define X_AXIS 0
 #define Y_AXIS 1
 #define Z_AXIS 2
+#define FLOAT_EPS 1e-8
 
 // =============== DATA STRUCTURES ====================
 struct v2f {
@@ -14,7 +15,7 @@ struct v2f {
 
 // ============== FUNCTIONS ==========================
 // Align x or y axis to z axis to enable transformation on all axes
-v2f DoZAxisRotation(v2f v, int toAxis, float4 maxExtents) {
+v2f DoZAxisRotation(v2f v, int toAxis, inout float4 maxExtents) {
     // Rotation matrix from Z to Y Axis
     float4x4 ZtoYAxis = {
        1,0,0,0,
@@ -45,7 +46,7 @@ v2f DoZAxisRotation(v2f v, int toAxis, float4 maxExtents) {
     return v;
 }
 
-v2f RestoreZAxis(v2f v, int fromAxis, float4 maxExtents) {
+v2f RestoreZAxis(v2f v, int fromAxis, inout float4 maxExtents) {
     // Rotation matrix from Z to Y Axis
     float4x4 YtoZAxis = {
       1,     0,     0,     0,
@@ -76,11 +77,11 @@ v2f RestoreZAxis(v2f v, int fromAxis, float4 maxExtents) {
 }
 
 // Align x or z axis to y axis to enable transformation on all axes (for bending!)
-v2f DoYAxisRotation(v2f v, int toAxis, float4 maxExtents) {
+v2f DoYAxisRotation(v2f v, int toAxis, inout float4 maxExtents) {
     // Rotation matrix from Y to X Axis
     float4x4 YtoXAxis = {
-       0, 1, 0, 0,
-      -1, 0, 0, 0,
+       0, -1, 0, 0,
+       1, 0, 0, 0,
        0, 0, 1, 0,
        0, 0, 0, 1
     };
@@ -88,8 +89,8 @@ v2f DoYAxisRotation(v2f v, int toAxis, float4 maxExtents) {
     // Rotation matrix from Y to Z Axis
     float4x4 YtoZAxis = {
         1, 0, 0, 0,
-        0, 0,-1, 0,
-        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, -1, 0, 0,
         0, 0, 0, 1
     };
 
@@ -107,11 +108,11 @@ v2f DoYAxisRotation(v2f v, int toAxis, float4 maxExtents) {
     return v;
 }
 
-v2f RestoreYAxis(v2f v, int fromAxis, float4 maxExtents) {
+v2f RestoreYAxis(v2f v, int fromAxis, inout float4 maxExtents) {
     // Rotation x axis back
     float4x4 XtoYAxis = {
-      0, -1, 0, 0,
-      1,  0, 0, 0,
+      0, 1, 0, 0,
+      -1,  0, 0, 0,
       0,  0, 1, 0,
       0,  0, 0, 1
     };
@@ -119,8 +120,8 @@ v2f RestoreYAxis(v2f v, int fromAxis, float4 maxExtents) {
     // Rotation z axis back
     float4x4 ZtoYAxis = {
         1, 0, 0, 0,
-        0, 0, 1, 0,
-        0, -1, 0, 0,
+        0, 0, -1, 0,
+        0, 1, 0, 0,
         0, 0, 0, 1
     };
 
@@ -261,7 +262,7 @@ inline v2f DoStretch( v2f v, int _StretchAxis, float _StretchAmount, float _Stre
 // Note that we are following Barr convention, thus this transformation is around y-axis and not z-axis by default!
 inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, float k, float4 _MaxExtents ) {
     // If no bending is required actually (k = 0), just return v
-    if( k < 1e-5 && k > -1e-5 )
+    if( k < FLOAT_EPS && k > -FLOAT_EPS )
         return v;
 
     v2f o;
@@ -274,47 +275,24 @@ inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, fl
     float z = v.vertex.z;    float nz = v.normal.z;
     float w = v.vertex.w;
 
-    // first of all, get angle theta
-    float yHat = clamp(y, _YMin, _YMax);
-    float theta = k * (yHat - _Y0);
+    float yhat = clamp(y, _YMin, _YMax);
+    float theta = k * (yhat - _Y0);
     float c = cos(theta), s = sin(theta);
+    float ik = 1.0/k;
 
-    // apply transformation
-    // let's start with the fixed components
     o.vertex.x = x;
+
+    o.vertex.y = -s * (z - ik) + _Y0;
+    if( y < _YMin ) o.vertex.y += c * (y-_YMin);
+    else if( y > _YMax ) o.vertex.y += c * (y-_YMax);
+
+    o.vertex.z = c * (z-ik) + ik;
+    if( y < _YMin ) o.vertex.z += s * (y-_YMin);
+    else if( y > _YMax ) o.vertex.z += s * (y-_YMax);
+
     o.vertex.w = w;
 
-    // y and z have formulae that change according to region considered
-    // Y
-    o.vertex.y = -s * (z-1.0f/k) + _Y0; // common part
-
-    if( y < _YMin ) {
-        o.vertex.y += c * (y - _YMin);
-    } else if( y > _YMax ) {
-        o.vertex.y += c * (y - _YMax);
-    }
-
-    // Z
-    o.vertex.z = c * (z-1.0f/k) + 1.0f / k;
-
-    if( y < _YMin ) {
-        o.vertex.z += s * (y - _YMin);
-    } else if( y > _YMax ) {
-        o.vertex.z += s * (y - _YMax);
-    }
-
-    // Normal transformation
-    // Note we use khat in J!
-    float k_hat = k;
-    if( y < _YMin || y > _YMax )
-        k_hat = 0;
-
-    float k_coeff = (1 - k_hat * z);
-    o.normal.x = k_coeff * nx;
-    o.normal.y = c * ny - s * k_coeff * nz;
-    o.normal.z = s * ny + c * k_coeff * nz;
-
-    o.normal = normalize(o.normal);
+    o.normal = v.normal;
 
     o = RestoreYAxis(o, _BendAxis, _MaxExtents);
     return o;
