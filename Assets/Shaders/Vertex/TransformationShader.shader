@@ -43,9 +43,9 @@ Shader "Custom/TransformationShader"
 		[Enum(X,0,Y,1,Z,2)]_BendAxis("Bend around", Int) = 2
 
 		// Params for bending region
-		_YMin("Min value", Float) = 0
-		_YMax("Max value", Float) = 0
-		_Y0("Starting value", Float) = 0
+		_YMin("Min value", Range(0,1)) = 0
+		_YMax("Max value", Range(0,1)) = 0
+		_Y0("Starting value", Range(0,1)) = 0
 
 		// ...
 		_BendRate("Bend Rate (k)", Float) = 0

@@ -257,9 +257,15 @@ inline v2f DoStretch( v2f v, int _StretchAxis, float _StretchAmount, float _Stre
     return o;
 }
 
+// Retrieve local coordinates from percentage of mesh measure along one axis
+inline float percentageYToLocalCoords( float p, float e ) {
+    return 2 * e * p - e;
+}
+
 // 3) (y-)BEND
 // Bend linearly at a rate k [rad/m] from point y0
 // Note that we are following Barr convention, thus this transformation is around y-axis and not z-axis by default!
+// All y passed as arguments are to be considered as percentages aka in [0,1] of the mesh measures
 inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, float k, float4 _MaxExtents ) {
     // If no bending is required actually (k = 0), just return v
     if( k < FLOAT_EPS && k > -FLOAT_EPS )
@@ -275,20 +281,25 @@ inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, fl
     float z = v.vertex.z;    float nz = v.normal.z;
     float w = v.vertex.w;
 
-    float yhat = clamp(y, _YMin, _YMax);
-    float theta = k * (yhat - _Y0);
+    // get y from percentages
+    float ymin = percentageYToLocalCoords(_YMin, _MaxExtents.y);
+    float ymax = percentageYToLocalCoords(_YMax, _MaxExtents.y);
+    float y0 = percentageYToLocalCoords(_Y0, _MaxExtents.y);
+
+    float yhat = clamp(y, ymin, ymax);
+    float theta = k * (yhat - y0);
     float c = cos(theta), s = sin(theta);
     float ik = 1.0/k;
 
     o.vertex.x = x;
 
-    o.vertex.y = -s * (z - ik) + _Y0;
-    if( y < _YMin ) o.vertex.y += c * (y-_YMin);
-    else if( y > _YMax ) o.vertex.y += c * (y-_YMax);
+    o.vertex.y = -s * (z - ik) + y0;
+    if( y < ymin ) o.vertex.y += c * (y-ymin);
+    else if( y > ymax ) o.vertex.y += c * (y-ymax);
 
     o.vertex.z = c * (z-ik) + ik;
-    if( y < _YMin ) o.vertex.z += s * (y-_YMin);
-    else if( y > _YMax ) o.vertex.z += s * (y-_YMax);
+    if( y < ymin ) o.vertex.z += s * (y-ymin);
+    else if( y > ymax ) o.vertex.z += s * (y-ymax);
 
     o.vertex.w = w;
 
