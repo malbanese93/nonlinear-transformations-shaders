@@ -291,6 +291,7 @@ inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, fl
     float c = cos(theta), s = sin(theta);
     float ik = 1.0/k;
 
+    // Apply transformations as described by Barr
     o.vertex.x = x;
 
     o.vertex.y = -s * (z - ik) + y0;
@@ -303,7 +304,18 @@ inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, fl
 
     o.vertex.w = w;
 
-    o.normal = v.normal;
+    // transform normals
+    // first of all we need to get khat
+    float khat = 0.0;
+    if( ymin <= y && y <= ymax ) khat = k;
+
+    // apply jacobian matrix
+    float khat_coeff = 1 - khat * z;
+    o.normal.x = khat_coeff * nx;
+    o.normal.y = c * ny - s * khat_coeff * nz;
+    o.normal.z = s * ny + c * khat_coeff * nz;
+
+    o.normal = normalize(o.normal); // NB: don't forget to normalize in the end!
 
     o = RestoreYAxis(o, _BendAxis, _MaxExtents);
     return o;

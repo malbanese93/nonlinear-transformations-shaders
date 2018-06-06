@@ -44,7 +44,7 @@ Shader "Custom/TransformationShader"
 
 		// Params for bending region
 		_YMin("Min value", Range(0,1)) = 0
-		_YMax("Max value", Range(0,1)) = 0
+		_YMax("Max value", Range(0,1)) = 1
 		_Y0("Starting value", Range(0,1)) = 0
 
 		// ...
