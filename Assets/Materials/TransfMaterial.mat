@@ -56,7 +56,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BendAxis: 0
-    - _BendRate: 0
+    - _BendRate: 3.64
+    - _BendRateX: 0
+    - _BendRateY: 0
+    - _BendRateZ: 0
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -86,9 +89,15 @@ Material:
     - _TwistAngleZ: 0
     - _TwistAxis: 2
     - _UVSec: 0
+    - _X0: 0
+    - _XMax: 1
+    - _XMin: 0
     - _Y0: 0
-    - _YMax: 0
+    - _YMax: 1
     - _YMin: 0
+    - _Z0: 0
+    - _ZMax: 1
+    - _ZMin: 0
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

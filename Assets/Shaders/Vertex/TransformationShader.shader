@@ -23,7 +23,6 @@ Shader "Custom/TransformationShader"
 		[Space(10)]
 
 		// === STRETCH ===
-		// Axis for stretching
 		[Header(Stretch)]
 		// _StretchAmount: How much to stretch along main axis
 		// _StretchStrength: How much to exagerate stretch
@@ -36,19 +35,26 @@ Shader "Custom/TransformationShader"
 		_StretchAmountZ("Stretch Amount Z", Range(-2,2)) = 0
 		_StretchStrengthZ("Stretch Strength Z", Range(0,3)) = 1
 
-		// TODO: anche gli altri assi!!
 		[Space(10)]
 		// === BEND ===
-		// Axis for bending
-		[Enum(X,0,Y,1,Z,2)]_BendAxis("Bend around", Int) = 2
-
-		// Params for bending region
-		_YMin("Min value", Range(0,1)) = 0
-		_YMax("Max value", Range(0,1)) = 1
-		_Y0("Starting value", Range(0,1)) = 0
-
-		// ...
-		_BendRate("Bend Rate (k)", Float) = 0
+		[Header(Bend X)]
+		// Params for bending region, expressed in percentage
+		_XMin("Min value X", Range(0,1)) = 0
+		_XMax("Max value X", Range(0,1)) = 1
+		_X0("Starting value X", Range(0,1)) = 0
+		_BendRateX("Bend Rate X", Float) = 0
+		[Space(5)]
+		[Header(Bend Y)]
+		_YMin("Min value Y", Range(0,1)) = 0
+		_YMax("Max value Y", Range(0,1)) = 1
+		_Y0("Starting value Y", Range(0,1)) = 0
+		_BendRateY("Bend Rate Y", Float) = 0
+		[Space(5)]
+		[Header(Bend Z)]
+		_ZMin("Min value Z", Range(0,1)) = 0
+		_ZMax("Max value Z", Range(0,1)) = 1
+		_Z0("Starting value Z", Range(0,1)) = 0
+		_BendRateZ("Bend Rate Z", Float) = 0
     }
 
     SubShader
@@ -84,11 +90,20 @@ Shader "Custom/TransformationShader"
 			float _StretchAmountZ;
 
 			// BEND
-			int _BendAxis;
+			float _XMin;
+			float _XMax;
+			float _X0;
+			float _BendRateX;
+
 			float _YMin;
 			float _YMax;
 			float _Y0;
-			float _BendRate;
+			float _BendRateY;
+
+			float _ZMin;
+			float _ZMax;
+			float _Z0;
+			float _BendRateZ;
 
             // Vertex Shader
             v2f vert (appdata_base v)
@@ -109,7 +124,9 @@ Shader "Custom/TransformationShader"
 				o = DoStretch(o, Y_AXIS, _StretchAmountY, _StretchStrengthY, _MaxExtents );
 				o = DoStretch(o, Z_AXIS, _StretchAmountZ, _StretchStrengthZ, _MaxExtents );
 
-				o = DoBend(o, _BendAxis, _YMin, _YMax, _Y0, _BendRate, _MaxExtents );
+				o = DoBend(o, X_AXIS, _XMin, _XMax, _X0, _BendRateX, _MaxExtents );
+				o = DoBend(o, Y_AXIS, _YMin, _YMax, _Y0, _BendRateY, _MaxExtents );
+				o = DoBend(o, Z_AXIS, _ZMin, _ZMax, _Z0, _BendRateZ, _MaxExtents );
 
 				// Finally, do MVP transformation as usual and return
 				o.vertex = UnityObjectToClipPos(o.vertex);
