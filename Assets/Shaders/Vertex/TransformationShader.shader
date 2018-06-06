@@ -10,7 +10,7 @@ Shader "Custom/TransformationShader"
 {
 	Properties
     {
-		// Mesh max values for bounding box. Equal to two times max extents.
+		// Mesh max values for bounding box. Equal to half size.
 		[HideInInspector]_MaxExtents("Max extents", Vector) = (0,0,0,0)
 
 		// === TWIST ===
