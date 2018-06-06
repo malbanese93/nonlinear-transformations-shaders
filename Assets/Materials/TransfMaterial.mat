@@ -72,9 +72,18 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _StretchAmount: 0
+    - _StretchAmountX: 0
+    - _StretchAmountY: 0
+    - _StretchAmountZ: 0
     - _StretchAxis: 2
     - _StretchStrength: 1
+    - _StretchStrengthX: 1
+    - _StretchStrengthY: 1
+    - _StretchStrengthZ: 1
     - _TwistAngle: -146
+    - _TwistAngleX: 0
+    - _TwistAngleY: 0
+    - _TwistAngleZ: 0
     - _TwistAxis: 2
     - _UVSec: 0
     - _Y0: 0

@@ -14,22 +14,29 @@ Shader "Custom/TransformationShader"
 		[HideInInspector]_MaxExtents("Max extents", Vector) = (0,0,0,0)
 
 		// === TWIST ===
-		// Axis for twisting
-		[Enum(X,0,Y,1,Z,2)]_TwistAxis("Twist around", Int) = 2
-		// Angle of rotation at the extremes (in degrees)
-		_TwistAngle("Twist Angle", Range(-360,360)) = 0
+		[Header(Twist)]
+		// _TwistAngle: Angle of rotation at the extremes (in degrees)
+		_TwistAngleX("Twist Angle X", Range(-360,360)) = 0
+		_TwistAngleY("Twist Angle Y", Range(-360,360)) = 0
+		_TwistAngleZ("Twist Angle Z", Range(-360,360)) = 0
 
 		[Space(10)]
-		[Header(A group of things)]
+
 		// === STRETCH ===
 		// Axis for stretching
-		[Enum(X,0,Y,1,Z,2)]_StretchAxis("Stretch around", Int) = 2
-		// How much to stretch along main axis
-		_StretchAmount("Stretch Amount", Range(-2,2)) = 0
-		// How much to exagerate stretch
-		_StretchStrength("Stretch Strength", Range(0,3)) = 1
+		[Header(Stretch)]
+		// _StretchAmount: How much to stretch along main axis
+		// _StretchStrength: How much to exagerate stretch
+		_StretchAmountX("Stretch Amount X", Range(-2,2)) = 0
+		_StretchStrengthX("Stretch Strength X", Range(0,3)) = 1
+		[Space(5)]
+		_StretchAmountY("Stretch Amount Y", Range(-2,2)) = 0
+		_StretchStrengthY("Stretch Strength Y", Range(0,3)) = 1
+		[Space(5)]
+		_StretchAmountZ("Stretch Amount Z", Range(-2,2)) = 0
+		_StretchStrengthZ("Stretch Strength Z", Range(0,3)) = 1
 
-		[Space(10)]
+		/*[Space(10)]
 		// === BEND ===
 		// Axis for bending
 		[Enum(X,0,Y,1,Z,2)]_BendAxis("Bend around", Int) = 2
@@ -39,7 +46,7 @@ Shader "Custom/TransformationShader"
 
 		// Starting y0
 		_Y0("Starting value", Float) = 0
-		_BendRate("Bend Rate (k)", Float) = 0
+		_BendRate("Bend Rate (k)", Float) = 0*/
     }
 
     SubShader
@@ -62,20 +69,24 @@ Shader "Custom/TransformationShader"
 			float4 _MaxExtents;
 
 			// TWIST
-			int _TwistAxis;
-			float _TwistAngle;
+			float _TwistAngleX;
+			float _TwistAngleY;
+			float _TwistAngleZ;
 
 			// STRETCH
-			int _StretchAxis;
-			float _StretchStrength;
-			float _StretchAmount;
+			float _StretchStrengthX;
+			float _StretchStrengthY;
+			float _StretchStrengthZ;
+			float _StretchAmountX;
+			float _StretchAmountY;
+			float _StretchAmountZ;
 
 			// BEND
-			int _BendAxis;
+			/*int _BendAxis;
 			float _YMin;
 			float _YMax;
 			float _Y0;
-			float _BendRate;
+			float _BendRate;*/
 
             // Vertex Shader
             v2f vert (appdata_base v)
@@ -86,14 +97,21 @@ Shader "Custom/TransformationShader"
 				o.vertex = v.vertex;
 				o.normal = v.normal;
 
-				// Apply all transformations in sequence
-				o = DoTwist(o, _TwistAxis, _TwistAngle, _MaxExtents);
-				o = DoStretch(o, _StretchAxis, _StretchAmount, _StretchStrength, _MaxExtents );
-				o = DoBend(o, _BendAxis, _YMin, _YMax, _Y0, _BendRate, _MaxExtents );
-				// TODO: lattice transformation
+				// The order is as follows
+				// TWIST - STRETCH - BEND, for each along X,Y,Z respectively
+				o = DoTwist(o, X_AXIS, _TwistAngleX, _MaxExtents);
+				o = DoTwist(o, Y_AXIS, _TwistAngleY, _MaxExtents);
+				o = DoTwist(o, Z_AXIS, _TwistAngleZ, _MaxExtents);
+
+				o = DoStretch(o, X_AXIS, _StretchAmountX, _StretchStrengthX, _MaxExtents );
+				o = DoStretch(o, Y_AXIS, _StretchAmountY, _StretchStrengthY, _MaxExtents );
+				o = DoStretch(o, Z_AXIS, _StretchAmountZ, _StretchStrengthZ, _MaxExtents );
+
+				//o = DoBend(o, _BendAxis, _YMin, _YMax, _Y0, _BendRate, _MaxExtents );
 
 				// Finally, do MVP transformation as usual and return
 				o.vertex = UnityObjectToClipPos(o.vertex);
+				o.normal = UnityObjectToWorldNormal(o.normal);
                 return o;
             }
 
