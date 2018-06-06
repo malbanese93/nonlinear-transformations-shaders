@@ -8,8 +8,6 @@
 // By applying all transformations in a single shader file we can check all vertices once per pass
 Shader "Custom/TransformationShader"
 {
-	// Here all properties are set from scripts outside
-	// Inspector values are used for debugging purposes
 	Properties
     {
 		// Mesh max values for bounding box. Equal to two times max extents.
@@ -22,6 +20,7 @@ Shader "Custom/TransformationShader"
 		_TwistAngle("Twist Angle", Range(-360,360)) = 0
 
 		[Space(10)]
+		[Header(A group of things)]
 		// === STRETCH ===
 		// Axis for stretching
 		[Enum(X,0,Y,1,Z,2)]_StretchAxis("Stretch around", Int) = 2

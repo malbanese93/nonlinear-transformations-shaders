@@ -61,8 +61,8 @@ public class TwistScript : MonoBehaviour {
 
         // Set kernel info
         int kernel = computeShader.FindKernel("Twist");
-        computeShader.SetBuffer(kernel, "g_buffer", buffer);
         computeShader.SetFloat("alpha", alpha);
+        computeShader.SetBuffer(kernel, "g_buffer", buffer);
         computeShader.SetInt("vertexCount", vCount);
 
         // Set buffer and vertex count in vertex shader
@@ -86,16 +86,20 @@ public class TwistScript : MonoBehaviour {
 
     void RunComputeShader()
     {
+        // Update alpha value
+        computeShader.SetFloat("alpha", alpha);
+
         // Dispatch all threads in a 1D fashion
         computeShader.Dispatch(kernelID, numberOfThreadGroups, 1, 1);
-
-        print("DISPATCH");
     }
 
     private void Update()
     {
-        if(Input.GetKey(KeyCode.Mouse1))
+        if (Input.GetKey(KeyCode.Mouse1))
+        {
+            
             RunComputeShader();
+        }
     }
 
     private void OnDestroy()

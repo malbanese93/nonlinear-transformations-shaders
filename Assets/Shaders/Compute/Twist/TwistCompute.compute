@@ -49,15 +49,8 @@ void Twist (uint3 threadInGroupIndex : SV_GROUPTHREADID,
 		float dtheta = alpha; // d(theta) / dz
 		float c = cos(theta), s = sin(theta);
 
-		/*float x = v.x;
-		float y = v.y;
-		float z = v.z;
-		float nx = n.x;
-		float ny = n.y;
-		float nz = n.z;*/
-
 		// transform normals
-		shared_buffer[l_tid].normal = n;//float3(c*nx - s*ny, s*nx + c*ny, y*dtheta*nx - x*dtheta*ny + nz);
+		shared_buffer[l_tid].normal = float3(c*n.x - s*n.y, s*n.x + c*n.y, v.y*dtheta*n.x - v.x*dtheta*n.y + n.z);
 
 		// transform positions
 		shared_buffer[l_tid].pos = float3(v.x*c - v.y*s, v.x*s + v.y*c, v.z);
