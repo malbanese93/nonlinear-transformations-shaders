@@ -14,16 +14,15 @@ public class LatticeScript : MonoBehaviour {
     Vector3[] startVertices;
 
     // L,M,N parameters for lattice
-    // NB: the number of vertices along each axis is 1 + param!
+    // This specifies the degree of the Bezier curve along that axis
+    // Remember that for degree k you have k+1 points!
     public IntVector3 gridParams;
-    Vector3[,,] gridpoints;
-
-    // Check if mesh origin is not on center but below
-    public bool isOriginDown = true;
+    Vector3[,,] gridpointsPos;
 
 	// Use this for initialization
 	void Start () {
         // First of all, retrieve bounds for mesh
+        print(BinomialCoefficient(5, 2));
         mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
         extents = bounds.extents;
@@ -38,11 +37,11 @@ public class LatticeScript : MonoBehaviour {
         Debug.Assert(L > 0 && M > 0 && N > 0);
 
         // Create lattice points
-        gridpoints = new Vector3[L+1, M+1, N+1];
+        gridpointsPos = new Vector3[L+1, M+1, N+1];
         for( int i = 0; i <= L; ++i )
             for( int j = 0; j <= M; ++j )
                 for( int k = 0; k <= N; ++k )
-                    gridpoints[i, j, k] = new Vector3 { x = (float)i / L, y = (float)j / M, z = (float)k / N };
+                    gridpointsPos[i, j, k] = new Vector3 { x = (float)i / L, y = (float)j / M, z = (float)k / N };
 
         // Generate lattice vertices
         GenerateVertices();
@@ -77,7 +76,7 @@ public class LatticeScript : MonoBehaviour {
         var z = idx.N;
 
         // and update grid point
-        gridpoints[x, y, z] = GetSTUCoords(vertexObject.transform.position);
+        gridpointsPos[x, y, z] = GetSTUCoords(vertexObject.transform.position);
 
         // Get all mesh vertices and apply transformation
         var vertices = mesh.vertices;
@@ -97,11 +96,11 @@ public class LatticeScript : MonoBehaviour {
                 for( int j = 0; j <= gridParams.M; ++j)
                     for( int k = 0; k <= gridParams.N; ++k)
                     {
-                        float sBernstein = BinomialCoefficient(i, gridParams.L) * Mathf.Pow(1 - s, gridParams.L - i) * Mathf.Pow(s, i);
-                        float tBernstein = BinomialCoefficient(j, gridParams.M) * Mathf.Pow(1 - t, gridParams.M - j) * Mathf.Pow(t, j);
-                        float uBernstein = BinomialCoefficient(k, gridParams.N) * Mathf.Pow(1 - u, gridParams.N - k) * Mathf.Pow(u, k);
+                        float sBernstein = BinomialCoefficient(gridParams.L, i) * Mathf.Pow(1 - s, gridParams.L - i) * Mathf.Pow(s, i);
+                        float tBernstein = BinomialCoefficient(gridParams.M, j) * Mathf.Pow(1 - t, gridParams.M - j) * Mathf.Pow(t, j);
+                        float uBernstein = BinomialCoefficient(gridParams.N, k) * Mathf.Pow(1 - u, gridParams.N - k) * Mathf.Pow(u, k);
 
-                        newPosition += GetLocalCoords(gridpoints[i, j, k]) * sBernstein * tBernstein * uBernstein;
+                        newPosition += GetLocalCoords(gridpointsPos[i, j, k]) * sBernstein * tBernstein * uBernstein;
                     }
 
             vertices[v] = newPosition;
@@ -116,10 +115,6 @@ public class LatticeScript : MonoBehaviour {
     {
         Vector3 res = 2 * Vector3.Scale(extents, stuCoord) - extents;
 
-        // Add offset if center is on the bottom of the mesh 
-        if(isOriginDown)
-            res.y += extents.y;
-
         return res;
     }
 
@@ -128,7 +123,7 @@ public class LatticeScript : MonoBehaviour {
     {
         Vector3 res;
         res.x = (localCoords.x + extents.x) / (2.0f * extents.x);
-        res.y = (isOriginDown) ? (localCoords.y / (2.0f * extents.y)) : (localCoords.y + extents.y) / (2.0f * extents.y);
+        res.y = (localCoords.y + extents.y) / (2.0f * extents.y);
         res.z = (localCoords.z + extents.z) / (2.0f * extents.z);
 
         return res;
@@ -137,15 +132,14 @@ public class LatticeScript : MonoBehaviour {
     // Display a little cube for each vertex
     void GenerateVertices()
     {
-        // Show coordinates in STU and local systems
         for (int i = 0; i <= gridParams.L; ++i)
             for (int j = 0; j <= gridParams.M; ++j)
                 for (int k = 0; k <= gridParams.N; ++k)
                 {
                     // Show coordinates in STU and local systems
-                    Vector3 localCoords = GetLocalCoords(gridpoints[i, j, k]);
-                    Vector3 stuCoords = gridpoints[i, j, k];
-
+                    Vector3 stuCoords = gridpointsPos[i, j, k];
+                    Vector3 localCoords = GetLocalCoords(stuCoords);
+                    
                     //print("POINT (" + i + "," + j + "," + k + ") -- STU: " + stuCoords + " -- LC: " + localCoords);
 
                     // Generate debug cube
@@ -158,10 +152,10 @@ public class LatticeScript : MonoBehaviour {
 
                     // Change position and scaling
                     cube.transform.parent = transform;
-                    cube.transform.localScale *= 0.2f;
+                    cube.transform.localScale *= 0.1f;
 
                     // Set it as a child of the mesh
-                    cube.transform.position = localCoords;
+                    cube.transform.localPosition = localCoords;
                 }
     }
 
@@ -172,12 +166,20 @@ public class LatticeScript : MonoBehaviour {
         float res = 1.0f;
 
         // based on the equivalence n choose k = (n/k) (n-1 choose k-1)
-        for( int i = 1; i <= kmin; ++i )
+        for( int i = 0; i < kmin; ++i )
         {
-            print((n - i + 1) + " " + (n - k - i + 1));
-            res *= (float)(n - i + 1) / (n - k - i + 1);
+            //print((n - i + 1) + " " + (n - k - i + 1));
+            res *= (float)(n - i) / (k - i);
         }
 
         return res;
+    }
+
+    // Keep L,M,N >= 1 in editor!
+    void OnValidate()
+    {
+        gridParams.L = Math.Max(1, gridParams.L);
+        gridParams.M = Math.Max(1, gridParams.M);
+        gridParams.N = Math.Max(1, gridParams.N);
     }
 }
