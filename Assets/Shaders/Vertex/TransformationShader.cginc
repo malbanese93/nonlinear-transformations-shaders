@@ -321,4 +321,18 @@ inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, fl
     return o;
 }
 
+// 4) FREE FORM DEFORMATION (FFD or LATTICE)
+// Alter all vertices by altering a cubic grid around the mesh.
+// The mesh is then reconstructed via a trivariate version of the bezier polynomials.
+inline v2f DoFFD(v2f v, float3 _STUCoords, int _L, int _M, int _N) {
+    v2f o;
+
+    
+
+    o.vertex = v.vertex;
+    o.normal = v.normal;
+
+    return o;
+}
+
 #endif

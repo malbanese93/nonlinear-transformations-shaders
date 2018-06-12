@@ -24,6 +24,9 @@ public class LatticeScript : MonoBehaviour {
     // Save gridpoints in local coords
     Vector3[,,] gridpointsPos;
 
+    // s,t,u for each vertex of the mesh
+    Vector3[] stuVertices;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -44,6 +47,11 @@ public class LatticeScript : MonoBehaviour {
         // Create lattice points
         gridpointsPos = new Vector3[L + 1, M + 1, N + 1];
 
+        // Get all stu coords
+        stuVertices = new Vector3[mesh.vertexCount];
+        for (var i = 0; i < mesh.vertexCount; ++i)
+            stuVertices[i] = GetSTUCoords(startVertices[i]);
+
         // Set lattice points
         ResetLattice();
     }
@@ -57,11 +65,9 @@ public class LatticeScript : MonoBehaviour {
                     // We need to express grid points in world space
                     // In order to do so, we first set them as stu (aka in percentage)...
                     Vector3 stuCoords = new Vector3 { x = (float)i / gridParams.L, y = (float)j / gridParams.M, z = (float)k / gridParams.N };
-                    //print(stuCoords);
 
                     //... then in local space
                     gridpointsPos[i, j, k] = GetLocalCoords(stuCoords);
-                    //print(gridpointsPos[i, j, k]);
                 }
     }
 
@@ -86,10 +92,9 @@ public class LatticeScript : MonoBehaviour {
         for( int v = 0; v < vertices.Length; ++v )
         {
             // 1) get STU coords
-            var stuVertex = GetSTUCoords(startVertices[v]); // NB: use (s,t,u) coords of original vertices of the mesh!
-            float s = stuVertex.x;
-            float t = stuVertex.y;
-            float u = stuVertex.z;
+            float s = stuVertices[v].x;
+            float t = stuVertices[v].y;
+            float u = stuVertices[v].z;
 
             // 2) apply transformation to each vertex
             Vector3 newPosition = Vector3.zero;

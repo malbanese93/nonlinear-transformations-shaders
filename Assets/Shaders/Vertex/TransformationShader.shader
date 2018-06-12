@@ -55,6 +55,15 @@ Shader "Custom/TransformationShader"
 		_ZMax("Max value Z", Range(0,1)) = 1
 		_Z0("Starting value Z", Range(0,1)) = 0
 		_BendRateZ("Bend Rate Z", Float) = 0
+
+		[Space(10)]
+		// ==== FFD ===
+		// Note that all these values are set via Lattice script!
+		//[Header(Free-Form Deformation (FFD))]
+		[HideInInspector]_STUCoords("stu Coordinates", Vector) = (0,0,0,1) // 4th component ignored
+		[HideInInspector]_L("L", Int) = 1
+		[HideInInspector]_M("M", Int) = 1
+		[HideInInspector]_N("N", Int) = 1
     }
 
     SubShader
@@ -105,6 +114,11 @@ Shader "Custom/TransformationShader"
 			float _Z0;
 			float _BendRateZ;
 
+			float3 _STUCoords;
+			int _L;
+			int _M;
+			int _N;
+
             // Vertex Shader
             v2f vert (appdata_base v)
             {
@@ -127,6 +141,9 @@ Shader "Custom/TransformationShader"
 				o = DoBend(o, X_AXIS, _XMin, _XMax, _X0, _BendRateX, _MaxExtents );
 				o = DoBend(o, Y_AXIS, _YMin, _YMax, _Y0, _BendRateY, _MaxExtents );
 				o = DoBend(o, Z_AXIS, _ZMin, _ZMax, _Z0, _BendRateZ, _MaxExtents );
+
+				// Apply FREE-FORM DEFORMATION (lattice)
+				o = DoFFD(o, _STUCoords, _L, _M, _N);
 
 				// Finally, do MVP transformation as usual and return
 				o.vertex = UnityObjectToClipPos(o.vertex);
