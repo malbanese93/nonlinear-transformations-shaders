@@ -63,10 +63,10 @@ public class LatticeScript : MonoBehaviour {
         //print(gridpointsPos[i, j, k]);
     }
 
-    void ModifyLattice(GameObject controlPoint)
+    public void ModifyLattice(GameObject controlPoint)
     {
         // Change position of vertex...
-        controlPoint.transform.localPosition += new Vector3(0.0f, 10f, 0.0f);
+        //controlPoint.transform.localPosition += new Vector3(0.0f, 10f, 0.0f);
         var idx = controlPoint.GetComponent<LatticeVertexScript>().index;
 
         // This is the index i,j,k for point P_ijk
@@ -185,7 +185,7 @@ public class LatticeScript : MonoBehaviour {
                 if (latticeVertex != null)
                 {
                     // Change lattice control point and then all mesh vertices
-                    ModifyLattice(hit.transform.gameObject);
+                    //ModifyLattice(hit.transform.gameObject);
                 }
             }
         }
