@@ -110,6 +110,11 @@ Shader "Custom/TransformationShader"
 			int _M;
 			int _N;
 
+			// Control points in FFD grid
+			// NB: At most FFD_MAX_PTS points can be used!
+			// This is done since dynamically sized arrays are not supported in hlsl
+			float4 _ControlPoints[FFD_MAX_PTS];
+
             // Vertex Shader
             v2f vert (appdata_base v)
             {
@@ -134,7 +139,7 @@ Shader "Custom/TransformationShader"
 				o = DoBend(o, Z_AXIS, _ZMin, _ZMax, _Z0, _BendRateZ, _MaxExtents );
 
 				// Apply FREE-FORM DEFORMATION (lattice)
-				o = DoFFD(o, _IsOriginDown, _L, _M, _N);
+				o = DoFFD(o, _IsOriginDown, _L, _M, _N, _ControlPoints, _MaxExtents);
 
 				// Finally, do MVP transformation as usual and return
 				o.vertex = UnityObjectToClipPos(o.vertex);

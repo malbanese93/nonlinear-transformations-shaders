@@ -168,9 +168,9 @@ namespace RuntimeGizmos
 						target.Translate(axis * moveAmount, Space.World);
 
                         // DO ACTION ONLY WHEN MOVEAMOUNT IS NOT ZERO
-                        //if (!Mathf.Approximately(moveAmount, 0.0f))
-                        //    print("MOVING");
-					}
+                        if (!Mathf.Approximately(moveAmount, 0.0f))
+                            target.parent.GetComponent<LatticeScript>().ModifyLattice(target.gameObject);
+                    }
 
 					if(type == TransformType.Scale)
 					{
@@ -206,11 +206,6 @@ namespace RuntimeGizmos
 
 				yield return null;
 			}
-
-            // Apply lattice transformation
-            print("TODO: transformation only at the end since it's CPU side for now!");
-            target.parent.GetComponent<LatticeScript>().ModifyLattice(target.gameObject);
-
 			totalRotationAmount = Quaternion.identity;
 			totalScaleAmount = 0;
 			isTransforming = false;

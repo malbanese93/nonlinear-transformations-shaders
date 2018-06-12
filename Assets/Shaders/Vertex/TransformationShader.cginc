@@ -6,6 +6,7 @@
 #define Y_AXIS 1
 #define Z_AXIS 2
 #define FLOAT_EPS 1e-8
+#define FFD_MAX_PTS 256
 
 // =============== DATA STRUCTURES ====================
 struct v2f {
@@ -335,7 +336,7 @@ inline float BinomialCoefficient(int n, int k) {
 }
 
 // Transform from local coords to STU coords
-inline float3 GetSTUCoords(float3 localCoords, bool _IsOriginDown, float4 _MaxExtents)
+inline float3 GetSTUCoords(float4 localCoords, bool _IsOriginDown, float4 _MaxExtents)
 {
    //adjust by half y size if origin is down
    if (_IsOriginDown) localCoords.y -= _MaxExtents.y;
@@ -345,25 +346,53 @@ inline float3 GetSTUCoords(float3 localCoords, bool _IsOriginDown, float4 _MaxEx
 }
 
 // Transform from STU coords to local coords
-inline float3 GetLocalCoords(int3 stuCoord, bool _IsOriginDown, float4 _MaxExtents)
+/*inline float4 GetLocalCoords(float3 stuCoord, bool _IsOriginDown, float4 _MaxExtents)
 {
-    float3 res = 2 * _MaxExtents * stuCoord - _MaxExtents;
+    float4 res = 2 * _MaxExtents * stuCoord - _MaxExtents;
+    res.w = 1;
 
     //adjust if origin is down
     if (_IsOriginDown) res.y += _MaxExtents.y;
 
     return res;
+}*/
+
+inline int To1DArrayCoords(int x, int y, int z, int L, int M)
+{
+    // WIDTH * HEIGHT * z (the plane we start with) + WIDTH * y (the row we start with) + x (offset)
+    // in this case WIDTH = L+1, HEIGHT = M+1
+    return x + (L+1) * (y + (M+1) * z);
 }
 
 // 4) FREE FORM DEFORMATION (FFD or LATTICE)
 // Alter all vertices by altering a cubic grid around the mesh.
 // The mesh is then reconstructed via a trivariate version of the bezier polynomials.
-inline v2f DoFFD(v2f v, bool _IsOriginDown, int _L, int _M, int _N) {
+inline v2f DoFFD(v2f v, bool _IsOriginDown, int _L, int _M, int _N, float4 _ControlPoints[FFD_MAX_PTS], float4 _MaxExtents) {
     v2f o;
 
-    
+    // 1) get STU coords of undistorted mesh vertex
+    float3 stu = GetSTUCoords(v.vertex, _IsOriginDown, _MaxExtents);
+    float s = stu.x;
+    float t = stu.y;
+    float u = stu.z;
 
-    o.vertex = v.vertex;
+    // 2) apply transformation to each vertex
+    float4 newPosition = float4(0,0,0,1);
+
+    for (int pi = 0; pi <= _L; ++pi)
+        for( int pj = 0; pj <= _M; ++pj)
+            for( int pk = 0; pk <= _N; ++pk)
+            {
+                float sBernstein = BinomialCoefficient(_L, pi) * pow(1 - s, _L - pi) * pow(s, pi);
+                float tBernstein = BinomialCoefficient(_M, pj) * pow(1 - t, _M - pj) * pow(t, pj);
+                float uBernstein = BinomialCoefficient(_N, pk) * pow(1 - u, _N - pk) * pow(u, pk);
+
+                newPosition += _ControlPoints[To1DArrayCoords(pi, pj, pk, _L, _M)] * sBernstein * tBernstein * uBernstein;
+            }
+
+    o.vertex = newPosition;
+
+    // TODO: what about normals?
     o.normal = v.normal;
 
     return o;

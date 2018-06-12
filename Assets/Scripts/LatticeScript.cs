@@ -39,14 +39,13 @@ public class LatticeScript : MonoBehaviour {
         int M = gridParams.M;
         int N = gridParams.N;
 
-        // Assert all values are positive
-        Debug.Assert(L > 0 && M > 0 && N > 0);
-
         // Create lattice points
         // Notice that we must use 1D arrays instead of 3D arrays
-        // since there's no way to pass it to the shader otherwise
-
-        gridpointsPos = new Vector4[(L + 1) * (M + 1) * (N + 1)];
+        // since there's no way to pass it to the shader otherwise!
+        // NB: HLSL does not support dynamically sized arrays.
+        // Everything is clamped to max values set.
+        // IF you change this value, remember to change the equivalent value in the vertex shader!
+        gridpointsPos = new Vector4[256];
 
         // Set lattice points
         StartLattice();
@@ -125,12 +124,14 @@ public class LatticeScript : MonoBehaviour {
                     //... then in local space
                     gridpointsPos[To1DArrayCoords(i,j,k)] = GetLocalCoords(stuCoords);
                 }
+
+        // Set the rest of the values to zero, since they will be unused
+
     }
 
     public void ModifyLattice(GameObject controlPoint)
     {
         // Change position of vertex...
-        //controlPoint.transform.localPosition += new Vector3(0.0f, 10f, 0.0f);
         var idx = controlPoint.GetComponent<LatticeVertexScript>().index;
 
         // This is the index i,j,k for point P_ijk
@@ -140,6 +141,9 @@ public class LatticeScript : MonoBehaviour {
 
         // and update grid point
         gridpointsPos[To1DArrayCoords(i, j, k)] = controlPoint.transform.localPosition;
+
+        // Do not forget to update data on GPU!
+        material.SetVectorArray("_ControlPoints", gridpointsPos);
 
         // Get all mesh vertices and apply transformation
         var vertices = mesh.vertices;
