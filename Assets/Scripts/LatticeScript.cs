@@ -17,12 +17,13 @@ public class LatticeScript : MonoBehaviour {
     // This specifies the degree of the Bezier curve along that axis
     // Remember that for degree k you have k+1 points!
     public IntVector3 gridParams;
+
+    // Save gridpoints in local coords
     Vector3[,,] gridpointsPos;
 
 	// Use this for initialization
 	void Start () {
         // First of all, retrieve bounds for mesh
-        print(BinomialCoefficient(5, 2));
         mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
         extents = bounds.extents;
@@ -38,45 +39,40 @@ public class LatticeScript : MonoBehaviour {
 
         // Create lattice points
         gridpointsPos = new Vector3[L+1, M+1, N+1];
-        for( int i = 0; i <= L; ++i )
-            for( int j = 0; j <= M; ++j )
-                for( int k = 0; k <= N; ++k )
-                    gridpointsPos[i, j, k] = new Vector3 { x = (float)i / L, y = (float)j / M, z = (float)k / N };
+        for (int i = 0; i <= L; ++i)
+            for (int j = 0; j <= M; ++j)
+                for (int k = 0; k <= N; ++k)
+                    GenerateGridPoint(ref gridpointsPos, i, j, k);
 
         // Generate lattice vertices
         GenerateVertices();
     }
 
-    private void Update()
+    private void GenerateGridPoint(ref Vector3[,,] gridpointsPos, int i, int j, int k)
     {
-        // Check if we hit a cube with the mouse
-        if (Input.GetMouseButtonDown(0))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
-            {
-                LatticeVertexScript latticeVertex = hit.transform.gameObject.GetComponent<LatticeVertexScript>();
-                if (latticeVertex != null)
-                {
-                    // Change lattice vertex and then all mesh vertices
-                    ModifyLattice(hit.transform.gameObject);   
-                }
-            }
-        }
+        // We need to express grid points in world space
+        // In order to do so, we first set them as stu (aka in percentage)...
+        Vector3 stuCoords = new Vector3 { x = (float)i / gridParams.L, y = (float)j / gridParams.M, z = (float)k / gridParams.N };
+        //print(stuCoords);
+
+        //... then in local space
+        gridpointsPos[i,j,k] = GetLocalCoords(stuCoords);
+        //print(gridpointsPos[i, j, k]);
     }
 
-    void ModifyLattice(GameObject vertexObject)
+    void ModifyLattice(GameObject controlPoint)
     {
         // Change position of vertex...
-        vertexObject.transform.position += new Vector3(0.0f, 0.2f, 0.0f);
-        var idx = vertexObject.GetComponent<LatticeVertexScript>().index;
-        var x = idx.L;
-        var y = idx.M;
-        var z = idx.N;
+        controlPoint.transform.localPosition += new Vector3(0.0f, 0.2f, 0.0f);
+        var idx = controlPoint.GetComponent<LatticeVertexScript>().index;
+
+        // This is the index i,j,k for point P_ijk
+        var i = idx.L;
+        var j = idx.M;
+        var k = idx.N;
 
         // and update grid point
-        gridpointsPos[x, y, z] = GetSTUCoords(vertexObject.transform.position);
+        gridpointsPos[i, j, k] = controlPoint.transform.localPosition;
 
         // Get all mesh vertices and apply transformation
         var vertices = mesh.vertices;
@@ -86,21 +82,22 @@ public class LatticeScript : MonoBehaviour {
         {
             // 1) get STU coords
             var stuVertex = GetSTUCoords(startVertices[v]); // NB: use (s,t,u) coords of original vertices of the mesh!
+            //print(stuVertex);
             float s = stuVertex.x;
             float t = stuVertex.y;
             float u = stuVertex.z;
 
             // 2) apply transformation to each vertex
             Vector3 newPosition = Vector3.zero;
-            for (int i = 0; i <= gridParams.L; ++i)
-                for( int j = 0; j <= gridParams.M; ++j)
-                    for( int k = 0; k <= gridParams.N; ++k)
+            for (int vi = 0; vi <= gridParams.L; ++vi)
+                for( int vj = 0; vj <= gridParams.M; ++vj)
+                    for( int vk = 0; vk <= gridParams.N; ++vk)
                     {
-                        float sBernstein = BinomialCoefficient(gridParams.L, i) * Mathf.Pow(1 - s, gridParams.L - i) * Mathf.Pow(s, i);
-                        float tBernstein = BinomialCoefficient(gridParams.M, j) * Mathf.Pow(1 - t, gridParams.M - j) * Mathf.Pow(t, j);
-                        float uBernstein = BinomialCoefficient(gridParams.N, k) * Mathf.Pow(1 - u, gridParams.N - k) * Mathf.Pow(u, k);
+                        float sBernstein = BinomialCoefficient(gridParams.L, vi) * Mathf.Pow(1 - s, gridParams.L - vi) * Mathf.Pow(s, vi);
+                        float tBernstein = BinomialCoefficient(gridParams.M, vj) * Mathf.Pow(1 - t, gridParams.M - vj) * Mathf.Pow(t, vj);
+                        float uBernstein = BinomialCoefficient(gridParams.N, vk) * Mathf.Pow(1 - u, gridParams.N - vk) * Mathf.Pow(u, vk);
 
-                        newPosition += GetLocalCoords(gridpointsPos[i, j, k]) * sBernstein * tBernstein * uBernstein;
+                        newPosition += gridpointsPos[vi, vj, vk] * sBernstein * tBernstein * uBernstein;
                     }
 
             vertices[v] = newPosition;
@@ -136,12 +133,6 @@ public class LatticeScript : MonoBehaviour {
             for (int j = 0; j <= gridParams.M; ++j)
                 for (int k = 0; k <= gridParams.N; ++k)
                 {
-                    // Show coordinates in STU and local systems
-                    Vector3 stuCoords = gridpointsPos[i, j, k];
-                    Vector3 localCoords = GetLocalCoords(stuCoords);
-                    
-                    //print("POINT (" + i + "," + j + "," + k + ") -- STU: " + stuCoords + " -- LC: " + localCoords);
-
                     // Generate debug cube
                     GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     cube.name = "Cube_" + i + "_" + j + "_" + k;
@@ -155,7 +146,8 @@ public class LatticeScript : MonoBehaviour {
                     cube.transform.localScale *= 0.1f;
 
                     // Set it as a child of the mesh
-                    cube.transform.localPosition = localCoords;
+                    cube.transform.localPosition = gridpointsPos[i, j, k];
+                    cube.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 }
     }
 
@@ -167,12 +159,28 @@ public class LatticeScript : MonoBehaviour {
 
         // based on the equivalence n choose k = (n/k) (n-1 choose k-1)
         for( int i = 0; i < kmin; ++i )
-        {
-            //print((n - i + 1) + " " + (n - k - i + 1));
             res *= (float)(n - i) / (k - i);
-        }
 
         return res;
+    }
+
+    private void Update()
+    {
+        // Check if we hit a cube with the mouse
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit))
+            {
+                LatticeVertexScript latticeVertex = hit.transform.gameObject.GetComponent<LatticeVertexScript>();
+                if (latticeVertex != null)
+                {
+                    // Change lattice control point and then all mesh vertices
+                    ModifyLattice(hit.transform.gameObject);
+                }
+            }
+        }
     }
 
     // Keep L,M,N >= 1 in editor!
