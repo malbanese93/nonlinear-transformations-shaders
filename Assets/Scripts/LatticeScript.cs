@@ -25,7 +25,8 @@ public class LatticeScript : MonoBehaviour {
     Vector3[,,] gridpointsPos;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
         // First of all, retrieve bounds for mesh
         mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
@@ -41,26 +42,27 @@ public class LatticeScript : MonoBehaviour {
         Debug.Assert(L > 0 && M > 0 && N > 0);
 
         // Create lattice points
-        gridpointsPos = new Vector3[L+1, M+1, N+1];
+        gridpointsPos = new Vector3[L + 1, M + 1, N + 1];
+
+        // Set lattice points
+        ResetLattice();
+    }
+
+    private void ResetGridPoints(int L, int M, int N)
+    {
         for (int i = 0; i <= L; ++i)
             for (int j = 0; j <= M; ++j)
                 for (int k = 0; k <= N; ++k)
-                    GenerateGridPoint(ref gridpointsPos, i, j, k);
+                {
+                    // We need to express grid points in world space
+                    // In order to do so, we first set them as stu (aka in percentage)...
+                    Vector3 stuCoords = new Vector3 { x = (float)i / gridParams.L, y = (float)j / gridParams.M, z = (float)k / gridParams.N };
+                    //print(stuCoords);
 
-        // Generate lattice vertices
-        GenerateGrid();
-    }
-
-    private void GenerateGridPoint(ref Vector3[,,] gridpointsPos, int i, int j, int k)
-    {
-        // We need to express grid points in world space
-        // In order to do so, we first set them as stu (aka in percentage)...
-        Vector3 stuCoords = new Vector3 { x = (float)i / gridParams.L, y = (float)j / gridParams.M, z = (float)k / gridParams.N };
-        //print(stuCoords);
-
-        //... then in local space
-        gridpointsPos[i,j,k] = GetLocalCoords(stuCoords);
-        //print(gridpointsPos[i, j, k]);
+                    //... then in local space
+                    gridpointsPos[i, j, k] = GetLocalCoords(stuCoords);
+                    //print(gridpointsPos[i, j, k]);
+                }
     }
 
     public void ModifyLattice(GameObject controlPoint)
@@ -143,7 +145,7 @@ public class LatticeScript : MonoBehaviour {
                 {
                     // Generate debug cube
                     GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    cube.name = "Cube_" + i + "_" + j + "_" + k;
+                    cube.name = "P_" + i + "_" + j + "_" + k;
 
                     // Add mouse interaction script
                     cube.AddComponent<LatticeVertexScript>();
@@ -189,6 +191,32 @@ public class LatticeScript : MonoBehaviour {
                 }
             }
         }
+
+        // Reset everything when pressing R
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ResetLattice();
+        }
+    }
+
+    private void ResetLattice()
+    {
+        DeleteLatticeVertices();
+        ResetGridPoints(gridParams.L, gridParams.M, gridParams.N);
+        // Generate lattice vertices
+        GenerateGrid();
+
+        // Restore vertices
+        mesh.vertices = startVertices;
+    }
+
+    private void DeleteLatticeVertices()
+    {
+        // Delete all children with lattice vertex script
+        var latticeScripts = GetComponentsInChildren<LatticeVertexScript>();
+
+        foreach (var script in latticeScripts)
+            Destroy(script.gameObject);
     }
 
     // Keep L,M,N >= 1 in editor!
