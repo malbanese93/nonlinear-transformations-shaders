@@ -321,10 +321,44 @@ inline v2f DoBend( v2f v, int _BendAxis, float _YMin, float _YMax, float _Y0, fl
     return o;
 }
 
+// Calculate binomial coefficient ( n choose k ) in linear time
+inline float BinomialCoefficient(int n, int k) {
+    k = min(k, n-k);
+
+    float res = 1.0f;
+
+    // based on the recursive equivalence n choose k = (n/k) (n-1 choose k-1)
+    for( int i = 0; i < k; ++i )
+        res *= (float)(n - i) / (k - i);
+
+    return res;
+}
+
+// Transform from local coords to STU coords
+inline float3 GetSTUCoords(float3 localCoords, bool _IsOriginDown, float4 _MaxExtents)
+{
+   //adjust by half y size if origin is down
+   if (_IsOriginDown) localCoords.y -= _MaxExtents.y;
+
+   // translate, scale and return
+   return (localCoords + _MaxExtents) / (2 * _MaxExtents);
+}
+
+// Transform from STU coords to local coords
+inline float3 GetLocalCoords(int3 stuCoord, bool _IsOriginDown, float4 _MaxExtents)
+{
+    float3 res = 2 * _MaxExtents * stuCoord - _MaxExtents;
+
+    //adjust if origin is down
+    if (_IsOriginDown) res.y += _MaxExtents.y;
+
+    return res;
+}
+
 // 4) FREE FORM DEFORMATION (FFD or LATTICE)
 // Alter all vertices by altering a cubic grid around the mesh.
 // The mesh is then reconstructed via a trivariate version of the bezier polynomials.
-inline v2f DoFFD(v2f v, float3 _STUCoords, int _L, int _M, int _N) {
+inline v2f DoFFD(v2f v, bool _IsOriginDown, int _L, int _M, int _N) {
     v2f o;
 
     

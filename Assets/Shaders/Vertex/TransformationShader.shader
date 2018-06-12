@@ -60,7 +60,7 @@ Shader "Custom/TransformationShader"
 		// ==== FFD ===
 		// Note that all these values are set via Lattice script!
 		//[Header(Free-Form Deformation (FFD))]
-		[HideInInspector]_STUCoords("stu Coordinates", Vector) = (0,0,0,1) // 4th component ignored
+		[HideInInspector]_IsOriginDown("Is origin down?", Int) = 0
 		[HideInInspector]_L("L", Int) = 1
 		[HideInInspector]_M("M", Int) = 1
 		[HideInInspector]_N("N", Int) = 1
@@ -114,7 +114,8 @@ Shader "Custom/TransformationShader"
 			float _Z0;
 			float _BendRateZ;
 
-			float3 _STUCoords;
+			// FFD
+			bool _IsOriginDown;
 			int _L;
 			int _M;
 			int _N;
@@ -143,7 +144,7 @@ Shader "Custom/TransformationShader"
 				o = DoBend(o, Z_AXIS, _ZMin, _ZMax, _Z0, _BendRateZ, _MaxExtents );
 
 				// Apply FREE-FORM DEFORMATION (lattice)
-				o = DoFFD(o, _STUCoords, _L, _M, _N);
+				o = DoFFD(o, _IsOriginDown, _L, _M, _N);
 
 				// Finally, do MVP transformation as usual and return
 				o.vertex = UnityObjectToClipPos(o.vertex);

@@ -24,9 +24,6 @@ public class LatticeScript : MonoBehaviour {
     // Save gridpoints in local coords
     Vector3[,,] gridpointsPos;
 
-    // s,t,u for each vertex of the mesh
-    Vector3[] stuVertices;
-
 	// Use this for initialization
 	void Start ()
     {
@@ -41,19 +38,63 @@ public class LatticeScript : MonoBehaviour {
         int M = gridParams.M;
         int N = gridParams.N;
 
+        // Set is origin down property for shader
+        // NB: Shaderlab does not support bools
+        GetComponent<Renderer>().material.SetInt("_IsOriginDown", isOriginDown == true ? 1 : 0);
+
         // Assert all values are positive
         Debug.Assert(L > 0 && M > 0 && N > 0);
 
         // Create lattice points
         gridpointsPos = new Vector3[L + 1, M + 1, N + 1];
 
-        // Get all stu coords
-        stuVertices = new Vector3[mesh.vertexCount];
-        for (var i = 0; i < mesh.vertexCount; ++i)
-            stuVertices[i] = GetSTUCoords(startVertices[i]);
-
         // Set lattice points
         ResetLattice();
+    }
+
+    private void ResetLattice()
+    {
+        DeleteLatticeVertices();
+        ResetGridPoints(gridParams.L, gridParams.M, gridParams.N);
+        // Generate lattice vertices
+        GenerateGrid();
+
+        // Restore vertices
+        mesh.vertices = startVertices;
+    }
+
+    // Display a little cube for each vertex
+    void GenerateGrid()
+    {
+        for (int i = 0; i <= gridParams.L; ++i)
+            for (int j = 0; j <= gridParams.M; ++j)
+                for (int k = 0; k <= gridParams.N; ++k)
+                {
+                    // Generate debug cube
+                    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    cube.name = "P_" + i + "_" + j + "_" + k;
+
+                    // Add mouse interaction script
+                    cube.AddComponent<LatticeVertexScript>();
+                    cube.GetComponent<LatticeVertexScript>().index = new IntVector3 { L = i, M = j, N = k };
+
+                    // Change position and scaling
+                    cube.transform.parent = transform;
+                    cube.transform.localScale *= 10.0f;
+
+                    // Set it as a child of the mesh
+                    cube.transform.localPosition = gridpointsPos[i, j, k];
+                    cube.transform.localRotation = Quaternion.Euler(0, 0, 0);
+                }
+    }
+
+    private void DeleteLatticeVertices()
+    {
+        // Delete all children with lattice vertex script
+        var latticeScripts = GetComponentsInChildren<LatticeVertexScript>();
+
+        foreach (var script in latticeScripts)
+            Destroy(script.gameObject);
     }
 
     private void ResetGridPoints(int L, int M, int N)
@@ -89,7 +130,7 @@ public class LatticeScript : MonoBehaviour {
         var vertices = mesh.vertices;
 
         // For each mesh vertex...
-        for( int v = 0; v < vertices.Length; ++v )
+        /*for( int v = 0; v < vertices.Length; ++v )
         {
             // 1) get STU coords
             float s = stuVertices[v].x;
@@ -110,7 +151,7 @@ public class LatticeScript : MonoBehaviour {
                     }
 
             vertices[v] = newPosition;
-        }
+        }*/
 
         // apply transformation
         mesh.vertices = vertices;
@@ -127,7 +168,7 @@ public class LatticeScript : MonoBehaviour {
         return res;
     }
 
-    // Transform from local coords to STU coords (apply reverse transformation wrt above)
+    /*// Transform from local coords to STU coords (apply reverse transformation wrt above)
     Vector3 GetSTUCoords(Vector3 localCoords)
     {
         //adjust if origin is down
@@ -139,33 +180,9 @@ public class LatticeScript : MonoBehaviour {
         res.z = (localCoords.z + extents.z) / (2.0f * extents.z);
 
         return res;
-    }
+    }*/
 
-    // Display a little cube for each vertex
-    void GenerateGrid()
-    {
-        for (int i = 0; i <= gridParams.L; ++i)
-            for (int j = 0; j <= gridParams.M; ++j)
-                for (int k = 0; k <= gridParams.N; ++k)
-                {
-                    // Generate debug cube
-                    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    cube.name = "P_" + i + "_" + j + "_" + k;
-
-                    // Add mouse interaction script
-                    cube.AddComponent<LatticeVertexScript>();
-                    cube.GetComponent<LatticeVertexScript>().index = new IntVector3 { L = i, M = j, N = k };
-
-                    // Change position and scaling
-                    cube.transform.parent = transform;
-                    cube.transform.localScale *= 10.0f;
-
-                    // Set it as a child of the mesh
-                    cube.transform.localPosition = gridpointsPos[i, j, k];
-                    cube.transform.localRotation = Quaternion.Euler(0, 0, 0);
-                }
-    }
-
+    /*
     // Calculate binomial coefficient ( n choose k ) in linear time
     private float BinomialCoefficient(int n, int k)
     {
@@ -178,6 +195,7 @@ public class LatticeScript : MonoBehaviour {
 
         return res;
     }
+    */
 
     private void Update()
     {
@@ -202,26 +220,6 @@ public class LatticeScript : MonoBehaviour {
         {
             ResetLattice();
         }
-    }
-
-    private void ResetLattice()
-    {
-        DeleteLatticeVertices();
-        ResetGridPoints(gridParams.L, gridParams.M, gridParams.N);
-        // Generate lattice vertices
-        GenerateGrid();
-
-        // Restore vertices
-        mesh.vertices = startVertices;
-    }
-
-    private void DeleteLatticeVertices()
-    {
-        // Delete all children with lattice vertex script
-        var latticeScripts = GetComponentsInChildren<LatticeVertexScript>();
-
-        foreach (var script in latticeScripts)
-            Destroy(script.gameObject);
     }
 
     // Keep L,M,N >= 1 in editor!
