@@ -23,6 +23,8 @@ public class LatticeScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        print(BinomialCoefficient(70, 63));
+
         // First of all, retrieve bounds for mesh
         mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
@@ -154,11 +156,11 @@ public class LatticeScript : MonoBehaviour {
     // Calculate binomial coefficient ( n choose k ) in linear time
     private float BinomialCoefficient(int n, int k)
     {
-        int kmin = Math.Min(k, n - k);
+        k = Math.Min(k, n - k);
         float res = 1.0f;
 
         // based on the equivalence n choose k = (n/k) (n-1 choose k-1)
-        for( int i = 0; i < kmin; ++i )
+        for( int i = 0; i < k; ++i )
             res *= (float)(n - i) / (k - i);
 
         return res;
