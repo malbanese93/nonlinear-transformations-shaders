@@ -13,6 +13,9 @@ public class LatticeScript : MonoBehaviour {
     Vector3 extents;
     Vector3[] startVertices;
 
+    // Check if mesh has origin on bottom
+    public bool isOriginDown;
+
     // L,M,N parameters for lattice
     // This specifies the degree of the Bezier curve along that axis
     // Remember that for degree k you have k+1 points!
@@ -23,8 +26,6 @@ public class LatticeScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        print(BinomialCoefficient(70, 63));
-
         // First of all, retrieve bounds for mesh
         mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
@@ -47,7 +48,7 @@ public class LatticeScript : MonoBehaviour {
                     GenerateGridPoint(ref gridpointsPos, i, j, k);
 
         // Generate lattice vertices
-        GenerateVertices();
+        GenerateGrid();
     }
 
     private void GenerateGridPoint(ref Vector3[,,] gridpointsPos, int i, int j, int k)
@@ -65,7 +66,7 @@ public class LatticeScript : MonoBehaviour {
     void ModifyLattice(GameObject controlPoint)
     {
         // Change position of vertex...
-        controlPoint.transform.localPosition += new Vector3(0.0f, 0.2f, 0.0f);
+        controlPoint.transform.localPosition += new Vector3(0.0f, 10f, 0.0f);
         var idx = controlPoint.GetComponent<LatticeVertexScript>().index;
 
         // This is the index i,j,k for point P_ijk
@@ -84,22 +85,21 @@ public class LatticeScript : MonoBehaviour {
         {
             // 1) get STU coords
             var stuVertex = GetSTUCoords(startVertices[v]); // NB: use (s,t,u) coords of original vertices of the mesh!
-            //print(stuVertex);
             float s = stuVertex.x;
             float t = stuVertex.y;
             float u = stuVertex.z;
 
             // 2) apply transformation to each vertex
             Vector3 newPosition = Vector3.zero;
-            for (int vi = 0; vi <= gridParams.L; ++vi)
-                for( int vj = 0; vj <= gridParams.M; ++vj)
-                    for( int vk = 0; vk <= gridParams.N; ++vk)
+            for (int pi = 0; pi <= gridParams.L; ++pi)
+                for( int pj = 0; pj <= gridParams.M; ++pj)
+                    for( int pk = 0; pk <= gridParams.N; ++pk)
                     {
-                        float sBernstein = BinomialCoefficient(gridParams.L, vi) * Mathf.Pow(1 - s, gridParams.L - vi) * Mathf.Pow(s, vi);
-                        float tBernstein = BinomialCoefficient(gridParams.M, vj) * Mathf.Pow(1 - t, gridParams.M - vj) * Mathf.Pow(t, vj);
-                        float uBernstein = BinomialCoefficient(gridParams.N, vk) * Mathf.Pow(1 - u, gridParams.N - vk) * Mathf.Pow(u, vk);
+                        float sBernstein = BinomialCoefficient(gridParams.L, pi) * Mathf.Pow(1 - s, gridParams.L - pi) * Mathf.Pow(s, pi);
+                        float tBernstein = BinomialCoefficient(gridParams.M, pj) * Mathf.Pow(1 - t, gridParams.M - pj) * Mathf.Pow(t, pj);
+                        float uBernstein = BinomialCoefficient(gridParams.N, pk) * Mathf.Pow(1 - u, gridParams.N - pk) * Mathf.Pow(u, pk);
 
-                        newPosition += gridpointsPos[vi, vj, vk] * sBernstein * tBernstein * uBernstein;
+                        newPosition += gridpointsPos[pi, pj, pk] * sBernstein * tBernstein * uBernstein;
                     }
 
             vertices[v] = newPosition;
@@ -114,12 +114,18 @@ public class LatticeScript : MonoBehaviour {
     {
         Vector3 res = 2 * Vector3.Scale(extents, stuCoord) - extents;
 
+        //adjust if origin is down
+        if (isOriginDown) res.y += extents.y;
+
         return res;
     }
 
     // Transform from local coords to STU coords (apply reverse transformation wrt above)
     Vector3 GetSTUCoords(Vector3 localCoords)
     {
+        //adjust if origin is down
+        if (isOriginDown) localCoords.y -= extents.y;
+
         Vector3 res;
         res.x = (localCoords.x + extents.x) / (2.0f * extents.x);
         res.y = (localCoords.y + extents.y) / (2.0f * extents.y);
@@ -129,7 +135,7 @@ public class LatticeScript : MonoBehaviour {
     }
 
     // Display a little cube for each vertex
-    void GenerateVertices()
+    void GenerateGrid()
     {
         for (int i = 0; i <= gridParams.L; ++i)
             for (int j = 0; j <= gridParams.M; ++j)
@@ -145,7 +151,7 @@ public class LatticeScript : MonoBehaviour {
 
                     // Change position and scaling
                     cube.transform.parent = transform;
-                    cube.transform.localScale *= 0.1f;
+                    cube.transform.localScale *= 10.0f;
 
                     // Set it as a child of the mesh
                     cube.transform.localPosition = gridpointsPos[i, j, k];
