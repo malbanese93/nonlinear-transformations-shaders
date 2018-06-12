@@ -10,9 +10,6 @@ Shader "Custom/TransformationShader"
 {
 	Properties
     {
-		// Mesh max values for bounding box. Equal to half size.
-		[HideInInspector]_MaxExtents("Max extents", Vector) = (0,0,0,0)
-
 		// === TWIST ===
 		[Header(Twist)]
 		// _TwistAngle: Angle of rotation at the extremes (in degrees)
@@ -55,15 +52,6 @@ Shader "Custom/TransformationShader"
 		_ZMax("Max value Z", Range(0,1)) = 1
 		_Z0("Starting value Z", Range(0,1)) = 0
 		_BendRateZ("Bend Rate Z", Float) = 0
-
-		[Space(10)]
-		// ==== FFD ===
-		// Note that all these values are set via Lattice script!
-		//[Header(Free-Form Deformation (FFD))]
-		[HideInInspector]_IsOriginDown("Is origin down?", Int) = 0
-		[HideInInspector]_L("L", Int) = 1
-		[HideInInspector]_M("M", Int) = 1
-		[HideInInspector]_N("N", Int) = 1
     }
 
     SubShader
@@ -116,6 +104,8 @@ Shader "Custom/TransformationShader"
 
 			// FFD
 			bool _IsOriginDown;
+
+			// bezier curves degrees
 			int _L;
 			int _M;
 			int _N;

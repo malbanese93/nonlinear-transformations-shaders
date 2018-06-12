@@ -12,6 +12,7 @@ public class LatticeScript : MonoBehaviour {
     Bounds bounds;
     Vector3 extents;
     Vector3[] startVertices;
+    Material material;
 
     // Check if mesh has origin on bottom
     public bool isOriginDown;
@@ -22,7 +23,7 @@ public class LatticeScript : MonoBehaviour {
     public IntVector3 gridParams;
 
     // Save gridpoints in local coords
-    Vector3[,,] gridpointsPos;
+    Vector4[] gridpointsPos;
 
 	// Use this for initialization
 	void Start ()
@@ -38,21 +39,28 @@ public class LatticeScript : MonoBehaviour {
         int M = gridParams.M;
         int N = gridParams.N;
 
-        // Set is origin down property for shader
-        // NB: Shaderlab does not support bools
-        GetComponent<Renderer>().material.SetInt("_IsOriginDown", isOriginDown == true ? 1 : 0);
-
         // Assert all values are positive
         Debug.Assert(L > 0 && M > 0 && N > 0);
 
         // Create lattice points
-        gridpointsPos = new Vector3[L + 1, M + 1, N + 1];
+        // Notice that we must use 1D arrays instead of 3D arrays
+        // since there's no way to pass it to the shader otherwise
+
+        gridpointsPos = new Vector4[(L + 1) * (M + 1) * (N + 1)];
 
         // Set lattice points
-        ResetLattice();
+        StartLattice();
+
+        // Set uniforms to shader
+        material = GetComponent<Renderer>().material;
+        material.SetInt("_IsOriginDown", isOriginDown == true ? 1 : 0); // SetBool does not exist!
+        material.SetInt("_L", L);
+        material.SetInt("_M", M);
+        material.SetInt("_N", N);
+        material.SetVectorArray("_ControlPoints", gridpointsPos);
     }
 
-    private void ResetLattice()
+    private void StartLattice()
     {
         DeleteLatticeVertices();
         ResetGridPoints(gridParams.L, gridParams.M, gridParams.N);
@@ -61,6 +69,13 @@ public class LatticeScript : MonoBehaviour {
 
         // Restore vertices
         mesh.vertices = startVertices;
+    }
+
+    private int To1DArrayCoords(int x, int y, int z)
+    {
+        // WIDTH * HEIGHT * z (the plane we start with) + WIDTH * y (the row we start with) + x (offset)
+        // in this case WIDTH = L+1, HEIGHT = M+1
+        return x + (gridParams.L+1) * (y + (gridParams.M+1) * z);
     }
 
     // Display a little cube for each vertex
@@ -83,7 +98,7 @@ public class LatticeScript : MonoBehaviour {
                     cube.transform.localScale *= 10.0f;
 
                     // Set it as a child of the mesh
-                    cube.transform.localPosition = gridpointsPos[i, j, k];
+                    cube.transform.localPosition = gridpointsPos[To1DArrayCoords(i, j, k)];
                     cube.transform.localRotation = Quaternion.Euler(0, 0, 0);
                 }
     }
@@ -105,10 +120,10 @@ public class LatticeScript : MonoBehaviour {
                 {
                     // We need to express grid points in world space
                     // In order to do so, we first set them as stu (aka in percentage)...
-                    Vector3 stuCoords = new Vector3 { x = (float)i / gridParams.L, y = (float)j / gridParams.M, z = (float)k / gridParams.N };
+                    Vector4 stuCoords = new Vector4 { x = (float)i / gridParams.L, y = (float)j / gridParams.M, z = (float)k / gridParams.N, w = 1 };
 
                     //... then in local space
-                    gridpointsPos[i, j, k] = GetLocalCoords(stuCoords);
+                    gridpointsPos[To1DArrayCoords(i,j,k)] = GetLocalCoords(stuCoords);
                 }
     }
 
@@ -124,7 +139,7 @@ public class LatticeScript : MonoBehaviour {
         var k = idx.N;
 
         // and update grid point
-        gridpointsPos[i, j, k] = controlPoint.transform.localPosition;
+        gridpointsPos[To1DArrayCoords(i, j, k)] = controlPoint.transform.localPosition;
 
         // Get all mesh vertices and apply transformation
         var vertices = mesh.vertices;
@@ -158,9 +173,10 @@ public class LatticeScript : MonoBehaviour {
     }
 
     // Transform from STU coords to local coords
-    Vector3 GetLocalCoords(Vector3 stuCoord)
+    Vector4 GetLocalCoords(Vector4 stuCoord)
     {
-        Vector3 res = 2 * Vector3.Scale(extents, stuCoord) - extents;
+        Vector4 res = 2 * Vector3.Scale(extents, stuCoord) - extents;
+        res.w = 1;
 
         //adjust if origin is down
         if (isOriginDown) res.y += extents.y;
@@ -218,7 +234,7 @@ public class LatticeScript : MonoBehaviour {
         // Reset everything when pressing R
         if (Input.GetKeyDown(KeyCode.R))
         {
-            ResetLattice();
+            StartLattice();
         }
     }
 
