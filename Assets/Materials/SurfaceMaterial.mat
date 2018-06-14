@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: _blue
-  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: SurfaceMaterial
+  m_Shader: {fileID: 4800000, guid: 4eb5d03995d142f4daac44bb3224841c, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -39,8 +39,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: 9014776310d0ebe4f9c24d166417d1d3, type: 3}
+        m_Scale: {x: 2, y: 2}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -59,6 +59,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
+    - _Amount: 0.5
     - _BendRateX: 0
     - _BendRateY: 0
     - _BendRateZ: 0
@@ -82,10 +83,11 @@ Material:
     - _StretchStrengthX: 1
     - _StretchStrengthY: 1
     - _StretchStrengthZ: 1
-    - _TwistAngleX: 0
+    - _TwistAngleX: -4
     - _TwistAngleY: 0
     - _TwistAngleZ: 0
     - _UVSec: 0
+    - _VertexCount: 0
     - _X0: 0
     - _XMax: 1
     - _XMin: 0
@@ -97,6 +99,5 @@ Material:
     - _ZMin: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.27892518, g: 0.34033749, b: 0.5661765, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _MaxExtents: {r: 0, g: 0, b: 0, a: 0}

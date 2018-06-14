@@ -11,7 +11,6 @@ public class LatticeScript : MonoBehaviour {
     Mesh mesh;
     Bounds bounds;
     Vector3 extents;
-    Vector3[] startVertices;
     Material material;
 
     // Check if mesh has origin on bottom
@@ -32,12 +31,6 @@ public class LatticeScript : MonoBehaviour {
         mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
         extents = bounds.extents;
-        startVertices = mesh.vertices;
-
-        // Get parameters for grid
-        int L = gridParams.L;
-        int M = gridParams.M;
-        int N = gridParams.N;
 
         // Create lattice points
         // Notice that we must use 1D arrays instead of 3D arrays
