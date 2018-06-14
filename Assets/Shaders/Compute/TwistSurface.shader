@@ -57,19 +57,6 @@ Shader "Surface/Compute" {
 			o.Albedo = half3(0,0.5,0.5);
 		}
 
-        /*
-        v2f vert (uint id : SV_VertexID) {
-
-          v2f o;
-          // Every time you access the buffer you need to add this preprocessing directive
-          #ifdef SHADER_API_D3D11
-          o.vertex = UnityObjectToClipPos(float4(buffer[id].pos,1));
-          o.normal = buffer[id].normal;
-          #endif
-
-          return o;
-        }*/
-
       ENDCG
     }
 }

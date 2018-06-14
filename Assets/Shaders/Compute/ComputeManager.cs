@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TwistScript : MonoBehaviour {
+public class ComputeManager : MonoBehaviour {
 
     public struct VertexData
     {
@@ -48,6 +48,9 @@ public class TwistScript : MonoBehaviour {
         // Thus we restructure data in order to work on (pos_i, n_i) data.
         RestructureMeshData(mesh.vertices, mesh.normals);
 
+        // Setup buffer
+        SetupBuffer();
+
         // Setup kernel
         kernelID = SetupKernel();
     }
@@ -55,22 +58,25 @@ public class TwistScript : MonoBehaviour {
     // Create buffer, send it to the GPU and initialize kernel
     private int SetupKernel()
     {
-        // Set buffer to send to the GPU
-        buffer = new ComputeBuffer(vCount, System.Runtime.InteropServices.Marshal.SizeOf(typeof(VertexData)));
-        buffer.SetData(vData);
-
         // Set kernel info
         int kernel = computeShader.FindKernel("Twist");
         computeShader.SetFloat("alpha", alpha);
         computeShader.SetBuffer(kernel, "g_buffer", buffer);
         computeShader.SetInt("vertexCount", vCount);
 
+        // return kernel id
+        return kernel;
+    }
+
+    private void SetupBuffer()
+    {
+        // Set buffer to send to the GPU
+        buffer = new ComputeBuffer(vCount, System.Runtime.InteropServices.Marshal.SizeOf(typeof(VertexData)));
+        buffer.SetData(vData);
+
         // Set buffer and vertex count in vertex shader
         Material m = GetComponent<MeshRenderer>().material;
         m.SetBuffer("buffer", buffer);
-
-        // return kernel id
-        return kernel;
     }
 
     // Save all data as an array of (pos_i, n_i)
