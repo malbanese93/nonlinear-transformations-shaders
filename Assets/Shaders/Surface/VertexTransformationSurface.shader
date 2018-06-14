@@ -1,4 +1,4 @@
-Shader "Surface/SurfaceTest" {
+Shader "Surface/Vertex" {
     Properties {
 		// === TWIST ===
 		[Header(Twist)]

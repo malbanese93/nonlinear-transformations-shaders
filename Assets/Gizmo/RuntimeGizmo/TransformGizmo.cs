@@ -169,7 +169,7 @@ namespace RuntimeGizmos
 
                         // DO ACTION ONLY WHEN MOVEAMOUNT IS NOT ZERO
                         if (!Mathf.Approximately(moveAmount, 0.0f))
-                            target.parent.GetComponent<LatticeScript>().ModifyLattice(target.gameObject);
+                            target.parent.GetComponent<ShaderSetupScript>().ModifyLattice(target.gameObject);
                     }
 
 					if(type == TransformType.Scale)
