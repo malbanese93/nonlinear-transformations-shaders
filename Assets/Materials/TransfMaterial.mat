@@ -89,13 +89,13 @@ Material:
     - _TwistAngleZ: 0
     - _TwistAxis: 2
     - _UVSec: 0
-    - _X0: 0
+    - _X0: 0.5
     - _XMax: 1
     - _XMin: 0
-    - _Y0: 0
+    - _Y0: 0.5
     - _YMax: 1
     - _YMin: 0
-    - _Z0: 0
+    - _Z0: 0.5
     - _ZMax: 1
     - _ZMin: 0
     - _ZWrite: 1

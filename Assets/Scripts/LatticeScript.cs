@@ -49,25 +49,26 @@ public class LatticeScript : MonoBehaviour {
 
         // Set lattice points
         StartLattice();
-
-        // Set uniforms to shader
-        material = GetComponent<Renderer>().material;
-        material.SetInt("_IsOriginDown", isOriginDown == true ? 1 : 0); // SetBool does not exist!
-        material.SetInt("_L", L);
-        material.SetInt("_M", M);
-        material.SetInt("_N", N);
-        material.SetVectorArray("_ControlPoints", gridpointsPos);
     }
 
     private void StartLattice()
     {
+        // Delete old vertices if present
         DeleteLatticeVertices();
+
+        // Reset all coordinates of the grid points
         ResetGridPoints(gridParams.L, gridParams.M, gridParams.N);
+
         // Generate lattice vertices
         GenerateGrid();
 
-        // Restore vertices
-        mesh.vertices = startVertices;
+        // Set uniforms to shader
+        material = GetComponent<Renderer>().material;
+        material.SetInt("_IsOriginDown", isOriginDown == true ? 1 : 0); // SetBool does not exist!
+        material.SetInt("_L", gridParams.L);
+        material.SetInt("_M", gridParams.M);
+        material.SetInt("_N", gridParams.N);
+        material.SetVectorArray("_ControlPoints", gridpointsPos);
     }
 
     private int To1DArrayCoords(int x, int y, int z)

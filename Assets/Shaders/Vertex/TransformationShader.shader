@@ -124,6 +124,12 @@ Shader "Custom/TransformationShader"
 				o.vertex = v.vertex;
 				o.normal = v.normal;
 
+				// Apply FREE-FORM DEFORMATION (lattice)
+				// NB: Due to the nature of transformation, we pass in extents greater than the real ones.
+				// Otherwise, we can encounter a situation of the type: 0^0 which result in NaNs propagating
+				//o = DoFFD(o, _IsOriginDown, _L, _M, _N, _ControlPoints, _MaxExtents);
+				o = DoFFD(o, _IsOriginDown, _L, _M, _N, _ControlPoints, float4(_MaxExtents.xyz * 1.2f, _MaxExtents.w));
+
 				// The order is as follows
 				// TWIST - STRETCH - BEND, for each along X,Y,Z respectively
 				o = DoTwist(o, X_AXIS, _TwistAngleX, _MaxExtents);
@@ -137,9 +143,6 @@ Shader "Custom/TransformationShader"
 				o = DoBend(o, X_AXIS, _XMin, _XMax, _X0, _BendRateX, _MaxExtents );
 				o = DoBend(o, Y_AXIS, _YMin, _YMax, _Y0, _BendRateY, _MaxExtents );
 				o = DoBend(o, Z_AXIS, _ZMin, _ZMax, _Z0, _BendRateZ, _MaxExtents );
-
-				// Apply FREE-FORM DEFORMATION (lattice)
-				o = DoFFD(o, _IsOriginDown, _L, _M, _N, _ControlPoints, _MaxExtents);
 
 				// Finally, do MVP transformation as usual and return
 				o.vertex = UnityObjectToClipPos(o.vertex);

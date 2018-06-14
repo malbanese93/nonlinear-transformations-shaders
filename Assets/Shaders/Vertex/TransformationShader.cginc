@@ -342,7 +342,10 @@ inline float3 GetSTUCoords(float4 localCoords, bool _IsOriginDown, float4 _MaxEx
    if (_IsOriginDown) localCoords.y -= _MaxExtents.y;
 
    // translate, scale and return
-   return (localCoords + _MaxExtents) / (2 * _MaxExtents);
+   float4 res = (localCoords + _MaxExtents) / (2 * _MaxExtents);
+   res.w = 1.0f;
+
+   return res;
 }
 
 // Transform from STU coords to local coords

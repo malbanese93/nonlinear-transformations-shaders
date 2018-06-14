@@ -12,6 +12,8 @@ public class ShaderSetupScript : MonoBehaviour {
         Bounds b = GetComponent<MeshFilter>().mesh.bounds; // Bounds in Local Space
         material = GetComponent<Renderer>().material;
         material.SetVector("_MaxExtents", b.extents);
+
+        print(b.extents);
 	}
 
 	// Update is called once per frame
