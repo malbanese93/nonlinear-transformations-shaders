@@ -89,7 +89,8 @@ public class ShaderSetupScript : MonoBehaviour {
 
                     // Change position and scaling
                     cube.transform.parent = transform;
-                    cube.transform.localScale *= 10.0f;
+                    // scaling is relative to parent size. There is no big or small cube in absolute terms, it depends on the mesh!
+                    cube.transform.localScale = Vector3.one * 0.30f * Mathf.Min(Mathf.Min(extents.x, extents.y), extents.z);
 
                     // Set it as a child of the mesh
                     cube.transform.localPosition = gridpointsPos[To1DArrayCoords(i, j, k)];
