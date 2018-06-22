@@ -58,6 +58,7 @@ Shader "Surface/Vertex" {
 
 		// COMMON
 		float4 _MaxExtents;
+        float4 _BoundsCenter;
 
 		// TWIST
 		float _TwistAngleX;
@@ -89,8 +90,6 @@ Shader "Surface/Vertex" {
 		float _BendAngleZ;
 
 		// FFD
-		bool _IsOriginDown;
-
 		// bezier curves degrees
 		int _L;
 		int _M;
@@ -110,14 +109,21 @@ Shader "Surface/Vertex" {
         // NB: the input vertex data MUST be of type appdata_full, even if all
         // additional data are not used
 		void vert (inout appdata_full v) {
+            // First of all, translate all vertices by _BoundsCenter.
+            // We do this since the mesh can be modelled around any pivot and this breaks
+            // the portability of the transforms below. By using _BoundsCenter
+            // we are to always start from the center of the mesh.
+            v.vertex -= _BoundsCenter;
+
 			// Apply FREE-FORM DEFORMATION (lattice)
-			// NB: Due to the nature of transformation, we pass in extents greater than the real ones.
+			// TODO NB: Due to the nature of transformation, we pass in extents greater than the real ones.
 			// Otherwise, we can encounter a situation of the type: 0^0 which result in NaNs propagating
-			DoFFD(v, _IsOriginDown, _L, _M, _N, _ControlPoints, float4(_MaxExtents.xyz * 1.2f, _MaxExtents.w));
+            DoFFD(v, _L, _M, _N, _ControlPoints, _MaxExtents);
+            //DoFFD(v, _L, _M, _N, _ControlPoints, float4(_MaxExtents.xyz * 1.2f, _MaxExtents.w));
 
 			// The order is as follows
 			// TWIST - STRETCH - BEND, for each along X,Y,Z respectively
-			DoTwist(v, X_AXIS, _TwistAngleX, _MaxExtents);
+			/*DoTwist(v, X_AXIS, _TwistAngleX, _MaxExtents);
 			DoTwist(v, Y_AXIS, _TwistAngleY, _MaxExtents);
 			DoTwist(v, Z_AXIS, _TwistAngleZ, _MaxExtents);
 
@@ -127,11 +133,14 @@ Shader "Surface/Vertex" {
 
 			DoBend(v, X_AXIS, _XMin, _XMax, _X0, _BendAngleX, _MaxExtents );
 			DoBend(v, Y_AXIS, _YMin, _YMax, _Y0, _BendAngleY, _MaxExtents );
-			DoBend(v, Z_AXIS, _ZMin, _ZMax, _Z0, _BendAngleZ, _MaxExtents );
+			DoBend(v, Z_AXIS, _ZMin, _ZMax, _Z0, _BendAngleZ, _MaxExtents );*/
+
+            // Restore coords wrt pivot
+            v.vertex += _BoundsCenter;
 		}
 
 		void surf (Input IN, inout SurfaceOutput o) {
-			o.Albedo = half3(0,0.5,0.5);
+			o.Albedo = half3(0.28f, 0.34f, 0.56f);
 		}
 
       ENDCG

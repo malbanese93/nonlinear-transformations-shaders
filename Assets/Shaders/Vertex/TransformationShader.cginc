@@ -250,6 +250,10 @@ inline void DoBend( inout appdata_full v, int _BendAxis, float _YMin, float _YMa
     if( _BendAngle < FLOAT_EPS && _BendAngle > -FLOAT_EPS)
         return;
 
+    // If ymax <= ymin, return, since this has no meaning
+    if( _YMax <= _YMin )
+        return;
+
     DoYAxisRotation(v, _BendAxis, _MaxExtents);
 
     // Setup
@@ -266,7 +270,7 @@ inline void DoBend( inout appdata_full v, int _BendAxis, float _YMin, float _YMa
     //     of 0 0.5 1 (only int allowed), so scale first!
     float y0_coeff = _Y0 / 2.0f;
     // Determine percentage of mesh from where to start transformation
-    float y0_perc = y0_coeff * _YMax + (1-y0_coeff) * _YMin;
+    float y0_perc = y0_coeff * _YMax + (1.0f-y0_coeff) * _YMin;
 
     // finally retrieve actual y to start from
     float y0 = percentageYToLocalCoords(y0_perc, _MaxExtents.y);
@@ -295,7 +299,7 @@ inline void DoBend( inout appdata_full v, int _BendAxis, float _YMin, float _YMa
     else if( y > ymax ) v.vertex.z += s * (y-ymax);
 
     // transform normals
-    // first of all we need to get khat
+    // first of all we need to get khat = k inside the region, 0 outside
     float khat = 0.0;
     if( ymin <= y && y <= ymax ) khat = k;
 
@@ -324,11 +328,8 @@ inline float BinomialCoefficient(int n, int k) {
 }
 
 // Transform from local coords to STU coords
-inline float3 GetSTUCoords(float4 localCoords, bool _IsOriginDown, float4 _MaxExtents)
+inline float3 GetSTUCoords(float4 localCoords, float4 _MaxExtents)
 {
-   //adjust by half y size if origin is down
-   if (_IsOriginDown) localCoords.y -= _MaxExtents.y;
-
    // translate, scale and return
    float3 res = (localCoords + _MaxExtents) / (2 * _MaxExtents);
 
@@ -345,9 +346,9 @@ inline int To1DArrayCoords(int x, int y, int z, int L, int M)
 // 4) FREE FORM DEFORMATION (FFD or LATTICE)
 // Alter all vertices by altering a cubic grid around the mesh.
 // The mesh is then reconstructed via a trivariate version of the bezier polynomials.
-inline void DoFFD(inout appdata_full v, bool _IsOriginDown, int _L, int _M, int _N, float4 _ControlPoints[FFD_MAX_PTS], float4 _MaxExtents) {
+inline void DoFFD(inout appdata_full v, int _L, int _M, int _N, float4 _ControlPoints[FFD_MAX_PTS], float4 _MaxExtents) {
     // 1) get STU coords of undistorted mesh vertex
-    float3 stu = GetSTUCoords(v.vertex, _IsOriginDown, _MaxExtents);
+    float3 stu = GetSTUCoords(v.vertex, _MaxExtents);
     float s = stu.x;
     float t = stu.y;
     float u = stu.z;

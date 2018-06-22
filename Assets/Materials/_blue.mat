@@ -97,6 +97,6 @@ Material:
     - _ZMin: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.27892518, g: 0.34033749, b: 0.5661765, a: 1}
+    - _Color: {r: 0.44827604, g: 0, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MaxExtents: {r: 0, g: 0, b: 0, a: 0}

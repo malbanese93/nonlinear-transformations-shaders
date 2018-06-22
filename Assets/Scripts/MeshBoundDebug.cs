@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class MeshBoundDebug : MonoBehaviour {
 
-    Renderer rend;
+    Bounds bounds; // Cache starting bounds since adding cubes later modify them!
 
     private void Start()
     {
-        rend = GetComponent<Renderer>();
+        bounds = GetComponent<MeshFilter>().mesh.bounds;
     }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        if (rend != null)
-            Gizmos.DrawWireCube(transform.position, rend.bounds.size);
+        // NB: transform.position because we are first translating all vertices in the vertex shader by bounds.center.
+        // In this way we always have the bounds center centered in trasform position (the origin is always in the AABB center)
+        Gizmos.DrawWireCube(transform.position, bounds.size);
     }
 }

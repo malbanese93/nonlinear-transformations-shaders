@@ -13,9 +13,6 @@ public class ShaderSetupScript : MonoBehaviour {
     Vector3 extents;
     Material material;
 
-    // Check if mesh has origin on bottom
-    public bool isOriginDown;
-
     // L,M,N parameters for lattice
     // This specifies the degree of the Bezier curve along that axis
     // Remember that for degree k you have k+1 points!
@@ -30,9 +27,12 @@ public class ShaderSetupScript : MonoBehaviour {
         // First of all, retrieve bounds for mesh and send them to the shader
         mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
-        print(bounds.center);
         extents = bounds.extents;
+            
+        // NB: the center may be everywhere. Always use bound center to do all calculations
+        // independently of how the mesh was created.
         material = GetComponent<Renderer>().material;
+        material.SetVector("_BoundsCenter", bounds.center);
         material.SetVector("_MaxExtents", extents);
 
         // Create lattice points
@@ -59,7 +59,6 @@ public class ShaderSetupScript : MonoBehaviour {
         GenerateGrid();
 
         // Set uniforms to shader
-        material.SetInt("_IsOriginDown", isOriginDown == true ? 1 : 0); // SetBool does not exist!
         material.SetInt("_L", gridParams.L);
         material.SetInt("_M", gridParams.M);
         material.SetInt("_N", gridParams.N);
@@ -94,8 +93,12 @@ public class ShaderSetupScript : MonoBehaviour {
                     cube.transform.localScale = Vector3.one * 0.30f * Mathf.Min(Mathf.Min(extents.x, extents.y), extents.z);
 
                     // Set it as a child of the mesh
-                    cube.transform.localPosition = gridpointsPos[To1DArrayCoords(i, j, k)];
+                    cube.transform.localPosition = gridpointsPos[To1DArrayCoords(i, j, k)] + new Vector4(bounds.center.x, bounds.center.y, bounds.center.z, 1.0f) ;
                     cube.transform.localRotation = Quaternion.Euler(0, 0, 0);
+
+                    // Disable shadows for these objects
+                    cube.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    cube.GetComponent<Renderer>().receiveShadows = false;
                 }
     }
 
@@ -122,8 +125,8 @@ public class ShaderSetupScript : MonoBehaviour {
                     gridpointsPos[To1DArrayCoords(i,j,k)] = GetLocalCoords(stuCoords);
                 }
 
-        // Set the rest of the values to zero, since they will be unused
-
+        // TODO: Set the rest of the values to zero, since they will be unused
+        // 
     }
 
     public void ModifyLattice(GameObject controlPoint)
@@ -141,36 +144,6 @@ public class ShaderSetupScript : MonoBehaviour {
 
         // Do not forget to update data on GPU!
         material.SetVectorArray("_ControlPoints", gridpointsPos);
-
-        // Get all mesh vertices and apply transformation
-        var vertices = mesh.vertices;
-
-        // For each mesh vertex...
-        /*for( int v = 0; v < vertices.Length; ++v )
-        {
-            // 1) get STU coords
-            float s = stuVertices[v].x;
-            float t = stuVertices[v].y;
-            float u = stuVertices[v].z;
-
-            // 2) apply transformation to each vertex
-            Vector3 newPosition = Vector3.zero;
-            for (int pi = 0; pi <= gridParams.L; ++pi)
-                for( int pj = 0; pj <= gridParams.M; ++pj)
-                    for( int pk = 0; pk <= gridParams.N; ++pk)
-                    {
-                        float sBernstein = BinomialCoefficient(gridParams.L, pi) * Mathf.Pow(1 - s, gridParams.L - pi) * Mathf.Pow(s, pi);
-                        float tBernstein = BinomialCoefficient(gridParams.M, pj) * Mathf.Pow(1 - t, gridParams.M - pj) * Mathf.Pow(t, pj);
-                        float uBernstein = BinomialCoefficient(gridParams.N, pk) * Mathf.Pow(1 - u, gridParams.N - pk) * Mathf.Pow(u, pk);
-
-                        newPosition += gridpointsPos[pi, pj, pk] * sBernstein * tBernstein * uBernstein;
-                    }
-
-            vertices[v] = newPosition;
-        }*/
-
-        // apply transformation
-        mesh.vertices = vertices;
     }
 
     // Transform from STU coords to local coords
@@ -179,59 +152,11 @@ public class ShaderSetupScript : MonoBehaviour {
         Vector4 res = 2 * Vector3.Scale(extents, stuCoord) - extents;
         res.w = 1;
 
-        //adjust if origin is down
-        if (isOriginDown) res.y += extents.y;
-
         return res;
     }
-
-    /*// Transform from local coords to STU coords (apply reverse transformation wrt above)
-    Vector3 GetSTUCoords(Vector3 localCoords)
-    {
-        //adjust if origin is down
-        if (isOriginDown) localCoords.y -= extents.y;
-
-        Vector3 res;
-        res.x = (localCoords.x + extents.x) / (2.0f * extents.x);
-        res.y = (localCoords.y + extents.y) / (2.0f * extents.y);
-        res.z = (localCoords.z + extents.z) / (2.0f * extents.z);
-
-        return res;
-    }*/
-
-    /*
-    // Calculate binomial coefficient ( n choose k ) in linear time
-    private float BinomialCoefficient(int n, int k)
-    {
-        k = Math.Min(k, n - k);
-        float res = 1.0f;
-
-        // based on the equivalence n choose k = (n/k) (n-1 choose k-1)
-        for( int i = 0; i < k; ++i )
-            res *= (float)(n - i) / (k - i);
-
-        return res;
-    }
-    */
 
     private void Update()
     {
-        // Check if we hit a cube with the mouse
-        if (Input.GetMouseButtonDown(0))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit))
-            {
-                LatticeVertexScript latticeVertex = hit.transform.gameObject.GetComponent<LatticeVertexScript>();
-                if (latticeVertex != null)
-                {
-                    // Change lattice control point and then all mesh vertices
-                    //ModifyLattice(hit.transform.gameObject);
-                }
-            }
-        }
-
         // Reset everything when pressing R
         if (Input.GetKeyDown(KeyCode.R))
         {
