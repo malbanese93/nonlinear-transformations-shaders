@@ -26,22 +26,22 @@ Shader "Surface/Vertex" {
 		// === BEND ===
 		[Header(Bend X)]
 		// Params for bending region, expressed in percentage
-		_XMin("Min value X", Range(0,1)) = 0
-		_XMax("Max value X", Range(0,1)) = 1
-		_X0("Starting value X", Range(0,1)) = 0
-		_BendRateX("Bend Rate X", Float) = 0
+		_XMin("Min %value X", Range(0,1)) = 0
+		_XMax("Max %value X", Range(0,1)) = 1
+		[Enum(Xmin,0,Halfway,1,Xmax,2)]_X0("Starting %value X (in affected region)", Float) = 0
+		_BendAngleX("Angle at extremes X", Range(-360,360)) = 0
 		[Space(5)]
 		[Header(Bend Y)]
-		_YMin("Min value Y", Range(0,1)) = 0
-		_YMax("Max value Y", Range(0,1)) = 1
-		_Y0("Starting value Y", Range(0,1)) = 0
-		_BendRateY("Bend Rate Y", Float) = 0
+		_YMin("Min %value Y", Range(0,1)) = 0
+		_YMax("Max %value Y", Range(0,1)) = 1
+		[Enum(Ymin,0,Halfway,1,Ymax,2)]_Y0("Starting %value Y (in affected region)", Float) = 0
+		_BendAngleY("Angle at extremes Y", Range(-360,360)) = 0
 		[Space(5)]
 		[Header(Bend Z)]
-		_ZMin("Min value Z", Range(0,1)) = 0
-		_ZMax("Max value Z", Range(0,1)) = 1
-		_Z0("Starting value Z", Range(0,1)) = 0
-		_BendRateZ("Bend Rate Z", Float) = 0
+		_ZMin("Min %value Z", Range(0,1)) = 0
+		_ZMax("Max %value Z", Range(0,1)) = 1
+		[Enum(Zmin,0,Halfway,1,Zmax,2)]_Z0("Starting %value Z (in affected region)", Float) = 0
+		_BendAngleZ("Angle at extremes Z", Range(-360,360)) = 0
     }
 
     SubShader {
@@ -76,17 +76,17 @@ Shader "Surface/Vertex" {
 		float _XMin;
 		float _XMax;
 		float _X0;
-		float _BendRateX;
+		float _BendAngleX;
 
 		float _YMin;
 		float _YMax;
 		float _Y0;
-		float _BendRateY;
+		float _BendAngleY;
 
 		float _ZMin;
 		float _ZMax;
 		float _Z0;
-		float _BendRateZ;
+		float _BendAngleZ;
 
 		// FFD
 		bool _IsOriginDown;
@@ -125,9 +125,9 @@ Shader "Surface/Vertex" {
 			DoStretch(v, Y_AXIS, _StretchAmountY, _StretchStrengthY, _MaxExtents );
 			DoStretch(v, Z_AXIS, _StretchAmountZ, _StretchStrengthZ, _MaxExtents );
 
-			DoBend(v, X_AXIS, _XMin, _XMax, _X0, _BendRateX, _MaxExtents );
-			DoBend(v, Y_AXIS, _YMin, _YMax, _Y0, _BendRateY, _MaxExtents );
-			DoBend(v, Z_AXIS, _ZMin, _ZMax, _Z0, _BendRateZ, _MaxExtents );
+			DoBend(v, X_AXIS, _XMin, _XMax, _X0, _BendAngleX, _MaxExtents );
+			DoBend(v, Y_AXIS, _YMin, _YMax, _Y0, _BendAngleY, _MaxExtents );
+			DoBend(v, Z_AXIS, _ZMin, _ZMax, _Z0, _BendAngleZ, _MaxExtents );
 		}
 
 		void surf (Input IN, inout SurfaceOutput o) {

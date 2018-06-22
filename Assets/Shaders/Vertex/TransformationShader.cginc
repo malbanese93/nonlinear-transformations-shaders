@@ -245,9 +245,9 @@ inline float percentageYToLocalCoords( float p, float e ) {
 // Bend linearly at a rate k [rad/m] from point y0
 // Note that we are following Barr convention, thus this transformation is around y-axis and not z-axis by default!
 // All y passed as arguments are to be considered as percentages aka in [0,1] of the mesh measures
-inline void DoBend( inout appdata_full v, int _BendAxis, float _YMin, float _YMax, float _Y0, float k, float4 _MaxExtents ) {
-    // If no bending is required actually (k = 0), just return v
-    if( k < FLOAT_EPS && k > -FLOAT_EPS )
+inline void DoBend( inout appdata_full v, int _BendAxis, float _YMin, float _YMax, float _Y0, float _BendAngle, float4 _MaxExtents ) {
+    // if no bending involved, simply return (otherwise you divide by zero later!)
+    if( _BendAngle < FLOAT_EPS && _BendAngle > -FLOAT_EPS)
         return;
 
     DoYAxisRotation(v, _BendAxis, _MaxExtents);
@@ -261,7 +261,24 @@ inline void DoBend( inout appdata_full v, int _BendAxis, float _YMin, float _YMa
     // get y from percentages
     float ymin = percentageYToLocalCoords(_YMin, _MaxExtents.y);
     float ymax = percentageYToLocalCoords(_YMax, _MaxExtents.y);
-    float y0 = percentageYToLocalCoords(_Y0, _MaxExtents.y);
+
+    // NB: due to limitations of shaderlab, y0 is set to 0,1,2 instead
+    //     of 0 0.5 1 (only int allowed), so scale first!
+    float y0_coeff = _Y0 / 2.0f;
+    // Determine percentage of mesh from where to start transformation
+    float y0_perc = y0_coeff * _YMax + (1-y0_coeff) * _YMin;
+
+    // finally retrieve actual y to start from
+    float y0 = percentageYToLocalCoords(y0_perc, _MaxExtents.y);
+
+    // Differently from Barr, k is given implicitly through the max angles
+    // at extremes (this enables to use meshes indipendently of scaling)
+    _BendAngle = radians(_BendAngle);     // Also, convert to radians first!
+    float k;
+    if( _Y0 < FLOAT_EPS ) // y0 is set to minimum
+       k = _BendAngle / (ymax - y0);
+    else
+       k = _BendAngle / (ymin - y0);
 
     float yhat = clamp(y, ymin, ymax);
     float theta = k * (yhat - y0);
