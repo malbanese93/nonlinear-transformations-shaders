@@ -30,6 +30,7 @@ public class ShaderSetupScript : MonoBehaviour {
         // First of all, retrieve bounds for mesh and send them to the shader
         mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
+        print(bounds.center);
         extents = bounds.extents;
         material = GetComponent<Renderer>().material;
         material.SetVector("_MaxExtents", extents);
