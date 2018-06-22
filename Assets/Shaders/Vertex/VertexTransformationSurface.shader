@@ -112,14 +112,11 @@ Shader "Surface/Vertex" {
             // First of all, translate all vertices by _BoundsCenter.
             // We do this since the mesh can be modelled around any pivot and this breaks
             // the portability of the transforms below. By using _BoundsCenter
-            // we are to always start from the center of the mesh.
+            // we are sure to always start from the center of the mesh.
             v.vertex -= _BoundsCenter;
 
 			// Apply FREE-FORM DEFORMATION (lattice)
-			// TODO NB: Due to the nature of transformation, we pass in extents greater than the real ones.
-			// Otherwise, we can encounter a situation of the type: 0^0 which result in NaNs propagating
-            DoFFD(v, _L, _M, _N, _ControlPoints, _MaxExtents);
-            //DoFFD(v, _L, _M, _N, _ControlPoints, float4(_MaxExtents.xyz * 1.2f, _MaxExtents.w));
+            DoFFD(v, _L, _M, _N, _ControlPoints, _BoundsCenter, _MaxExtents);
 
 			// The order is as follows
 			// TWIST - STRETCH - BEND, for each along X,Y,Z respectively

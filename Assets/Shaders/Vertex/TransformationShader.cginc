@@ -327,11 +327,11 @@ inline float BinomialCoefficient(int n, int k) {
     return res;
 }
 
-// Transform from local coords to STU coords
-inline float3 GetSTUCoords(float4 localCoords, float4 _MaxExtents)
+// Transform from local coords (from bounds center) to STU coords
+inline float3 GetSTUCoords(float4 bcCoords, float4 _BoundsCenter, float4 _MaxExtents)
 {
    // translate, scale and return
-   float3 res = (localCoords + _MaxExtents) / (2 * _MaxExtents);
+   float3 res = (bcCoords + _MaxExtents) / (2 * _MaxExtents);
 
    return res;
 }
@@ -343,12 +343,21 @@ inline int To1DArrayCoords(int x, int y, int z, int L, int M)
     return x + (L+1) * (y + (M+1) * z);
 }
 
+// This custom pow function ignores 0^0 by setting it to zero, in order to avoid
+// NaNs arising from the bernstein polynomials
+inline float custom_pow(float a, float b) {
+    if( a < FLOAT_EPS && a > -FLOAT_EPS )
+        return 1.0;
+    else
+        return pow(a,b);
+}
+
 // 4) FREE FORM DEFORMATION (FFD or LATTICE)
 // Alter all vertices by altering a cubic grid around the mesh.
 // The mesh is then reconstructed via a trivariate version of the bezier polynomials.
-inline void DoFFD(inout appdata_full v, int _L, int _M, int _N, float4 _ControlPoints[FFD_MAX_PTS], float4 _MaxExtents) {
+inline void DoFFD(inout appdata_full v, int _L, int _M, int _N, float4 _ControlPoints[FFD_MAX_PTS], float4 _BoundsCenter, float4 _MaxExtents) {
     // 1) get STU coords of undistorted mesh vertex
-    float3 stu = GetSTUCoords(v.vertex, _MaxExtents);
+    float3 stu = GetSTUCoords(v.vertex, _BoundsCenter, _MaxExtents);
     float s = stu.x;
     float t = stu.y;
     float u = stu.z;
@@ -360,9 +369,10 @@ inline void DoFFD(inout appdata_full v, int _L, int _M, int _N, float4 _ControlP
         for( int pj = 0; pj <= _M; ++pj)
             for( int pk = 0; pk <= _N; ++pk)
             {
-                float sBernstein = BinomialCoefficient(_L, pi) * pow(1 - s, _L - pi) * pow(s, pi);
-                float tBernstein = BinomialCoefficient(_M, pj) * pow(1 - t, _M - pj) * pow(t, pj);
-                float uBernstein = BinomialCoefficient(_N, pk) * pow(1 - u, _N - pk) * pow(u, pk);
+                // NB: Since 0^0 is NaN, we use a custom pow function to ignore that case
+                float sBernstein = BinomialCoefficient(_L, pi) * custom_pow(1 - s, _L - pi) * custom_pow(s, pi);
+                float tBernstein = BinomialCoefficient(_M, pj) * custom_pow(1 - t, _M - pj) * custom_pow(t, pj);
+                float uBernstein = BinomialCoefficient(_N, pk) * custom_pow(1 - u, _N - pk) * custom_pow(u, pk);
 
                 newPosition += _ControlPoints[To1DArrayCoords(pi, pj, pk, _L, _M)] * sBernstein * tBernstein * uBernstein;
             }

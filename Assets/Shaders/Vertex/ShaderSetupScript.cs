@@ -92,8 +92,7 @@ public class ShaderSetupScript : MonoBehaviour {
                     // scaling is relative to parent size. There is no big or small cube in absolute terms, it depends on the mesh!
                     cube.transform.localScale = Vector3.one * 0.30f * Mathf.Min(Mathf.Min(extents.x, extents.y), extents.z);
 
-                    // Set it as a child of the mesh
-                    cube.transform.localPosition = gridpointsPos[To1DArrayCoords(i, j, k)] + new Vector4(bounds.center.x, bounds.center.y, bounds.center.z, 1.0f) ;
+                    cube.transform.localPosition = gridpointsPos[To1DArrayCoords(i, j, k)] + new Vector4(bounds.center.x, bounds.center.y, bounds.center.z, 1.0f);
                     cube.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
                     // Disable shadows for these objects
@@ -121,8 +120,8 @@ public class ShaderSetupScript : MonoBehaviour {
                     // In order to do so, we first set them as stu (aka in percentage)...
                     Vector4 stuCoords = new Vector4 { x = (float)i / gridParams.L, y = (float)j / gridParams.M, z = (float)k / gridParams.N, w = 1 };
 
-                    //... then in local space
-                    gridpointsPos[To1DArrayCoords(i,j,k)] = GetLocalCoords(stuCoords);
+                    //... then in local space centered in bounds center
+                    gridpointsPos[To1DArrayCoords(i,j,k)] = GetBoundCenterCoords(stuCoords);
                 }
 
         // TODO: Set the rest of the values to zero, since they will be unused
@@ -140,16 +139,16 @@ public class ShaderSetupScript : MonoBehaviour {
         var k = idx.N;
 
         // and update grid point
-        gridpointsPos[To1DArrayCoords(i, j, k)] = controlPoint.transform.localPosition;
+        gridpointsPos[To1DArrayCoords(i, j, k)] = controlPoint.transform.localPosition - bounds.center;
 
         // Do not forget to update data on GPU!
         material.SetVectorArray("_ControlPoints", gridpointsPos);
     }
 
-    // Transform from STU coords to local coords
-    Vector4 GetLocalCoords(Vector4 stuCoord)
+    // Transform from STU coords to local coords (centered in bounds center)
+    Vector4 GetBoundCenterCoords(Vector4 stuCoord)
     {
-        Vector4 res = 2 * Vector3.Scale(extents, stuCoord) - extents;
+        Vector4 res = 2 * Vector3.Scale(extents, stuCoord - 0.5f * Vector4.one);
         res.w = 1;
 
         return res;
