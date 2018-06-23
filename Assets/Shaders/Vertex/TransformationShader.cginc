@@ -31,10 +31,12 @@ void DoZAxisRotation(inout appdata_full v, int toAxis, inout float4 maxExtents) 
     // one axis with the z axis
     if( toAxis == X_AXIS ) {
         v.vertex = mul(ZtoXAxis, v.vertex);
+        v.normal = mul((float3x3)(ZtoXAxis), v.normal);
         maxExtents = mul(ZtoXAxis, maxExtents);
     }
     else if( toAxis == Y_AXIS ) {
         v.vertex = mul(ZtoYAxis, v.vertex);
+        v.normal = mul((float3x3)(ZtoYAxis), v.normal);
         maxExtents = mul(ZtoYAxis, maxExtents);
     }
 }
@@ -59,10 +61,15 @@ void RestoreZAxis(inout appdata_full v, int fromAxis, inout float4 maxExtents) {
     // Rollback axis if pre-rotated
     if( fromAxis == X_AXIS ) {
         v.vertex = mul(XtoZAxis, v.vertex);
+        // Normals are transformed via matrix N = inv(transpose(M3x3))
+        // where M3x3 is the upper-left matrix M
+        // since this is a rotation matrix only, inv(transpose(M3x3)) = M3x3!
+        v.normal = mul((float3x3)(XtoZAxis), v.normal);
         maxExtents = mul(XtoZAxis, maxExtents);
     }
     else if( fromAxis == Y_AXIS ) {
         v.vertex = mul(YtoZAxis, v.vertex);
+        v.normal = mul((float3x3)(YtoZAxis), v.normal);
         maxExtents = mul(YtoZAxis, maxExtents);
     }
 }
@@ -89,10 +96,12 @@ void DoYAxisRotation(inout appdata_full v, int toAxis, inout float4 maxExtents) 
     // one axis with the y axis
     if( toAxis == X_AXIS ) {
         v.vertex = mul(YtoXAxis, v.vertex);
+        v.normal = mul((float3x3)YtoXAxis, v.normal);
         maxExtents = mul(YtoXAxis, maxExtents);
     }
     else if( toAxis == Z_AXIS ) {
         v.vertex = mul(YtoZAxis, v.vertex);
+        v.normal = mul((float3x3)YtoZAxis, v.normal);
         maxExtents = mul(YtoZAxis, maxExtents);
     }
 }
@@ -117,10 +126,12 @@ void RestoreYAxis(inout appdata_full v, int fromAxis, inout float4 maxExtents) {
     // Rollback axis if pre-rotated
     if( fromAxis == X_AXIS ) {
         v.vertex = mul(XtoYAxis, v.vertex);
+        v.normal = mul((float3x3)XtoYAxis, v.normal);
         maxExtents = mul(XtoYAxis, maxExtents);
     }
     else if( fromAxis == Z_AXIS ) {
         v.vertex = mul(ZtoYAxis, v.vertex);
+        v.normal = mul((float3x3)ZtoYAxis, v.normal);
         maxExtents = mul(ZtoYAxis, maxExtents);
     }
 }

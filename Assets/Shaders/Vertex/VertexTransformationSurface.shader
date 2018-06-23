@@ -100,15 +100,15 @@ Shader "Surface/Vertex" {
 		// This is done since dynamically sized arrays are not supported in hlsl
 		float4 _ControlPoints[FFD_MAX_PTS];
 
-		// Because of the surface shaders limitations, a non-empty input struct
-		// must always be defined, even if not used.
 		struct Input {
-		  int ignore_this;
+            float3 vertexNormal;
 		};
 
         // NB: the input vertex data MUST be of type appdata_full, even if all
         // additional data are not used
-		void vert (inout appdata_full v) {
+		void vert (inout appdata_full v, out Input o) {
+            UNITY_INITIALIZE_OUTPUT(Input,o);
+
             // First of all, translate all vertices by _BoundsCenter.
             // We do this since the mesh can be modelled around any pivot and this breaks
             // the portability of the transforms below. By using _BoundsCenter
@@ -116,11 +116,11 @@ Shader "Surface/Vertex" {
             v.vertex -= _BoundsCenter;
 
 			// Apply FREE-FORM DEFORMATION (lattice)
-            DoFFD(v, _L, _M, _N, _ControlPoints, _BoundsCenter, _MaxExtents);
+            //DoFFD(v, _L, _M, _N, _ControlPoints, _BoundsCenter, _MaxExtents);
 
 			// The order is as follows
 			// TWIST - STRETCH - BEND, for each along X,Y,Z respectively
-			/*DoTwist(v, X_AXIS, _TwistAngleX, _MaxExtents);
+			DoTwist(v, X_AXIS, _TwistAngleX, _MaxExtents);
 			DoTwist(v, Y_AXIS, _TwistAngleY, _MaxExtents);
 			DoTwist(v, Z_AXIS, _TwistAngleZ, _MaxExtents);
 
@@ -130,14 +130,17 @@ Shader "Surface/Vertex" {
 
 			DoBend(v, X_AXIS, _XMin, _XMax, _X0, _BendAngleX, _MaxExtents );
 			DoBend(v, Y_AXIS, _YMin, _YMax, _Y0, _BendAngleY, _MaxExtents );
-			DoBend(v, Z_AXIS, _ZMin, _ZMax, _Z0, _BendAngleZ, _MaxExtents );*/
+			DoBend(v, Z_AXIS, _ZMin, _ZMax, _Z0, _BendAngleZ, _MaxExtents );
 
             // Restore coords wrt pivot
             v.vertex += _BoundsCenter;
+
+            o.vertexNormal = abs(v.normal);
 		}
 
 		void surf (Input IN, inout SurfaceOutput o) {
-			o.Albedo = half3(1.0f, 0.34f, 0.56f);
+			o.Albedo = half3(0.8f,0.8f,0.8f);
+            //o.Normal = UnityObjectToWorldNormal (IN.worldNormal);
 		}
 
       ENDCG
