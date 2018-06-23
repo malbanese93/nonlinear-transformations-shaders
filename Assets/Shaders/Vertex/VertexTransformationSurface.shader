@@ -137,7 +137,7 @@ Shader "Surface/Vertex" {
 		}
 
 		void surf (Input IN, inout SurfaceOutput o) {
-			o.Albedo = half3(0.28f, 0.34f, 0.56f);
+			o.Albedo = half3(1.0f, 0.34f, 0.56f);
 		}
 
       ENDCG

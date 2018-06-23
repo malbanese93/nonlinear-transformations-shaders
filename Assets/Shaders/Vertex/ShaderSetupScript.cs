@@ -79,7 +79,7 @@ public class ShaderSetupScript : MonoBehaviour {
             for (int j = 0; j <= gridParams.M; ++j)
                 for (int k = 0; k <= gridParams.N; ++k)
                 {
-                    // Generate debug cube
+                    // Generate cube
                     GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     cube.name = "P_" + i + "_" + j + "_" + k;
 

@@ -343,10 +343,11 @@ inline int To1DArrayCoords(int x, int y, int z, int L, int M)
     return x + (L+1) * (y + (M+1) * z);
 }
 
-// This custom pow function ignores 0^0 by setting it to zero, in order to avoid
+// This custom pow function ignores 0^0 by setting it to one, in order to avoid
 // NaNs arising from the bernstein polynomials
+//( lim x ->0 x^x = 1)
 inline float custom_pow(float a, float b) {
-    if( a < FLOAT_EPS && a > -FLOAT_EPS )
+    if( a < FLOAT_EPS && a > -FLOAT_EPS && b < FLOAT_EPS && b > -FLOAT_EPS)
         return 1.0;
     else
         return pow(a,b);
