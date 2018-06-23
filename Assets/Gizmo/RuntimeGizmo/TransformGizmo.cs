@@ -165,11 +165,10 @@ namespace RuntimeGizmos
 					if(type == TransformType.Move)
 					{
 						float moveAmount = ExtVector3.MagnitudeInDirection(mousePosition - previousMousePosition, projectedAxis) * moveSpeedMultiplier;
-						target.Translate(axis * moveAmount, Space.World);
 
                         // DO ACTION ONLY WHEN MOVEAMOUNT IS NOT ZERO
                         if (!Mathf.Approximately(moveAmount, 0.0f))
-                            target.parent.GetComponent<ShaderSetupScript>().ModifyLattice(target.gameObject);
+                            target.parent.GetComponent<ShaderSetupScript>().ModifyLattice(target.gameObject, axis * moveAmount);
                     }
 
 					if(type == TransformType.Scale)

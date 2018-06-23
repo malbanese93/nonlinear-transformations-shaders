@@ -21,6 +21,9 @@ public class ShaderSetupScript : MonoBehaviour {
     // Save gridpoints in local coords
     Vector4[] gridpointsPos;
 
+    // Is multipoint lattice enabled?
+    public bool isMultiplePointLattice;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -128,18 +131,32 @@ public class ShaderSetupScript : MonoBehaviour {
         // 
     }
 
-    public void ModifyLattice(GameObject controlPoint)
+    public void ModifyLattice(GameObject controlPoint, Vector3 translationVector)
     {
         // Change position of vertex...
-        var idx = controlPoint.GetComponent<LatticeVertexScript>().index;
+        controlPoint.transform.Translate(translationVector, Space.World);
 
-        // This is the index i,j,k for point P_ijk
+        // Index for P_ijk
+        var idx = controlPoint.GetComponent<LatticeVertexScript>().index;
         var i = idx.L;
         var j = idx.M;
         var k = idx.N;
 
         // and update grid point
         gridpointsPos[To1DArrayCoords(i, j, k)] = controlPoint.transform.localPosition - bounds.center;
+
+        // if multipoint lattice is enabled, apply transformation for every other point at the same quota
+        // (aka pj = j)
+        if (isMultiplePointLattice)
+        {
+            for (int pi = 0; pi <= gridParams.L; ++pi)
+                for(int pk = 0; pk <= gridParams.N; ++pk)
+                {
+                    var siblingCube = transform.Find("P_" + pi + "_" + j + "_" + pk);
+                    siblingCube.Translate(translationVector, Space.World);
+                    gridpointsPos[To1DArrayCoords(pi, j, pk)] = siblingCube.transform.localPosition - bounds.center;
+                }
+        }
 
         // Do not forget to update data on GPU!
         material.SetVectorArray("_ControlPoints", gridpointsPos);
