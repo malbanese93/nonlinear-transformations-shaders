@@ -1,20 +1,46 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class MeshLoader : MonoBehaviour {
+using Crosstales.FB;
 
-	// Use this for initialization
-	void Start () {
-        ObjImporter OBJimporter = new ObjImporter();
+public class MeshLoader : MonoBehaviour
+{
+    public GameObject meshObject; // mesh used for visualization
+    MeshFilter meshFilter; // .. and its meshfilter
 
-        // TODO: MESH SELECT WINDOW
-        Mesh m = OBJimporter.ImportFile(@"E:\unity5\Projects\LatticeTest\LatticeTest\thesis\Assets\Mesh\mesh_onelayer.obj");
-        GetComponent<MeshFilter>().mesh = m;
+    bool isMeshLoaded;
+
+    public static readonly string DEFAULT_PATH = @"E:\unity5\Projects\LatticeTest\LatticeTest\thesis\Assets\Mesh\";
+
+    public Mesh testMesh;
+
+    // GUI Handling
+    public Button loadMeshBtn;
+
+    private void Start()
+    {
+        meshFilter = meshObject.GetComponent<MeshFilter>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    public void OpenSingleFile()
+    {
+        // Open file loader (only obj!)
+        string extensions = "obj";
+        string path = FileBrowser.OpenSingleFile("Open File", DEFAULT_PATH, extensions);
+        Debug.Log("Selected file: " + path);
+
+        // Import mesh and set it
+        Mesh myMesh = FastObjImporter.Instance.ImportFile(path);
+        meshFilter.sharedMesh = myMesh;
+
+        // NB: recalculate all values needed for other scripts (especially lattice!)
+        meshObject.GetComponent<ShaderSetupScript>().Setup();
+
+        Debug.Log("Loading complete");
+
+        loadMeshBtn.gameObject.SetActive(true);
+    }
+
 }

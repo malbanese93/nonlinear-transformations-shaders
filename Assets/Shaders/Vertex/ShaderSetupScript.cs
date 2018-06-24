@@ -24,20 +24,16 @@ public class ShaderSetupScript : MonoBehaviour {
     // Is multipoint lattice enabled?
     public bool isMultiplePointLattice;
 
-	// Use this for initialization
-	void Start ()
+    private void Awake()
     {
-        // First of all, retrieve bounds for mesh and send them to the shader
-        mesh = GetComponent<MeshFilter>().mesh;
-        bounds = mesh.bounds;
-        extents = bounds.extents;
-            
         // NB: the center may be everywhere. Always use bound center to do all calculations
         // independently of how the mesh was created.
         material = GetComponent<Renderer>().material;
-        material.SetVector("_BoundsCenter", bounds.center);
-        material.SetVector("_MaxExtents", extents);
+    }
 
+    // Use this for initialization
+    void Start ()
+    {
         // Create lattice points
         // Notice that we must use 1D arrays instead of 3D arrays
         // since there's no way to pass it to the shader otherwise!
@@ -45,6 +41,21 @@ public class ShaderSetupScript : MonoBehaviour {
         // Everything is clamped to max values set.
         // IF you change this value, remember to change the equivalent value in the vertex shader!
         gridpointsPos = new Vector4[256];
+        Setup();
+    }
+
+    public void Setup()
+    {
+        // Retrieve bounds for mesh
+        mesh = GetComponent<MeshFilter>().mesh;
+        bounds = mesh.bounds;
+        extents = bounds.extents;
+
+        // send data to shader
+        material.SetVector("_BoundsCenter", bounds.center);
+        material.SetVector("_MaxExtents", extents);
+
+
 
         // Set lattice points
         StartLattice();
