@@ -68,11 +68,7 @@ public sealed class FastObjImporter
 
         Mesh mesh = new Mesh();
         // https://unity3d.com/unity/beta/unity2017.3.0b4
-        // NB: Unity support for high vertex count meshes added only recently!
-        if ( faceData.Count >= 64000 )
-        {
-            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // Use 32-bit index for vertices
-        }
+        mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // Use 32-bit index for vertices
 
         mesh.vertices = newVerts;
         mesh.uv = newUVs;

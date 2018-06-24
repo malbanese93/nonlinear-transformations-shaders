@@ -31,8 +31,13 @@ public class MeshLoader : MonoBehaviour
         string path = FileBrowser.OpenSingleFile("Open File", DEFAULT_PATH, extensions);
         Debug.Log("Selected file: " + path);
 
+        // return if no file was selected
+        if (path.Equals(""))
+            return;
+
         // Import mesh and set it
         Mesh myMesh = FastObjImporter.Instance.ImportFile(path);
+        meshFilter.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // Use 32-bit index for vertices
         meshFilter.sharedMesh = myMesh;
 
         // NB: recalculate all values needed for other scripts (especially lattice!)
