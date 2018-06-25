@@ -20,9 +20,11 @@ public class UIMgr : MonoBehaviour {
 
     public void OnChangeSlider(Slider slider)
     {
-        // change text
+        // change text (use only 3 significant digits)
+        float val = Mathf.Round((slider.value * 100)) / 100.0f;
+
         Text description = slider.transform.parent.Find(slider.name + "Value").GetComponent<Text>();
-        description.text = slider.value.ToString(); 
+        description.text = val.ToString(); 
 
         // set shader variable
         material.SetFloat(slider.name, slider.value);
