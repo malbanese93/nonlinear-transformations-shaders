@@ -27,6 +27,7 @@ public class UIMgr : MonoBehaviour {
 
         // set shader variable
         material.SetFloat(slider.name, slider.value);
+        print(slider.value);
     }
 
     // This returns the enum value of the starting value for selected bend.

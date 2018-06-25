@@ -1,6 +1,6 @@
 Shader "Surface/Vertex" {
     Properties {
-        // NB: VALUES SET BY UI        
+        // NB: VALUES SET BY UI
 		// === TWIST ===
 		/*[Header(Twist)]
 		// _TwistAngle: Angle of rotation at the extremes (in degrees)
