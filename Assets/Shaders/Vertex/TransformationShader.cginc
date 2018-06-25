@@ -190,7 +190,6 @@ inline void DoStretch( inout appdata_full v, int _StretchAxis, float _StretchAmo
     float w = v.vertex.w;
 
     // NB Vertex and normal transformation depend on the sign of the amount!
-
     // _StretchAmount > 0 ==> stretch
     if( _StretchAmount > 0 )
     {

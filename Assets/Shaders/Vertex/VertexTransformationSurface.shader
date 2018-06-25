@@ -53,8 +53,6 @@ Shader "Surface/Vertex" {
 		#include "TransformationShader.cginc"
 
         #pragma surface surf Lambert vertex:vert
-		// === UNIFORM VARIABLES ===
-		// Just copied from Shaderlab wrapper!
 
 		// COMMON
 		float4 _MaxExtents;
@@ -140,7 +138,7 @@ Shader "Surface/Vertex" {
 
 		void surf (Input IN, inout SurfaceOutput o) {
 			o.Albedo = half3(0.8f,0.8f,0.8f);
-            //o.Normal = UnityObjectToWorldNormal (IN.worldNormal);
+            o.Normal = UnityObjectToWorldNormal (IN.vertexNormal);
 		}
 
       ENDCG

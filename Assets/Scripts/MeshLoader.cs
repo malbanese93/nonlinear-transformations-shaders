@@ -24,7 +24,7 @@ public class MeshLoader : MonoBehaviour
         meshFilter = meshObject.GetComponent<MeshFilter>();
     }
 
-    public void OpenSingleFile()
+    public void LoadMeshFromFile()
     {
         // Open file loader (only obj!)
         string extensions = "obj";
