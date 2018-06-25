@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // Shader setup script 
 // Mainly used to setup lattice, but also to set mesh extents used by all
