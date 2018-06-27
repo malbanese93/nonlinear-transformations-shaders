@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class UIManager : MonoBehaviour {
     
@@ -14,6 +15,7 @@ public class UIManager : MonoBehaviour {
     [Header("UI Elements")]
     public GameObject initPanel;
     public GameObject optionsPanel;
+    public GameObject loadingScreen;
 
     public static readonly string DEFAULT_PATH = @"E:\unity5\Projects\LatticeTest\LatticeTest\thesis\Assets\Mesh\";
 
@@ -45,13 +47,18 @@ public class UIManager : MonoBehaviour {
         print(slider.value);
     }
 
-    // This returns the enum value of the starting value for selected bend.
-    // 0 -> set equal to min value
-    // 1 -> set halfway between min and max value
-    // 2 -> set equal to max value
+
     public void OnBendStartDropdown(Dropdown dropdown)
     {
         material.SetInt(dropdown.name, dropdown.value);
+    }
+
+    public void OnMultiLatticeToggle(Toggle toggle)
+    {
+        ShaderSetupScript shaderSetupScript = mainObject.GetComponent<ShaderSetupScript>();
+
+        if( shaderSetupScript )
+            shaderSetupScript.isMultiplePointLattice = toggle.isOn;
     }
 
     public void LoadMeshFromFile()
@@ -65,6 +72,17 @@ public class UIManager : MonoBehaviour {
         if (path.Equals(""))
             return;
 
+        // Hide screen with loading screen
+        loadingScreen.SetActive(true);
+
+        StartCoroutine(ImportMesh(path));
+    }
+
+    private IEnumerator ImportMesh(string path)
+    {
+        // In order to let Unity redraw the GUI, we need to skip a frame first before importing the mesh...
+        yield return null;
+
         // Import mesh and set it
         Mesh myMesh = FastObjImporter.Instance.ImportFile(path);
         meshFilter.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // Use 32-bit index for vertices
@@ -76,6 +94,9 @@ public class UIManager : MonoBehaviour {
         // Hide initial message and enable options
         initPanel.SetActive(false);
         optionsPanel.SetActive(true);
+
+        // Show screen again
+        loadingScreen.SetActive(false);
 
         Debug.Log("Loading complete");
     }
