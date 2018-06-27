@@ -13,19 +13,7 @@ public class LoadManager : MonoBehaviour {
     MeshFilter meshFilter;
     ShaderSetupScript shaderSetupScript;
 
-    [Header("Panels")]
-    public GameObject initPanel;
-    public GameObject optionsPanel;
-    public GameObject loadingScreen;
-
     public static readonly string DEFAULT_PATH = @"E:\unity5\Projects\LatticeTest\LatticeTest\thesis\Assets\Mesh\";
-
-    private void Awake()
-    {
-        // Show only init message at first
-        initPanel.SetActive(true);
-        optionsPanel.SetActive(false);
-    }
 
     public void OnLoadMeshButton()
     {
@@ -44,7 +32,7 @@ public class LoadManager : MonoBehaviour {
             yield break;
 
         // Hide screen with loading screen
-        loadingScreen.SetActive(true);
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<PanelManager>().SetLoadingScreen(true);
 
         // In order to let Unity redraw the GUI, we need to skip a frame first before importing the mesh...
         yield return null;
@@ -63,14 +51,12 @@ public class LoadManager : MonoBehaviour {
         shaderSetupScript = mainObject.GetComponent<ShaderSetupScript>();
         shaderSetupScript.Setup();
 
-        // Hide initial message and enable options
-        initPanel.SetActive(false);
-        optionsPanel.SetActive(true);
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<PanelManager>().AfterLoading();
 
         shaderSetupScript.Setup();
 
         // Show screen again
-        loadingScreen.SetActive(false);
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<PanelManager>().SetLoadingScreen(false);
 
         Debug.Log("Loading complete");
     }

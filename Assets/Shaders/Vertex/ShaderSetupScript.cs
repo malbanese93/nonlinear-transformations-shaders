@@ -64,8 +64,6 @@ public class ShaderSetupScript : MonoBehaviour {
         GenerateGrid();
 
         // Set uniforms to shader
-        print(gridParams.L);
-
         material.SetInt("_L", gridParams.L);
         material.SetInt("_M", gridParams.M);
         material.SetInt("_N", gridParams.N);

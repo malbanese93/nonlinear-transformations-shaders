@@ -73,7 +73,7 @@ Shader "Surface/Vertex" {
 
 			// The order is as follows
 			// TWIST - STRETCH - BEND, for each along X,Y,Z respectively
-			/*DoTwist(v, X_AXIS, _TwistAngleX, _MaxExtents);
+			DoTwist(v, X_AXIS, _TwistAngleX, _MaxExtents);
 			DoTwist(v, Y_AXIS, _TwistAngleY, _MaxExtents);
 			DoTwist(v, Z_AXIS, _TwistAngleZ, _MaxExtents);
 
@@ -83,7 +83,7 @@ Shader "Surface/Vertex" {
 
 			DoBend(v, X_AXIS, _BendXMin, _BendXMax, _BendX0, _BendAngleX, _MaxExtents );
 			DoBend(v, Y_AXIS, _BendYMin, _BendYMax, _BendY0, _BendAngleY, _MaxExtents );
-			DoBend(v, Z_AXIS, _BendZMin, _BendZMax, _BendZ0, _BendAngleZ, _MaxExtents );*/
+			DoBend(v, Z_AXIS, _BendZMin, _BendZMax, _BendZ0, _BendAngleZ, _MaxExtents );
 
             // Restore coords wrt pivot
             v.vertex += _BoundsCenter;
