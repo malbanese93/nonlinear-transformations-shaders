@@ -23,7 +23,7 @@ public class ShaderSetupScript : MonoBehaviour {
     Vector4[] gridpointsPos;
 
     // Is multipoint lattice enabled?
-    public bool isMultiplePointLattice;
+    [HideInInspector] public bool isMultiplePointLattice;
 
     public void Setup()
     {
@@ -37,10 +37,10 @@ public class ShaderSetupScript : MonoBehaviour {
 
         // NB: the center may be everywhere. Always use bound center to do all calculations
         // independently of how the mesh was created.
-        material = GetComponent<Renderer>().material;
+        material = GetComponent<Renderer>().sharedMaterial;
 
         // Retrieve bounds for mesh
-        mesh = GetComponent<MeshFilter>().mesh;
+        mesh = GetComponent<MeshFilter>().sharedMesh;
         bounds = mesh.bounds;
         extents = bounds.extents;
 
