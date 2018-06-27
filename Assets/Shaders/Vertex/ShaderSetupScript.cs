@@ -154,6 +154,8 @@ public class ShaderSetupScript : MonoBehaviour {
             for (int pi = 0; pi <= gridParams.L; ++pi)
                 for(int pk = 0; pk <= gridParams.N; ++pk)
                 {
+                    if (pi == i && pk == k) continue; // do not translate twice!
+
                     var siblingCube = transform.Find("P_" + pi + "_" + j + "_" + pk);
                     siblingCube.Translate(translationVector, Space.World);
                     gridpointsPos[To1DArrayCoords(pi, j, pk)] = siblingCube.transform.localPosition - bounds.center;
