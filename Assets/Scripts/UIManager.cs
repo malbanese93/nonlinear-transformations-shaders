@@ -11,11 +11,13 @@ public class UIManager : MonoBehaviour {
     public GameObject mainObject;
     Material material;
     MeshFilter meshFilter;
+    ShaderSetupScript shaderSetupScript;
 
     [Header("UI Elements")]
     public GameObject initPanel;
     public GameObject optionsPanel;
     public GameObject loadingScreen;
+    public Dropdown[] latticeDropdowns; // in order to set all params at once
 
     public static readonly string DEFAULT_PATH = @"E:\unity5\Projects\LatticeTest\LatticeTest\thesis\Assets\Mesh\";
 
@@ -24,6 +26,7 @@ public class UIManager : MonoBehaviour {
         // get material reference
         material = mainObject.GetComponent<Renderer>().material;
         meshFilter = mainObject.GetComponent<MeshFilter>();
+        shaderSetupScript = mainObject.GetComponent<ShaderSetupScript>();
 
         // Show only init message at first
         initPanel.SetActive(true);
@@ -44,7 +47,6 @@ public class UIManager : MonoBehaviour {
 
         // set shader variable
         material.SetFloat(slider.name, slider.value);
-        print(slider.value);
     }
 
 
@@ -53,15 +55,23 @@ public class UIManager : MonoBehaviour {
         material.SetInt(dropdown.name, dropdown.value);
     }
 
-    public void OnMultiLatticeToggle(Toggle toggle)
+    public void OnLatticeDropdown()
     {
-        ShaderSetupScript shaderSetupScript = mainObject.GetComponent<ShaderSetupScript>();
-
-        if( shaderSetupScript )
-            shaderSetupScript.isMultiplePointLattice = toggle.isOn;
+        shaderSetupScript.ResetGridPoints(latticeDropdowns[0].value, latticeDropdowns[1].value, latticeDropdowns[2].value);
+        shaderSetupScript.Setup();
     }
 
-    public void LoadMeshFromFile()
+    public void OnMultiLatticeToggle(Toggle toggle)
+    {
+        shaderSetupScript.isMultiplePointLattice = toggle.isOn;
+    }
+
+    public void OnLoadMeshButton()
+    {
+        StartCoroutine(ImportMesh());
+    }
+
+    private IEnumerator ImportMesh()
     {
         // Open file loader (only obj!)
         string extensions = "obj";
@@ -70,16 +80,11 @@ public class UIManager : MonoBehaviour {
 
         // return if no file was selected
         if (path.Equals(""))
-            return;
+            yield break;
 
         // Hide screen with loading screen
         loadingScreen.SetActive(true);
 
-        StartCoroutine(ImportMesh(path));
-    }
-
-    private IEnumerator ImportMesh(string path)
-    {
         // In order to let Unity redraw the GUI, we need to skip a frame first before importing the mesh...
         yield return null;
 
@@ -89,6 +94,8 @@ public class UIManager : MonoBehaviour {
         meshFilter.sharedMesh = myMesh;
 
         // NB: recalculate all values needed for other scripts (especially lattice!)
+        mainObject.SetActive(true);
+        mainObject.transform.parent.gameObject.SetActive(true); // usually meshes are child of another object when imported in Unity...
         mainObject.GetComponent<ShaderSetupScript>().Setup();
 
         // Hide initial message and enable options

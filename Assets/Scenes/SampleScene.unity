@@ -1867,7 +1867,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1135259092}
-        m_MethodName: OnBendStartDropdown
+        m_MethodName: OnLatticeDropdown
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 142232945}
@@ -4597,7 +4597,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1135259092}
-        m_MethodName: LoadMeshFromFile
+        m_MethodName: OnLoadMeshButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -11699,11 +11699,11 @@ Prefab:
       objectReference: {fileID: 2100000, guid: 3efbe6c51ff4343408c1275ba7212569, type: 2}
     - target: {fileID: 100002, guid: 80830df2bbc4745449edc6cafe09dff7, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 80830df2bbc4745449edc6cafe09dff7, type: 3}
       propertyPath: m_Name
-      value: vertexShader
+      value: MainMesh
       objectReference: {fileID: 0}
     - target: {fileID: 3300000, guid: 80830df2bbc4745449edc6cafe09dff7, type: 3}
       propertyPath: m_Mesh
@@ -13345,6 +13345,10 @@ MonoBehaviour:
   initPanel: {fileID: 1872305790}
   optionsPanel: {fileID: 1428417924}
   loadingScreen: {fileID: 1758428194}
+  latticeDropdowns:
+  - {fileID: 1317420891}
+  - {fileID: 1304942046}
+  - {fileID: 142232945}
 --- !u!1 &1137012093
 GameObject:
   m_ObjectHideFlags: 0
@@ -14819,7 +14823,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1135259092}
-        m_MethodName: OnBendStartDropdown
+        m_MethodName: OnLatticeDropdown
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1304942046}
@@ -14957,7 +14961,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1135259092}
-        m_MethodName: OnBendStartDropdown
+        m_MethodName: OnLatticeDropdown
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1317420891}
@@ -20401,7 +20405,7 @@ GameObject:
   - component: {fileID: 1933886165}
   - component: {fileID: 1933886164}
   m_Layer: 5
-  m_Name: LatticePanel <<< TODO
+  m_Name: LatticePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

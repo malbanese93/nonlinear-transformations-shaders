@@ -25,15 +25,7 @@ public class ShaderSetupScript : MonoBehaviour {
     // Is multipoint lattice enabled?
     public bool isMultiplePointLattice;
 
-    private void Awake()
-    {
-        // NB: the center may be everywhere. Always use bound center to do all calculations
-        // independently of how the mesh was created.
-        material = GetComponent<Renderer>().material;
-    }
-
-    // Use this for initialization
-    void Start ()
+    public void Setup()
     {
         // Create lattice points
         // Notice that we must use 1D arrays instead of 3D arrays
@@ -42,11 +34,11 @@ public class ShaderSetupScript : MonoBehaviour {
         // Everything is clamped to max values set.
         // IF you change this value, remember to change the equivalent value in the vertex shader!
         gridpointsPos = new Vector4[256];
-        Setup();
-    }
 
-    public void Setup()
-    {
+        // NB: the center may be everywhere. Always use bound center to do all calculations
+        // independently of how the mesh was created.
+        material = GetComponent<Renderer>().material;
+
         // Retrieve bounds for mesh
         mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
@@ -56,8 +48,6 @@ public class ShaderSetupScript : MonoBehaviour {
         material.SetVector("_BoundsCenter", bounds.center);
         material.SetVector("_MaxExtents", extents);
 
-
-
         // Set lattice points
         StartLattice();
     }
@@ -66,9 +56,6 @@ public class ShaderSetupScript : MonoBehaviour {
     {
         // Delete old vertices if present
         DeleteLatticeVertices();
-
-        // Reset all coordinates of the grid points
-        ResetGridPoints(gridParams.L, gridParams.M, gridParams.N);
 
         // Generate lattice vertices
         GenerateGrid();
@@ -125,7 +112,7 @@ public class ShaderSetupScript : MonoBehaviour {
             Destroy(script.gameObject);
     }
 
-    private void ResetGridPoints(int L, int M, int N)
+    public void ResetGridPoints(int L, int M, int N)
     {
         for (int i = 0; i <= L; ++i)
             for (int j = 0; j <= M; ++j)
@@ -192,11 +179,4 @@ public class ShaderSetupScript : MonoBehaviour {
         }
     }
 
-    // Keep L,M,N >= 1 in editor!
-    void OnValidate()
-    {
-        gridParams.L = Math.Max(1, gridParams.L);
-        gridParams.M = Math.Max(1, gridParams.M);
-        gridParams.N = Math.Max(1, gridParams.N);
-    }
 }
