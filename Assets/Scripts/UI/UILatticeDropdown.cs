@@ -16,8 +16,8 @@ public class UILatticeDropdown : MonoBehaviour {
 	public void ChangeValue()
     {
         ShaderSetupScript shaderSetupScript = mainObject.GetComponent<ShaderSetupScript>();
-        shaderSetupScript.gridParams = 
-            new IntVector3 { L = latticeDropdowns[0].value, M = latticeDropdowns[1].value, N = latticeDropdowns[2].value };
+        shaderSetupScript.gridParams =
+            new IntVector3 { L = latticeDropdowns[0].value + 1, M = latticeDropdowns[1].value + 1, N = latticeDropdowns[2].value + 1 };
         shaderSetupScript.Setup();
     }
 }

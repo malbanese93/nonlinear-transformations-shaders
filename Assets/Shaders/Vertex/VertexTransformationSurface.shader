@@ -1,50 +1,4 @@
 Shader "Surface/Vertex" {
-    Properties {
-        // NB: VALUES SET BY UI
-		// === TWIST ===
-		/*[Header(Twist)]
-		// _TwistAngle: Angle of rotation at the extremes (in degrees)
-		_TwistAngleX("Twist Angle X", Range(-360,360)) = 0
-		_TwistAngleY("Twist Angle Y", Range(-360,360)) = 0
-		_TwistAngleZ("Twist Angle Z", Range(-360,360)) = 0
-
-		[Space(10)]
-
-		// === STRETCH ===
-		[Header(Stretch)]
-		// _StretchAmount: How much to stretch along main axis
-		// _StretchStrength: How much to exagerate stretch
-		_StretchAmountX("Stretch Amount X", Range(-2,2)) = 0
-		_StretchStrengthX("Stretch Strength X", Range(0,3)) = 1
-		[Space(5)]
-		_StretchAmountY("Stretch Amount Y", Range(-2,2)) = 0
-		_StretchStrengthY("Stretch Strength Y", Range(0,3)) = 1
-		[Space(5)]
-		_StretchAmountZ("Stretch Amount Z", Range(-2,2)) = 0
-		_StretchStrengthZ("Stretch Strength Z", Range(0,3)) = 1*/
-
-		/*[Space(10)]
-		// === BEND ===
-		[Header(Bend X)]
-		// Params for bending region, expressed in percentage
-		_BendXMin("Min %value X", Range(0,1)) = 0
-		_BendXMax("Max %value X", Range(0,1)) = 1
-		[Enum(Xmin,0,Halfway,1,Xmax,2)]_BendX0("Starting %value X (in affected region)", Float) = 0
-		_BendAngleX("Angle at extremes X", Range(-360,360)) = 0
-		[Space(5)]
-		[Header(Bend Y)]
-		_BendYMin("Min %value Y", Range(0,1)) = 0
-		_BendYMax("Max %value Y", Range(0,1)) = 1
-		[Enum(Ymin,0,Halfway,1,Ymax,2)]_BendY0("Starting %value Y (in affected region)", Float) = 0
-		_BendAngleY("Angle at extremes Y", Range(-360,360)) = 0
-		[Space(5)]
-		[Header(Bend Z)]
-		_BendZMin("Min %value Z", Range(0,1)) = 0
-		_BendZMax("Max %value Z", Range(0,1)) = 1
-		[Enum(Zmin,0,Halfway,1,Zmax,2)]_BendZ0("Starting %value Z (in affected region)", Float) = 0
-		_BendAngleZ("Angle at extremes Z", Range(-360,360)) = 0*/
-    }
-
     SubShader {
 
 		Tags { "RenderType" = "Opaque" }
@@ -119,7 +73,7 @@ Shader "Surface/Vertex" {
 
 			// The order is as follows
 			// TWIST - STRETCH - BEND, for each along X,Y,Z respectively
-			DoTwist(v, X_AXIS, _TwistAngleX, _MaxExtents);
+			/*DoTwist(v, X_AXIS, _TwistAngleX, _MaxExtents);
 			DoTwist(v, Y_AXIS, _TwistAngleY, _MaxExtents);
 			DoTwist(v, Z_AXIS, _TwistAngleZ, _MaxExtents);
 
@@ -129,7 +83,7 @@ Shader "Surface/Vertex" {
 
 			DoBend(v, X_AXIS, _BendXMin, _BendXMax, _BendX0, _BendAngleX, _MaxExtents );
 			DoBend(v, Y_AXIS, _BendYMin, _BendYMax, _BendY0, _BendAngleY, _MaxExtents );
-			DoBend(v, Z_AXIS, _BendZMin, _BendZMax, _BendZ0, _BendAngleZ, _MaxExtents );
+			DoBend(v, Z_AXIS, _BendZMin, _BendZMax, _BendZ0, _BendAngleZ, _MaxExtents );*/
 
             // Restore coords wrt pivot
             v.vertex += _BoundsCenter;

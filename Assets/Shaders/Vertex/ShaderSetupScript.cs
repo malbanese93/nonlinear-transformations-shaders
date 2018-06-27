@@ -17,6 +17,7 @@ public class ShaderSetupScript : MonoBehaviour {
     // L,M,N parameters for lattice
     // This specifies the degree of the Bezier curve along that axis
     // Remember that for degree k you have k+1 points!
+    [HideInInspector]
     public IntVector3 gridParams;
 
     // Save gridpoints in local coords
@@ -57,10 +58,14 @@ public class ShaderSetupScript : MonoBehaviour {
         // Delete old vertices if present
         DeleteLatticeVertices();
 
+        ResetGridPoints();
+
         // Generate lattice vertices
         GenerateGrid();
 
         // Set uniforms to shader
+        print(gridParams.L);
+
         material.SetInt("_L", gridParams.L);
         material.SetInt("_M", gridParams.M);
         material.SetInt("_N", gridParams.N);
@@ -112,11 +117,11 @@ public class ShaderSetupScript : MonoBehaviour {
             Destroy(script.gameObject);
     }
 
-    public void ResetGridPoints(int L, int M, int N)
+    public void ResetGridPoints()
     {
-        for (int i = 0; i <= L; ++i)
-            for (int j = 0; j <= M; ++j)
-                for (int k = 0; k <= N; ++k)
+        for (int i = 0; i <= gridParams.L; ++i)
+            for (int j = 0; j <= gridParams.M; ++j)
+                for (int k = 0; k <= gridParams.N; ++k)
                 {
                     // We need to express grid points in world space
                     // In order to do so, we first set them as stu (aka in percentage)...

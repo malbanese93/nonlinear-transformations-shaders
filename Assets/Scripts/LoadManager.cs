@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class UIManager : MonoBehaviour {
+public class LoadManager : MonoBehaviour {
     
     [Header("Main Mesh")]
     public GameObject mainObject;
@@ -67,10 +67,7 @@ public class UIManager : MonoBehaviour {
         initPanel.SetActive(false);
         optionsPanel.SetActive(true);
 
-        // Set all initial values to shader
-        // per ogni slider nell'options panel => chiama set slider bla bla 
-        
-
+        shaderSetupScript.Setup();
 
         // Show screen again
         loadingScreen.SetActive(false);

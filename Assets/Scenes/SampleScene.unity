@@ -1880,12 +1880,12 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1135259092}
-        m_MethodName: OnLatticeDropdown
-        m_Mode: 2
+      - m_Target: {fileID: 142232948}
+        m_MethodName: ChangeValue
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 142232945}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Dropdown, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4940,12 +4940,12 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1135259092}
-        m_MethodName: OnChangeSlider
-        m_Mode: 2
+      - m_Target: {fileID: 353537029}
+        m_MethodName: ChangeValue
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 353537028}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Slider, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -9002,9 +9002,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridParams:
-    L: 0
-    M: 0
-    N: 0
+    L: 1
+    M: 1
+    N: 1
   isMultiplePointLattice: 0
 --- !u!33 &786500386
 MeshFilter:
@@ -15146,12 +15146,12 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1135259092}
-        m_MethodName: OnLatticeDropdown
-        m_Mode: 2
+      - m_Target: {fileID: 1304942049}
+        m_MethodName: ChangeValue
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 1304942046}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Dropdown, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -15373,12 +15373,12 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1135259092}
-        m_MethodName: OnLatticeDropdown
-        m_Mode: 2
+      - m_Target: {fileID: 1317420894}
+        m_MethodName: ChangeValue
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 1317420891}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Dropdown, UnityEngine.UI
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
