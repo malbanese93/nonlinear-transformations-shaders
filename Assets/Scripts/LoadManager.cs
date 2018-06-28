@@ -51,16 +51,16 @@ public class LoadManager : MonoBehaviour {
 
         // Set mesh
         meshFilter = mainObject.GetComponent<MeshFilter>();
-        meshFilter.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // Use 32-bit index for vertices
-        meshFilter.sharedMesh = myMesh;
+        meshFilter.mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // Use 32-bit index for vertices
+        meshFilter.mesh = myMesh;
 
         // Do all calculations required by shader
         shaderSetupScript = mainObject.GetComponent<ShaderSetupScript>();
         shaderSetupScript.Setup();
 
         // Change position of camera and light
-        mainCamera.GetComponent<CameraPosition>().ChangeCamera(meshFilter.sharedMesh.bounds);
-        pointLight.GetComponent<LightPosition>().ChangeLight(meshFilter.sharedMesh.bounds);
+        mainCamera.GetComponent<CameraPosition>().ChangeCamera(meshFilter.mesh.bounds);
+        pointLight.GetComponent<LightPosition>().ChangeLight(meshFilter.mesh.bounds);
 
         // change screens
         GameObject.FindGameObjectWithTag("GameController").GetComponent<PanelManager>().AfterLoading();

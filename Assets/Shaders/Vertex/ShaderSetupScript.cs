@@ -41,7 +41,7 @@ public class ShaderSetupScript : MonoBehaviour {
         material = GetComponent<Renderer>().sharedMaterial;
 
         // Retrieve bounds for mesh
-        mesh = GetComponent<MeshFilter>().sharedMesh;
+        mesh = GetComponent<MeshFilter>().mesh;
         bounds = mesh.bounds;
         extents = bounds.extents;
 
