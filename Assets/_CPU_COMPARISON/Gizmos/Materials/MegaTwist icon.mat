@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: SurfaceMaterial
-  m_Shader: {fileID: 4800000, guid: 4eb5d03995d142f4daac44bb3224841c, type: 3}
+  m_Name: MegaTwist icon
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -40,7 +40,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 2, y: 2}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -54,18 +54,7 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SpecGlossMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Amount: 0.5
-    - _BendAngleX: 0
-    - _BendAngleY: 0
-    - _BendAngleZ: 167.54144
-    - _BendRateX: 0
-    - _BendRateY: 0
-    - _BendRateZ: 0
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -80,27 +69,8 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StretchAmountX: 0
-    - _StretchAmountY: 0
-    - _StretchAmountZ: 1.7475967
-    - _StretchStrengthX: 1
-    - _StretchStrengthY: 2.8502512
-    - _StretchStrengthZ: 1
-    - _TwistAngleX: 89
-    - _TwistAngleY: 0
-    - _TwistAngleZ: 0
     - _UVSec: 0
-    - _VertexCount: 0
-    - _X0: 0
-    - _XMax: 1
-    - _XMin: 0
-    - _Y0: 0
-    - _YMax: 1
-    - _YMin: 0
-    - _Z0: 0
-    - _ZMax: 1
-    - _ZMin: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0, b: 0.7241378, a: 1}
+    - _Color: {r: 1, g: 0.628, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
