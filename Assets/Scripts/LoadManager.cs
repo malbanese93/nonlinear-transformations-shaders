@@ -12,6 +12,9 @@ public class LoadManager : MonoBehaviour {
     MeshFilter meshFilter;
     ShaderSetupScript shaderSetupScript;
 
+    [Header("Camera")]
+    public Camera mainCamera;
+
     public static readonly string DEFAULT_PATH = @"E:\unity5\Projects\LatticeTest\LatticeTest\thesis\Assets\Mesh\";
 
     public void OnLoadMeshButton()
@@ -36,27 +39,42 @@ public class LoadManager : MonoBehaviour {
         // In order to let Unity redraw the GUI, we need to skip a frame first before importing the mesh...
         yield return null;
 
-        // Import mesh and set it
+        // Import mesh 
         Mesh myMesh = FastObjImporter.Instance.ImportFile(path);
 
         mainObject.SetActive(true);
         mainObject.transform.parent.gameObject.SetActive(true); // usually meshes are child of another object when imported in Unity..
-                                                                
+
+        // Set mesh
         meshFilter = mainObject.GetComponent<MeshFilter>();
         meshFilter.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // Use 32-bit index for vertices
         meshFilter.sharedMesh = myMesh;
 
+        // Do all calculations required by shader
         shaderSetupScript = mainObject.GetComponent<ShaderSetupScript>();
         shaderSetupScript.Setup();
 
-        GameObject.FindGameObjectWithTag("GameController").GetComponent<PanelManager>().AfterLoading();
+        // Change position camera
+        ChangePositionCamera();
 
-        shaderSetupScript.Setup();
+        // change screens
+        GameObject.FindGameObjectWithTag("GameController").GetComponent<PanelManager>().AfterLoading();
 
         // Show screen again
         GameObject.FindGameObjectWithTag("GameController").GetComponent<PanelManager>().SetLoadingScreen(false);
 
         Debug.Log("Loading complete");
     }
+
+    private void ChangePositionCamera()
+    {
+        var e = meshFilter.sharedMesh.bounds.extents;
+        var bc = meshFilter.sharedMesh.bounds.center;
+
+        mainCamera.transform.position = new Vector3(0, bc.y, 2.5f * e.z);
+        mainCamera.transform.rotation = Quaternion.Euler(0, 180, 0);
+    }
+
+    
 
 }

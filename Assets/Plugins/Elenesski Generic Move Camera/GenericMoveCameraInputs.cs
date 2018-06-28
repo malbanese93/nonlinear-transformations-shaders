@@ -41,8 +41,8 @@ namespace Assets.Elenesski.Camera.Utilities {
 
             isPanLeft = Input.GetKey(KeyCode.A);
             isPanRight = Input.GetKey(KeyCode.D);
-            isPanUp = Input.GetKey(KeyCode.Q);
-            isPanDown = Input.GetKey(KeyCode.Z);
+            isPanUp = Input.GetKey(KeyCode.E);
+            isPanDown = Input.GetKey(KeyCode.Q);
 
             isMoveForward = Input.GetKey(KeyCode.W);
             isMoveBackward = Input.GetKey(KeyCode.S);

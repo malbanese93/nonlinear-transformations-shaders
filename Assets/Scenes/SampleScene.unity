@@ -4285,7 +4285,7 @@ MonoBehaviour:
   ControlKeyMagnification: 0.25
   RotationMagnification: 1
   PanLeftRightSensitivity: 3
-  PanUpDownSensitivity: 1
+  PanUpDownSensitivity: 3
   MouseRotationSensitivity: 5
   ForwardDampenRate: 0.9
   PanningDampenRate: 0.9
@@ -16109,6 +16109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainObject: {fileID: 786500383}
+  mainCamera: {fileID: 282840813}
 --- !u!1 &1137012093
 GameObject:
   m_ObjectHideFlags: 0
