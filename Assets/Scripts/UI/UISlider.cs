@@ -8,10 +8,13 @@ public class UISlider : MonoBehaviour {
     public GameObject mainObject;
     Slider slider;
 
+    public int initialValue;
+
 	// Use this for initialization
 	void Start () {
         slider = GetComponent<Slider>();
 
+        ResetSlider();
         ChangeValue();
 	}
 	
@@ -25,5 +28,10 @@ public class UISlider : MonoBehaviour {
 
         // set shader variable
         mainObject.GetComponent<Renderer>().sharedMaterial.SetFloat(slider.name, slider.value);
+    }
+
+    public void ResetSlider()
+    {
+        slider.value = initialValue;
     }
 }

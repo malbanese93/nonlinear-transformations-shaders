@@ -69,7 +69,7 @@ Shader "Surface/Vertex" {
             v.vertex -= _BoundsCenter;
 
 			// Apply FREE-FORM DEFORMATION (lattice)
-            DoFFD(v, _L, _M, _N, _ControlPoints, _BoundsCenter, _MaxExtents);
+            //DoFFD(v, _L, _M, _N, _ControlPoints, _BoundsCenter, _MaxExtents);
 
 			// The order is as follows
 			// TWIST - STRETCH - BEND, for each along X,Y,Z respectively

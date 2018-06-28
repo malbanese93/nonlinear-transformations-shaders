@@ -9,7 +9,6 @@ public class LoadManager : MonoBehaviour {
     
     [Header("Main Mesh")]
     public GameObject mainObject;
-    Material material;
     MeshFilter meshFilter;
     ShaderSetupScript shaderSetupScript;
 
@@ -43,7 +42,6 @@ public class LoadManager : MonoBehaviour {
         mainObject.SetActive(true);
         mainObject.transform.parent.gameObject.SetActive(true); // usually meshes are child of another object when imported in Unity..
                                                                 
-        material = mainObject.GetComponent<Renderer>().material;
         meshFilter = mainObject.GetComponent<MeshFilter>();
         meshFilter.sharedMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32; // Use 32-bit index for vertices
         meshFilter.sharedMesh = myMesh;
