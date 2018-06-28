@@ -62,7 +62,7 @@ Material:
     - _Amount: 0.5
     - _BendAngleX: 0
     - _BendAngleY: 0
-    - _BendAngleZ: 0
+    - _BendAngleZ: 15.003826
     - _BendRateX: 0
     - _BendRateY: 0
     - _BendRateZ: 0
@@ -82,12 +82,12 @@ Material:
     - _SrcBlend: 1
     - _StretchAmountX: 0
     - _StretchAmountY: 0
-    - _StretchAmountZ: 0
+    - _StretchAmountZ: 1.7475967
     - _StretchStrengthX: 1
-    - _StretchStrengthY: 1
+    - _StretchStrengthY: 2.8502512
     - _StretchStrengthZ: 1
     - _TwistAngleX: 0
-    - _TwistAngleY: 0
+    - _TwistAngleY: 80
     - _TwistAngleZ: 0
     - _UVSec: 0
     - _VertexCount: 0

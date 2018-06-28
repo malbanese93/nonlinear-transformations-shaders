@@ -1,6 +1,10 @@
 Shader "Surface/Vertex" {
     SubShader {
-
+        ZWrite On
+        ZTest LEqual
+        Cull Back
+        Fog {Mode Off}
+        Blend Off
 		Tags { "RenderType" = "Opaque" }
 		CGPROGRAM
 		// Utility functions
@@ -54,7 +58,7 @@ Shader "Surface/Vertex" {
 		float4 _ControlPoints[FFD_MAX_PTS];
 
 		struct Input {
-            float3 vertexNormal;
+            float3 worldNormal; INTERNAL_DATA
 		};
 
         // NB: the input vertex data MUST be of type appdata_full, even if all
@@ -88,12 +92,12 @@ Shader "Surface/Vertex" {
             // Restore coords wrt pivot
             v.vertex += _BoundsCenter;
 
-            o.vertexNormal = abs(v.normal);
+            o.worldNormal = v.normal; //UnityObjectToWorldNormal (v.normal);
 		}
 
 		void surf (Input IN, inout SurfaceOutput o) {
 			o.Albedo = half3(0.8f,0.8f,0.8f);
-            o.Normal = UnityObjectToWorldNormal (IN.vertexNormal);
+            //o.Normal = UnityObjectToWorldNormal (IN.worldNormal);
 		}
 
       ENDCG

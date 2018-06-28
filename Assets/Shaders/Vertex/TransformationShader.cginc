@@ -5,7 +5,7 @@
 #define X_AXIS 0
 #define Y_AXIS 1
 #define Z_AXIS 2
-#define FLOAT_EPS 1e-8
+#define FLOAT_EPS 1e-3
 #define FFD_MAX_PTS 256
 
 // ============== FUNCTIONS ==========================
