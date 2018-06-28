@@ -92,11 +92,11 @@ Shader "Surface/Vertex" {
             // Restore coords wrt pivot
             v.vertex += _BoundsCenter;
 
-            o.worldNormal = v.normal; //UnityObjectToWorldNormal (v.normal);
+            o.worldNormal = v.normal;
 		}
 
 		void surf (Input IN, inout SurfaceOutput o) {
-			o.Albedo = half3(0.8f,0.8f,0.8f);
+			o.Albedo = half3(0.5f,0.5f,0.5f);
             //o.Normal = UnityObjectToWorldNormal (IN.worldNormal);
 		}
 

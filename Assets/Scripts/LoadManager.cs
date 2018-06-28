@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using Assets.Elenesski.Camera.Utilities;
 
 public class LoadManager : MonoBehaviour {
     
@@ -14,6 +15,9 @@ public class LoadManager : MonoBehaviour {
 
     [Header("Camera")]
     public Camera mainCamera;
+
+    [Header("Test Pointlight")]
+    public Light pointLight;
 
     public static readonly string DEFAULT_PATH = @"E:\unity5\Projects\LatticeTest\LatticeTest\thesis\Assets\Mesh\";
 
@@ -54,8 +58,9 @@ public class LoadManager : MonoBehaviour {
         shaderSetupScript = mainObject.GetComponent<ShaderSetupScript>();
         shaderSetupScript.Setup();
 
-        // Change position camera
-        ChangePositionCamera();
+        // Change position of camera and light
+        mainCamera.GetComponent<CameraPosition>().ChangeCamera(meshFilter.sharedMesh.bounds);
+        pointLight.GetComponent<LightPosition>().ChangeLight(meshFilter.sharedMesh.bounds);
 
         // change screens
         GameObject.FindGameObjectWithTag("GameController").GetComponent<PanelManager>().AfterLoading();
@@ -65,16 +70,5 @@ public class LoadManager : MonoBehaviour {
 
         Debug.Log("Loading complete");
     }
-
-    private void ChangePositionCamera()
-    {
-        var e = meshFilter.sharedMesh.bounds.extents;
-        var bc = meshFilter.sharedMesh.bounds.center;
-
-        mainCamera.transform.position = new Vector3(0, bc.y, 2.5f * e.z);
-        mainCamera.transform.rotation = Quaternion.Euler(0, 180, 0);
-    }
-
-    
 
 }
