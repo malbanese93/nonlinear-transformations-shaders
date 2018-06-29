@@ -87,7 +87,7 @@ Material:
     - _StretchStrengthY: 1
     - _StretchStrengthZ: 1
     - _TwistAngleX: 0
-    - _TwistAngleY: -11
+    - _TwistAngleY: 0
     - _TwistAngleZ: 0
     - _UVSec: 0
     - _VertexCount: 0
