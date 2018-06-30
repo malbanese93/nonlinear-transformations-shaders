@@ -20,3 +20,4 @@ public class CameraPosition : MonoBehaviour {
         cameraScript.PanUpDownSensitivity = e.y;
     }
 }
+

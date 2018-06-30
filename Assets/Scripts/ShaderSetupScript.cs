@@ -100,6 +100,9 @@ public class ShaderSetupScript : MonoBehaviour {
                     cube.transform.localPosition = gridpointsPos[To1DArrayCoords(i, j, k)] + new Vector4(bounds.center.x, bounds.center.y, bounds.center.z, 1.0f);
                     cube.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
+                    // set material
+                    cube.GetComponent<Renderer>().material = new Material(Shader.Find("Diffuse"));
+
                     // Disable shadows for these objects
                     cube.GetComponent<Renderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                     cube.GetComponent<Renderer>().receiveShadows = false;
