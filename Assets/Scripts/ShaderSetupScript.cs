@@ -17,7 +17,6 @@ public class ShaderSetupScript : MonoBehaviour {
     // L,M,N parameters for lattice
     // This specifies the degree of the Bezier curve along that axis
     // Remember that for degree k you have k+1 points!
-    [HideInInspector]
     public IntVector3 gridParams;
 
     // Save gridpoints in local coords
