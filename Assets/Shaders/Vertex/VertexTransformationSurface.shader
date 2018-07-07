@@ -58,7 +58,7 @@ Shader "Surface/Vertex" {
 		float4 _ControlPoints[FFD_MAX_PTS];
 
 		struct Input {
-            float3 worldNormal; INTERNAL_DATA
+            int ignore_this;
 		};
 
         // NB: the input vertex data MUST be of type appdata_full, even if all
@@ -91,13 +91,10 @@ Shader "Surface/Vertex" {
 
             // Restore coords wrt pivot
             v.vertex += _BoundsCenter;
-
-            o.worldNormal = v.normal;
 		}
 
 		void surf (Input IN, inout SurfaceOutput o) {
 			o.Albedo = half3(0.5f,0.5f,0.5f);
-            //o.Normal = UnityObjectToWorldNormal (IN.worldNormal);
 		}
 
       ENDCG

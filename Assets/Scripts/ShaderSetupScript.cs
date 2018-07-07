@@ -130,10 +130,7 @@ public class ShaderSetupScript : MonoBehaviour {
 
                     //... then in local space centered in bounds center
                     gridpointsPos[To1DArrayCoords(i,j,k)] = GetBoundCenterCoords(stuCoords);
-                }
-
-        // TODO: Set the rest of the values to zero, since they will be unused
-        // 
+                } 
     }
 
     public void ModifyLattice(GameObject controlPoint, Vector3 translationVector)

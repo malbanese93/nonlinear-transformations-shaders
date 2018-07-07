@@ -103,7 +103,6 @@ public class ComputeManager : MonoBehaviour {
     {
         if (Input.GetKey(KeyCode.Mouse1))
         {
-            
             RunComputeShader();
         }
     }
