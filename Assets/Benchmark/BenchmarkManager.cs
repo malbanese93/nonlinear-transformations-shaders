@@ -2,10 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class BenchmarkManager : MonoBehaviour {
 
-    public GameObject GPUMeshContainer;
+    [Header("Meshes (0 ignored!)")]
+    public Mesh[] meshes;
+
+    [Header("Mesh Holders")]
+    public GameObject CPUObj, GPUObj;
+
+    public void Start()
+    {
+        GPUObj.GetComponent<ShaderSetupScript>().Setup();
+    }
 
     public void OnBackButton()
     {
@@ -23,13 +33,28 @@ public class BenchmarkManager : MonoBehaviour {
         }
     }
 
-    public void Start()
+    public void OnChangeMesh(Dropdown dropdown)
     {
-        // initialize all meshes with gpu transformation
-        foreach(var s in GPUMeshContainer.GetComponentsInChildren<ShaderSetupScript>())
-        {
-            s.Setup();
-            print(s.transform.parent.name);
-        }
+        var id = dropdown.value;
+
+        // blank state
+        if (id == 0)
+            return;
+
+        CPUObj.GetComponent<MeshFilter>().mesh = meshes[id];
+
+        GPUObj.GetComponent<MeshFilter>().mesh = meshes[id];
+        GPUObj.GetComponent<ShaderSetupScript>().Setup();
+    }
+
+    public void OnChangeTransformation(Dropdown dropdown)
+    {
+        var id = dropdown.value;
+
+        if (id == 0)
+            return;
+
+        // CPU
+        GPUObj.GetComponent<GPUAnimation>().SetTransformation((TransformationEnum)id);
     }
 }
