@@ -36,7 +36,7 @@ public class GPUAnimation : MonoBehaviour {
         if (currentTransformation == TransformationEnum.IGNORE)
             return;
 
-        print(currentTransformation.ToString() + " - " + min + " " + max);
+        //print(currentTransformation.ToString() + " - " + min + " " + max);
         t = Time.time;
         GetComponent<Renderer>().material.SetFloat(transformationMap[currentTransformation], min + (max - min) * (1 + Mathf.Sin(speed * t))/2.0f );
     }
@@ -46,9 +46,13 @@ public class GPUAnimation : MonoBehaviour {
         switch (newTransformation)
         {
             case TransformationEnum.TWIST:
-            case TransformationEnum.BEND:
                 min = -180.0f;
                 max = 180.0f;
+                break;
+
+            case TransformationEnum.BEND:
+                min = -120.0f;
+                max = 120.0f;
                 break;
 
             default:
@@ -60,6 +64,14 @@ public class GPUAnimation : MonoBehaviour {
         // reset old value and set new one
         if( currentTransformation != TransformationEnum.IGNORE )
             GetComponent<Renderer>().material.SetFloat(transformationMap[currentTransformation], 0.0f);
+
+        // ADDITIONAL values only for BEND
+        if (currentTransformation != TransformationEnum.BEND)
+        {
+            GetComponent<Renderer>().material.SetFloat("_BendYMin", 0.0f);
+            GetComponent<Renderer>().material.SetFloat("_BendYMax", 1.0f);
+            GetComponent<Renderer>().material.SetFloat("_BendY0;", 0.5f);
+        }
 
         currentTransformation = newTransformation;
     }
