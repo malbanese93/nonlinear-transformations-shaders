@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 34529983}
   - component: {fileID: 34529982}
   - component: {fileID: 34529981}
+  - component: {fileID: 34529985}
   m_Layer: 0
   m_Name: CPU_3k
   m_TagString: Untagged
@@ -214,6 +215,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 34529979}
   m_Mesh: {fileID: 4300000, guid: 13bf59d0f489cc54894936032d014212, type: 3}
+--- !u!114 &34529985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 34529979}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcc6f4987bfe4c4478bd80ec26e3aa0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxValue: 1
 --- !u!1 &35371035
 GameObject:
   m_ObjectHideFlags: 0
@@ -862,6 +875,7 @@ GameObject:
   - component: {fileID: 192829424}
   - component: {fileID: 192829423}
   - component: {fileID: 192829422}
+  - component: {fileID: 192829426}
   m_Layer: 0
   m_Name: CPU_30k
   m_TagString: Untagged
@@ -951,6 +965,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 192829420}
   m_Mesh: {fileID: 4300000, guid: 6d78663f6491eee46a27a2a77d31e0d9, type: 3}
+--- !u!114 &192829426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 192829420}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcc6f4987bfe4c4478bd80ec26e3aa0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxValue: 1
 --- !u!1 &228084025
 GameObject:
   m_ObjectHideFlags: 0
@@ -3008,6 +3034,7 @@ GameObject:
   - component: {fileID: 1384812927}
   - component: {fileID: 1384812926}
   - component: {fileID: 1384812925}
+  - component: {fileID: 1384812929}
   m_Layer: 0
   m_Name: CPU_15k
   m_TagString: Untagged
@@ -3097,6 +3124,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1384812923}
   m_Mesh: {fileID: 4300000, guid: 564ced571706f1349be9ac2d3947d937, type: 3}
+--- !u!114 &1384812929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1384812923}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcc6f4987bfe4c4478bd80ec26e3aa0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxValue: 1
 --- !u!1 &1429766625
 GameObject:
   m_ObjectHideFlags: 0
@@ -3311,6 +3350,7 @@ GameObject:
   - component: {fileID: 1587942982}
   - component: {fileID: 1587942981}
   - component: {fileID: 1587942980}
+  - component: {fileID: 1587942984}
   m_Layer: 0
   m_Name: CPU_60k
   m_TagString: Untagged
@@ -3400,6 +3440,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1587942978}
   m_Mesh: {fileID: 4300000, guid: 4d9113b6070047e4baa964d1ccd9e9d0, type: 3}
+--- !u!114 &1587942984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1587942978}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcc6f4987bfe4c4478bd80ec26e3aa0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxValue: 1
 --- !u!1 &1604768352
 GameObject:
   m_ObjectHideFlags: 0
@@ -4178,6 +4230,7 @@ GameObject:
   - component: {fileID: 1823047417}
   - component: {fileID: 1823047416}
   - component: {fileID: 1823047415}
+  - component: {fileID: 1823047419}
   m_Layer: 0
   m_Name: CPU_300k
   m_TagString: Untagged
@@ -4267,6 +4320,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1823047413}
   m_Mesh: {fileID: 4300000, guid: f65cc158a8783944a8b4c3aed63bd4b3, type: 3}
+--- !u!114 &1823047419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1823047413}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcc6f4987bfe4c4478bd80ec26e3aa0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxValue: 1
 --- !u!1 &1885403733
 GameObject:
   m_ObjectHideFlags: 0
@@ -4395,6 +4460,7 @@ GameObject:
   - component: {fileID: 1966595124}
   - component: {fileID: 1966595123}
   - component: {fileID: 1966595122}
+  - component: {fileID: 1966595126}
   m_Layer: 0
   m_Name: CPU_6k
   m_TagString: Untagged
@@ -4484,6 +4550,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1966595120}
   m_Mesh: {fileID: 4300000, guid: ab920de3ff683654695c81e3c0c3872f, type: 3}
+--- !u!114 &1966595126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1966595120}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcc6f4987bfe4c4478bd80ec26e3aa0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxValue: 1
 --- !u!1 &1981026443
 GameObject:
   m_ObjectHideFlags: 0

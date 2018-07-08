@@ -13,8 +13,6 @@ public class Twist : Transformation {
     {
         newVertices = new Vector3[mesh.vertexCount];
         newNormals = new Vector3[mesh.vertexCount];
-
-        print("HERE?");
     }
 
     public override void DoTransformation()

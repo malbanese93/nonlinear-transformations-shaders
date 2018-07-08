@@ -26,7 +26,7 @@ public class GPUAnimation : MonoBehaviour {
     private void SetTransformationMap()
     {
         transformationMap.Add(TransformationEnum.TWIST, "_TwistAngleZ");
-        transformationMap.Add(TransformationEnum.STRETCH, "_StretchAmountX");
+        transformationMap.Add(TransformationEnum.STRETCH, "_StretchAmountZ");
         transformationMap.Add(TransformationEnum.BEND, "_BendAngleY");
         // TODO COMPLETARE
     }
@@ -36,9 +36,9 @@ public class GPUAnimation : MonoBehaviour {
         if (currentTransformation == TransformationEnum.IGNORE)
             return;
 
-        //print(currentTransformation.ToString() + " - " + min + " " + max);
-        t = Time.time;
-        GetComponent<Renderer>().material.SetFloat(transformationMap[currentTransformation], min + (max - min) * (1 + Mathf.Sin(speed * t))/2.0f );
+        GetComponent<Renderer>().material.SetFloat(transformationMap[currentTransformation], Mathf.Sin(Time.time) * max );
+
+        print("GPU: " + Mathf.Sin(Time.time) * max);
     }
 
     public void SetTransformation(TransformationEnum newTransformation)
@@ -74,6 +74,9 @@ public class GPUAnimation : MonoBehaviour {
             GetComponent<Renderer>().material.SetFloat("_BendYMax", 1.0f);
             GetComponent<Renderer>().material.SetFloat("_BendY0;", 0.5f);
         }
+
+        if(currentTransformation != TransformationEnum.STRETCH )
+            GetComponent<Renderer>().material.SetFloat("_StretchStrengthZ", 1.0f);
 
         currentTransformation = newTransformation;
     }
