@@ -80,8 +80,8 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _StretchAmountX: 0
-    - _StretchAmountY: 0.2602501
+    - _StretchAmountX: 0.16936731
+    - _StretchAmountY: -0.08380926
     - _StretchAmountZ: 0
     - _StretchStrengthX: 1
     - _StretchStrengthY: 1

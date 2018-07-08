@@ -8,36 +8,22 @@ public class CPUAnimation : MonoBehaviour {
     // oscillate values as sin(speed * t)
     float t;
     public float speed = 1.0f;
-
     float min;
     float max;
 
-    bool isTransformationEnabled;
+    public bool isTransformationEnabled;
 
     public TransformationEnum currentTransformation;
+
+    private Dictionary<TransformationEnum, Transformation> scriptMap;
 
     public void Start()
     {
         isTransformationEnabled = false;
-    }
 
-    public void Update()
-    {
-        if (currentTransformation == TransformationEnum.IGNORE || !isTransformationEnabled)
-            return;
-
-        t = Time.time;
-
-        switch(currentTransformation)
-        {
-            case TransformationEnum.TWIST:
-                GetComponent<MegaTwist>().angle = min + (max - min) * (1 + Mathf.Sin(speed * t)) / 2.0f;
-                break;
-
-            default:
-                break;
-        }
-        
+        scriptMap = new Dictionary<TransformationEnum, Transformation>();
+        scriptMap.Add(TransformationEnum.TWIST, GetComponent<Twist>());
+        //scriptMap.Add(TransformationEnum.BEND, GetComponent<Bend>());
     }
 
     internal void SetEnabled(bool isOn)
@@ -47,6 +33,11 @@ public class CPUAnimation : MonoBehaviour {
 
     public void SetTransformation(TransformationEnum newTransformation)
     {
+        // disable current component
+        if(currentTransformation != TransformationEnum.IGNORE)
+            scriptMap[currentTransformation].enabled = false;
+
+        // enable new
         switch (newTransformation)
         {
             case TransformationEnum.TWIST:
@@ -66,6 +57,9 @@ public class CPUAnimation : MonoBehaviour {
         }
 
         currentTransformation = newTransformation;
+
+        if (currentTransformation != TransformationEnum.IGNORE)
+            scriptMap[currentTransformation].enabled = true;
     }
 
 }

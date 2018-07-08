@@ -48,6 +48,9 @@ public class ShaderSetupScript : MonoBehaviour {
         material.SetVector("_BoundsCenter", bounds.center);
         material.SetVector("_MaxExtents", extents);
 
+        // Set all initial values to default
+        // TODO
+
         // Set lattice points
         StartLattice();
     }

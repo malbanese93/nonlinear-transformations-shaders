@@ -43,6 +43,8 @@ public class GPUAnimation : MonoBehaviour {
 
     public void SetTransformation(TransformationEnum newTransformation)
     {
+        GetComponent<ShaderSetupScript>().Setup();
+
         switch (newTransformation)
         {
             case TransformationEnum.TWIST:

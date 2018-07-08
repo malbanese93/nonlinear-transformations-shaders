@@ -6,20 +6,22 @@ using UnityEngine.UI;
 
 public class BenchmarkManager : MonoBehaviour {
 
-    [Header("Meshes (0 ignored!)")]
-    public Mesh[] meshes;
-
-    [Header("Mesh Holders")]
-    public GameObject CPUObj, GPUObj;
+    [Header("Mesh containers")]
+    public GameObject GPUContainer, CPUContainer;
+    int currentID;    
 
     public void Start()
     {
-        GPUObj.GetComponent<ShaderSetupScript>().Setup();
+        currentID = 0;
+
+        foreach (var s in GPUContainer.GetComponentsInChildren<ShaderSetupScript>(true))
+            s.Setup();
     }
 
     public void EnableCPU(Toggle toggle)
     {
-        CPUObj.GetComponent<CPUAnimation>().SetEnabled(toggle.isOn);
+        foreach (var c in CPUContainer.GetComponentsInChildren<CPUAnimation>(true))
+            c.SetEnabled(toggle.isOn);
     }
 
     public void OnBackButton()
@@ -42,14 +44,12 @@ public class BenchmarkManager : MonoBehaviour {
     {
         var id = dropdown.value;
 
-        // blank state
-        if (id == 0)
-            return;
+        CPUContainer.transform.GetChild(currentID).gameObject.SetActive(false);
+        GPUContainer.transform.GetChild(currentID).gameObject.SetActive(false);
 
-        CPUObj.GetComponent<MeshFilter>().mesh = meshes[id];
-
-        GPUObj.GetComponent<MeshFilter>().mesh = meshes[id];
-        GPUObj.GetComponent<ShaderSetupScript>().Setup();
+        currentID = id;
+        CPUContainer.transform.GetChild(currentID).gameObject.SetActive(true);
+        GPUContainer.transform.GetChild(currentID).gameObject.SetActive(true);
     }
 
     public void OnChangeTransformation(Dropdown dropdown)
@@ -59,7 +59,11 @@ public class BenchmarkManager : MonoBehaviour {
         if (id == 0)
             return;
 
-        CPUObj.GetComponent<CPUAnimation>().SetTransformation((TransformationEnum)id);
-        GPUObj.GetComponent<GPUAnimation>().SetTransformation((TransformationEnum)id);
+        foreach(var c in CPUContainer.GetComponentsInChildren<CPUAnimation>(true))
+            c.SetTransformation((TransformationEnum)id);
+
+        foreach (var c in GPUContainer.GetComponentsInChildren<GPUAnimation>(true))
+            c.SetTransformation((TransformationEnum)id);
+
     }
 }
