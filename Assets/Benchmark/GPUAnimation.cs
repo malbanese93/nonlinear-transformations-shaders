@@ -72,7 +72,7 @@ public class GPUAnimation : MonoBehaviour {
         {
             GetComponent<Renderer>().material.SetFloat("_BendYMin", 0.0f);
             GetComponent<Renderer>().material.SetFloat("_BendYMax", 1.0f);
-            GetComponent<Renderer>().material.SetFloat("_BendY0;", 0.5f);
+            GetComponent<Renderer>().material.SetFloat("_BendY0", 0.5f);
         }
 
         if(currentTransformation != TransformationEnum.STRETCH )
