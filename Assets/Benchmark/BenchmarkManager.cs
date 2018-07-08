@@ -54,7 +54,7 @@ public class BenchmarkManager : MonoBehaviour {
         if (id == 0)
             return;
 
-        // CPU
+        CPUObj.GetComponent<CPUAnimation>().SetTransformation((TransformationEnum)id);
         GPUObj.GetComponent<GPUAnimation>().SetTransformation((TransformationEnum)id);
     }
 }
