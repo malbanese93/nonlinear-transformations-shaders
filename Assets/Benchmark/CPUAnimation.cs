@@ -17,13 +17,15 @@ public class CPUAnimation : MonoBehaviour {
 
     private Dictionary<TransformationEnum, Transformation> scriptMap;
 
-    public void Start()
+    public void Setup()
     {
         isTransformationEnabled = false;
 
         scriptMap = new Dictionary<TransformationEnum, Transformation>();
         scriptMap.Add(TransformationEnum.TWIST, GetComponent<Twist>());
         //scriptMap.Add(TransformationEnum.BEND, GetComponent<Bend>());
+
+        print(transform.name);
     }
 
     internal void SetEnabled(bool isOn)

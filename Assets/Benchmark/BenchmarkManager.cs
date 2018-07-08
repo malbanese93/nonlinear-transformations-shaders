@@ -16,6 +16,9 @@ public class BenchmarkManager : MonoBehaviour {
 
         foreach (var s in GPUContainer.GetComponentsInChildren<ShaderSetupScript>(true))
             s.Setup();
+
+        foreach (var s in CPUContainer.GetComponentsInChildren<CPUAnimation>(true))
+            s.Setup();
     }
 
     public void EnableCPU(Toggle toggle)
