@@ -37,8 +37,6 @@ public class GPUAnimation : MonoBehaviour {
             return;
 
         GetComponent<Renderer>().material.SetFloat(transformationMap[currentTransformation], Mathf.Sin(Time.time) * max );
-
-        print("GPU: " + Mathf.Sin(Time.time) * max);
     }
 
     public void SetTransformation(TransformationEnum newTransformation)
@@ -53,8 +51,8 @@ public class GPUAnimation : MonoBehaviour {
                 break;
 
             case TransformationEnum.BEND:
-                min = -120.0f;
-                max = 120.0f;
+                min = -90.0f;
+                max = 90.0f;
                 break;
 
             default:

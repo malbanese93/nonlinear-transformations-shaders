@@ -24,7 +24,7 @@ public class CPUAnimation : MonoBehaviour {
         scriptMap = new Dictionary<TransformationEnum, Transformation>();
         scriptMap.Add(TransformationEnum.TWIST, GetComponent<Twist>());
         scriptMap.Add(TransformationEnum.STRETCH, GetComponent<Stretch>());
-        //scriptMap.Add(TransformationEnum.BEND, GetComponent<Bend>());
+        scriptMap.Add(TransformationEnum.BEND, GetComponent<Bend>());
 
         print(transform.name);
     }
