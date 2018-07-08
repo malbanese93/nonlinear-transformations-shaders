@@ -25,7 +25,7 @@ public class GPUAnimation : MonoBehaviour {
 
     private void SetTransformationMap()
     {
-        transformationMap.Add(TransformationEnum.TWIST, "_TwistAngleY");
+        transformationMap.Add(TransformationEnum.TWIST, "_TwistAngleZ");
         transformationMap.Add(TransformationEnum.STRETCH, "_StretchAmountX");
         transformationMap.Add(TransformationEnum.BEND, "_BendAngleY");
         // TODO COMPLETARE
@@ -48,8 +48,8 @@ public class GPUAnimation : MonoBehaviour {
         switch (newTransformation)
         {
             case TransformationEnum.TWIST:
-                min = -180.0f;
-                max = 180.0f;
+                min = -90.0f;
+                max = 90.0f;
                 break;
 
             case TransformationEnum.BEND:
