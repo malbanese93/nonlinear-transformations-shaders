@@ -17,6 +17,11 @@ public class BenchmarkManager : MonoBehaviour {
         GPUObj.GetComponent<ShaderSetupScript>().Setup();
     }
 
+    public void EnableCPU(Toggle toggle)
+    {
+        CPUObj.GetComponent<CPUAnimation>().SetEnabled(toggle.isOn);
+    }
+
     public void OnBackButton()
     {
         StartCoroutine(BackToMenu());

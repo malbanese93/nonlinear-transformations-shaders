@@ -12,16 +12,18 @@ public class CPUAnimation : MonoBehaviour {
     float min;
     float max;
 
+    bool isTransformationEnabled;
+
     public TransformationEnum currentTransformation;
 
     public void Start()
     {
-        
+        isTransformationEnabled = false;
     }
 
     public void Update()
     {
-        if (currentTransformation == TransformationEnum.IGNORE)
+        if (currentTransformation == TransformationEnum.IGNORE || !isTransformationEnabled)
             return;
 
         t = Time.time;
@@ -36,6 +38,11 @@ public class CPUAnimation : MonoBehaviour {
                 break;
         }
         
+    }
+
+    internal void SetEnabled(bool isOn)
+    {
+        isTransformationEnabled = isOn;
     }
 
     public void SetTransformation(TransformationEnum newTransformation)
