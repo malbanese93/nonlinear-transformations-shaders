@@ -56,7 +56,7 @@ public class LoadManager : MonoBehaviour {
 
         // Do all calculations required by shader
         shaderSetupScript = mainObject.GetComponent<ShaderSetupScript>();
-        shaderSetupScript.Setup();
+        shaderSetupScript.Setup(true);
 
         // Change position of camera and light
         mainCamera.GetComponent<CameraPosition>().ChangeCamera(meshFilter.sharedMesh.bounds);

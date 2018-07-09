@@ -25,7 +25,7 @@ public class ShaderSetupScript : MonoBehaviour {
     // Is multipoint lattice enabled?
     [HideInInspector] public bool isMultiplePointLattice;
 
-    public void Setup()
+    public void Setup(bool showGrid)
     {
         // Create lattice points
         // Notice that we must use 1D arrays instead of 3D arrays
@@ -52,18 +52,19 @@ public class ShaderSetupScript : MonoBehaviour {
         // TODO
 
         // Set lattice points
-        StartLattice();
+        StartLattice(showGrid);
     }
 
-    private void StartLattice()
+    private void StartLattice(bool showGrid)
     {
         // Delete old vertices if present
         DeleteLatticeVertices();
 
         ResetGridPoints();
 
-        // Generate lattice vertices
-        GenerateGrid();
+        // Generate lattice vertices if required
+        if(showGrid)
+            GenerateGrid();
 
         // Set uniforms to shader
         material.SetInt("_L", gridParams.L);
@@ -182,7 +183,7 @@ public class ShaderSetupScript : MonoBehaviour {
         // Reset everything when pressing R
         if (Input.GetKeyDown(KeyCode.R))
         {
-            StartLattice();
+            StartLattice(true);
         }
     }
 
