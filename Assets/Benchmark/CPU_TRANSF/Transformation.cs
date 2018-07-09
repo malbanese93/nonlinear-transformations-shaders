@@ -31,9 +31,9 @@ public abstract class Transformation : MonoBehaviour {
     public void Update()
     {
         if (cpuAnimation.isTransformationEnabled)
-            DoTransformation();
+            DoTransformation(Mathf.Sin(Time.time));
     }
 
     abstract public void StartTransformation();
-    abstract public void DoTransformation();
+    abstract public void DoTransformation(float sineTime);
 }

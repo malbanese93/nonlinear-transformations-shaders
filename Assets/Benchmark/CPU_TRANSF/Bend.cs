@@ -16,12 +16,12 @@ public class Bend : Transformation {
         newNormals = new Vector3[mesh.vertexCount];
     }
 
-    public override void DoTransformation()
+    public override void DoTransformation(float sineTime)
     {
         Vector3[] vertices = startVertices;
         Vector3[] normals = startNormals;
 
-        float angle = Mathf.Sin(Time.time) * maxAngle * Mathf.Deg2Rad;
+        float angle = sineTime * maxAngle * Mathf.Deg2Rad;
 
         float ymin = -extents.y;
         float ymax = extents.y;

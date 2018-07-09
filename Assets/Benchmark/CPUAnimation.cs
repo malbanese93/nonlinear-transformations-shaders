@@ -29,8 +29,15 @@ public class CPUAnimation : MonoBehaviour {
     public void SetTransformation(TransformationEnum newTransformation)
     {
         // disable current component
-        if(currentTransformation != TransformationEnum.IGNORE)
+        if (currentTransformation != TransformationEnum.IGNORE)
+        {
+            // reset value for transformation (only for current mesh)
+            if(scriptMap[currentTransformation].transform.gameObject.activeSelf)
+                scriptMap[currentTransformation].DoTransformation(0);
+
+            // disable
             scriptMap[currentTransformation].enabled = false;
+        }
 
         currentTransformation = newTransformation;
 

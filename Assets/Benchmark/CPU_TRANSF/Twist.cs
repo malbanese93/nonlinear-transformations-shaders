@@ -15,7 +15,7 @@ public class Twist : Transformation {
         newNormals = new Vector3[mesh.vertexCount];
     }
 
-    public override void DoTransformation()
+    public override void DoTransformation(float sineTime)
     {
         Vector3[] vertices = startVertices;
         Vector3[] normals = startNormals;
@@ -27,8 +27,8 @@ public class Twist : Transformation {
 
             v -= bounds.center;
 
-            float theta = (v.z / extents.z) * Mathf.Deg2Rad * Mathf.Sin(Time.time) * maxAngle;
-            float dtheta = (1.0f / extents.z) * Mathf.Deg2Rad * Mathf.Sin(Time.time) * maxAngle;
+            float theta = (v.z / extents.z) * Mathf.Deg2Rad * sineTime * maxAngle;
+            float dtheta = (1.0f / extents.z) * Mathf.Deg2Rad * sineTime * maxAngle;
 
             float c = Mathf.Cos(theta);
             float s = Mathf.Sin(theta);

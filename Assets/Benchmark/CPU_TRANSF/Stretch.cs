@@ -16,12 +16,12 @@ public class Stretch : Transformation {
         newNormals = new Vector3[mesh.vertexCount];
     }
 
-    public override void DoTransformation()
+    public override void DoTransformation(float sineTime)
     {
         Vector3[] vertices = startVertices;
         Vector3[] normals = startNormals;
 
-        float amount = Mathf.Sin(Time.time) * maxValue;
+        float amount = sineTime * maxValue;
 
         for (int i = 0; i < mesh.vertexCount; ++i)
         {

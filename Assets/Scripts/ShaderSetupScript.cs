@@ -71,19 +71,6 @@ public class ShaderSetupScript : MonoBehaviour {
             material.SetFloat("_Bend" + axis + "0", 0);
             material.SetFloat("_BendAngle" + axis, 0);
         }
-
-		/*
-
-		// FFD
-		// bezier curves degrees
-		int _L;
-		int _M;
-		int _N;
-
-		// Control points in FFD grid
-		// NB: At most FFD_MAX_PTS points can be used!
-		// This is done since dynamically sized arrays are not supported in hlsl
-		float4 _ControlPoints[FFD_MAX_PTS];*/
     }
 
     private void StartLattice(bool showGrid)
@@ -212,7 +199,7 @@ public class ShaderSetupScript : MonoBehaviour {
     private void Update()
     {
         // Reset everything when pressing R
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && !GameObject.Find("_BenchmarkManager"))
         {
             StartLattice(true);
         }
