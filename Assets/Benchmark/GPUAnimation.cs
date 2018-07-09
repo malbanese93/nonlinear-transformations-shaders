@@ -11,7 +11,7 @@ public class GPUAnimation : MonoBehaviour {
 
     private Dictionary<TransformationEnum, string> transformationMap;
 
-    public void Start()
+    public void Setup()
     {
         transformationMap = new Dictionary<TransformationEnum, string>();
 
@@ -47,14 +47,18 @@ public class GPUAnimation : MonoBehaviour {
                 maxValue = 60.0f;
                 break;
 
+            case TransformationEnum.STRETCH:
             default:
                 maxValue = 1.0f;
                 break;
         }
 
-        // reset old value and set new one
-        if( currentTransformation != TransformationEnum.IGNORE )
-            GetComponent<Renderer>().material.SetFloat(transformationMap[currentTransformation], 0.0f);
+        if (currentTransformation != TransformationEnum.IGNORE)
+        {
+            Material material = GetComponent<Renderer>().material;
+            string key = transformationMap[currentTransformation];
+            material.SetFloat(key, 0.0f);
+        }
 
         // ADDITIONAL values only for BEND
         if (currentTransformation != TransformationEnum.BEND)

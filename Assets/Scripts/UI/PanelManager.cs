@@ -40,7 +40,6 @@ public class PanelManager : MonoBehaviour {
         for (int i = 0; i < options.Length; ++i)
         {
             options[i].SetActive(id == i);
-            print(id);
         }
     }
 }

@@ -82,7 +82,7 @@ Material:
     - _SrcBlend: 1
     - _StretchAmountX: 0
     - _StretchAmountY: 0
-    - _StretchAmountZ: -2
+    - _StretchAmountZ: 0
     - _StretchStrengthX: 1
     - _StretchStrengthY: 1
     - _StretchStrengthZ: 1

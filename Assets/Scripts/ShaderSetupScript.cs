@@ -44,15 +44,46 @@ public class ShaderSetupScript : MonoBehaviour {
         bounds = mesh.bounds;
         extents = bounds.extents;
 
+        // Set all initial values to default
+        ResetShaderValues();
+
+        // Set lattice points
+        StartLattice(showGrid);
+    }
+
+    private void ResetShaderValues()
+    {
+        string[] axes = { "X", "Y", "Z" };
+
         // send data to shader
         material.SetVector("_BoundsCenter", bounds.center);
         material.SetVector("_MaxExtents", extents);
 
-        // Set all initial values to default
-        // TODO
+        foreach(string axis in axes)
+        {
+            material.SetFloat("_TwistAngle" + axis, 0);
 
-        // Set lattice points
-        StartLattice(showGrid);
+            material.SetFloat("_StretchAmount" + axis, 0);
+            material.SetFloat("_StretchStrength" + axis, 1);
+
+            material.SetFloat("_Bend" + axis + "Min", 0);
+            material.SetFloat("_Bend" + axis + "Max", 1);
+            material.SetFloat("_Bend" + axis + "0", 0);
+            material.SetFloat("_BendAngle" + axis, 0);
+        }
+
+		/*
+
+		// FFD
+		// bezier curves degrees
+		int _L;
+		int _M;
+		int _N;
+
+		// Control points in FFD grid
+		// NB: At most FFD_MAX_PTS points can be used!
+		// This is done since dynamically sized arrays are not supported in hlsl
+		float4 _ControlPoints[FFD_MAX_PTS];*/
     }
 
     private void StartLattice(bool showGrid)
