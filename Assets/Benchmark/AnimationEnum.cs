@@ -8,6 +8,4 @@ public enum TransformationEnum
     TWIST,
     BEND,
     STRETCH,
-    LATTICE,
-    ALL,
 }

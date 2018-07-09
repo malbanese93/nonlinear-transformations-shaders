@@ -8,7 +8,7 @@ public class Bend : Transformation {
     Vector3[] newVertices;
     Vector3[] newNormals;
 
-    public float maxAngle = 120.0f;
+    public float maxAngle = 60.0f;
 
     public override void StartTransformation()
     {

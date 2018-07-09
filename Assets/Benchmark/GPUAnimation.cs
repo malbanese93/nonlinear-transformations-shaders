@@ -5,12 +5,7 @@ using UnityEngine;
 
 public class GPUAnimation : MonoBehaviour {
 
-    // oscillate values as sin(speed * t)
-    float t;
-    public float speed = 1.0f;
-
-    float min;
-    float max;
+    float maxValue;
 
     public TransformationEnum currentTransformation;
 
@@ -28,7 +23,6 @@ public class GPUAnimation : MonoBehaviour {
         transformationMap.Add(TransformationEnum.TWIST, "_TwistAngleZ");
         transformationMap.Add(TransformationEnum.STRETCH, "_StretchAmountZ");
         transformationMap.Add(TransformationEnum.BEND, "_BendAngleY");
-        // TODO COMPLETARE
     }
 
     public void Update()
@@ -36,7 +30,7 @@ public class GPUAnimation : MonoBehaviour {
         if (currentTransformation == TransformationEnum.IGNORE)
             return;
 
-        GetComponent<Renderer>().material.SetFloat(transformationMap[currentTransformation], Mathf.Sin(Time.time) * max );
+        GetComponent<Renderer>().material.SetFloat(transformationMap[currentTransformation], Mathf.Sin(Time.time) * maxValue );
     }
 
     public void SetTransformation(TransformationEnum newTransformation)
@@ -46,18 +40,15 @@ public class GPUAnimation : MonoBehaviour {
         switch (newTransformation)
         {
             case TransformationEnum.TWIST:
-                min = -90.0f;
-                max = 90.0f;
+                maxValue = 90.0f;
                 break;
 
             case TransformationEnum.BEND:
-                min = -90.0f;
-                max = 90.0f;
+                maxValue = 60.0f;
                 break;
 
             default:
-                min = -1.0f;
-                max = 1.0f;
+                maxValue = 1.0f;
                 break;
         }
 
@@ -70,7 +61,7 @@ public class GPUAnimation : MonoBehaviour {
         {
             GetComponent<Renderer>().material.SetFloat("_BendYMin", 0.0f);
             GetComponent<Renderer>().material.SetFloat("_BendYMax", 1.0f);
-            GetComponent<Renderer>().material.SetFloat("_BendY0", 0.5f);
+            GetComponent<Renderer>().material.SetFloat("_BendY0", 1.0f); // half mesh
         }
 
         if(currentTransformation != TransformationEnum.STRETCH )
