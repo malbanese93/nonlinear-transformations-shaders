@@ -10735,6 +10735,7 @@ MonoBehaviour:
     M: 1
     N: 1
   isMultiplePointLattice: 0
+  color: {r: 0.42647058, g: 0.385705, b: 0.385705, a: 0}
 --- !u!33 &786500386
 MeshFilter:
   m_ObjectHideFlags: 0

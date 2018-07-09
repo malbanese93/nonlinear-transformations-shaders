@@ -16,6 +16,7 @@ Shader "Surface/Vertex" {
 		// COMMON
 		float4 _MaxExtents;
         float4 _BoundsCenter;
+        float4 _Color;
 
 		// TWIST
 		float _TwistAngleX;
@@ -94,7 +95,7 @@ Shader "Surface/Vertex" {
 		}
 
 		void surf (Input IN, inout SurfaceOutput o) {
-			o.Albedo = half3(0.5f,0.5f,0.5f);
+			o.Albedo = _Color.xyz;
 		}
 
       ENDCG

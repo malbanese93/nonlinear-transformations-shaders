@@ -173,6 +173,7 @@ MonoBehaviour:
     M: 1
     N: 1
   isMultiplePointLattice: 0
+  color: {r: 0.43753898, g: 0.8470589, b: 0.40392163, a: 0}
 --- !u!23 &35371039
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -588,6 +589,7 @@ MonoBehaviour:
     M: 1
     N: 1
   isMultiplePointLattice: 0
+  color: {r: 0.43753898, g: 0.8470589, b: 0.40392163, a: 0}
 --- !u!23 &106988695
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1004,6 +1006,7 @@ MonoBehaviour:
     M: 1
     N: 1
   isMultiplePointLattice: 0
+  color: {r: 0.43753898, g: 0.8470589, b: 0.40392163, a: 0}
 --- !u!23 &228084029
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1674,6 +1677,7 @@ MonoBehaviour:
     M: 1
     N: 1
   isMultiplePointLattice: 0
+  color: {r: 0.43753898, g: 0.8470589, b: 0.40392163, a: 0}
 --- !u!23 &606850615
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1894,6 +1898,7 @@ MonoBehaviour:
     M: 1
     N: 1
   isMultiplePointLattice: 0
+  color: {r: 0.43753898, g: 0.8470589, b: 0.40392163, a: 0}
 --- !u!23 &674637706
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3167,6 +3172,7 @@ MonoBehaviour:
     M: 1
     N: 1
   isMultiplePointLattice: 0
+  color: {r: 0.43753898, g: 0.8470589, b: 0.40392163, a: 0}
 --- !u!23 &1363137629
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -3632,6 +3638,7 @@ MonoBehaviour:
     M: 1
     N: 1
   isMultiplePointLattice: 0
+  color: {r: 0.43753898, g: 0.8470589, b: 0.40392163, a: 0}
 --- !u!23 &1490311147
 MeshRenderer:
   m_ObjectHideFlags: 0

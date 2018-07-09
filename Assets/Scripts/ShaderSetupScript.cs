@@ -25,6 +25,9 @@ public class ShaderSetupScript : MonoBehaviour {
     // Is multipoint lattice enabled?
     [HideInInspector] public bool isMultiplePointLattice;
 
+    // Color of mesh
+    public Color color;
+
     public void Setup(bool showGrid)
     {
         // Create lattice points
@@ -58,6 +61,7 @@ public class ShaderSetupScript : MonoBehaviour {
         // send data to shader
         material.SetVector("_BoundsCenter", bounds.center);
         material.SetVector("_MaxExtents", extents);
+        material.SetVector("_Color", color);
 
         foreach(string axis in axes)
         {

@@ -88,7 +88,7 @@ Material:
     - _StretchStrengthZ: 1
     - _TwistAngleX: 0
     - _TwistAngleY: 0
-    - _TwistAngleZ: 0
+    - _TwistAngleZ: -72
     - _UVSec: 0
     - _VertexCount: 0
     - _X0: 0
@@ -102,5 +102,5 @@ Material:
     - _ZMin: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.3897059, g: 0.3467039, b: 0, a: 1}
+    - _Color: {r: 0.42647058, g: 0.385705, b: 0.385705, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
