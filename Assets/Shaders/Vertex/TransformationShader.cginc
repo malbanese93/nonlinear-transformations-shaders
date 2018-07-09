@@ -341,7 +341,7 @@ inline float BinomialCoefficient(int n, int k) {
 inline float3 GetSTUCoords(float4 bcCoords, float4 _BoundsCenter, float4 _MaxExtents)
 {
    // translate, scale and return
-   float3 res = (bcCoords + _MaxExtents) / (2 * _MaxExtents);
+   float3 res = ((bcCoords + _MaxExtents) / (2 * _MaxExtents)).xyz;
 
    return res;
 }
@@ -359,6 +359,10 @@ inline int To1DArrayCoords(int x, int y, int z, int L, int M)
 inline float custom_pow(float a, float b) {
     if( a < FLOAT_EPS && a > -FLOAT_EPS && b < FLOAT_EPS && b > -FLOAT_EPS)
         return 1.0;
+    // due to numerical errors, s, t, u may have very little values < 0. If this is the case,
+    // we are evaluating 0^n actually, which is equal to 0
+    else if( a < 0.0 )
+        return 0.0;
     else
         return pow(a,b);
 }
