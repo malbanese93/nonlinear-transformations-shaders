@@ -1,6 +1,8 @@
 # Non-linear transformations - Shaders in Unity
 This project implements non-linear transformations (**twisting**, **bending**, **free-form deformation**...) in Unity, via vertex and compute custom shaders.
 
+![Twisted cat](./gif/cat.gif)
+
 ## Abstract
 3D models are composed of several triangles, linked together to form a complex surface in space. 
 
